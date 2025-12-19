@@ -1,0 +1,24 @@
+html,
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Roboto", sans-serif
+}
+
+.list {
+    /* color: red; */
+    font-size: 21px !important;
+}
+.w3-text-red {
+    color: #c80000 !important;
+}
+.w3-red {
+    background-color: #c80000 !important;
+}
+.blurred-text-filter {
+  filter: blur(4px); /* Adjust the pixel value to control the amount of blur */
+}

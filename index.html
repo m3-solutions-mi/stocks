@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>M3 Stocks&nbsp;&nbsp;|&nbsp;&nbsp;$0</title>
+    <meta charset="UTF-8">
+    <link id="favicon" rel="icon" href="./favicon.ico" type="image/png" sizes="16x16">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1 minimum-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body class="w3-light-grey">
+
+    <!-- Page Container -->
+    <div class="w3-content w3-margin-top" style="max-width:1450px;">
+
+        <!-- The Grid -->
+        <div class="w3-row-padding">
+
+            <!--* Mobile View -->
+            <div class="w3-hide-medium w3-hide-large w3-col s12" style="margin-top:5px;">
+                <div class="w3-col s12 w3-card w3-center w3-xxxlarge w3-green w3-text-black"
+                    style="margin-top:5px;height:90px;">
+                    <!-- <div class="w3-container w3-card w3-margin w3-padding"> -->
+                    <div class="w3-col s4 w3-center">
+                        <img class="_w3-hide-large w3-padding"
+                            src="https://offsite-ryan.github.io/m3-trader/favicon-black.png" style="width:100%"
+                            alt="M3 Solutions" _onclick="toggle_settings()">
+                    </div>
+
+                    <div class="w3-col s7 w3-padding w3-xlarge w3-text-black">
+                        M3 Solutions MI
+                        <b><span id="mobile-clock" class="w3-large" style="letter-spacing:4px;"></span></b>
+                    </div>
+
+                </div>
+                <div class="w3-col s12 w3-card w3-center w3-xxxlarge w3-text-black"
+                    style="margin-top:5px;min-height:90px;">
+                    <!--* banner *-->
+                    <div id="mobile-banner" class="w3-padding w3-xxlarge w3-text-black"
+                        style="margin-top:10px;margin-bottom:-10px;">
+                    </div>
+
+                    <div id="mobile-chart5" class="w3-margin-left w3-margin-right" style="min-height: 315px;"></div>
+                    <!-- <hr/> -->
+                    <div id="mobile-chart9" class="w3-margin-left w3-margin-right" style="min-height: 315px;"></div>
+                </div>
+            </div>
+            <!--* End Mobile View -->
+
+            <span class="w3-hide-small">
+                <!-- Top -->
+                <div class="w3-col s12" style="margin-bottom:20px;">
+                    <div class="_w3-col s12" style="margin-top:5px;">
+                        <div class="w3-large w3-container w3-card w3-green w3-padding">
+                            <div class="w3-col s2 w3-center">
+                                <img class="w3-hide-small w3-padding"
+                                    src="https://offsite-ryan.github.io/m3-trader/favicon-black.png" style="width:70%"
+                                    alt="M3 Solutions" onclick="toggle_settings()">
+                            </div>
+
+                            <div class="w3-col s7 w3-padding _w3-xxlarge w3-bold w3-text-black">
+
+                                <div class="W3-container w3-text-black">
+                                    <h1 style="margin-top:10px;">
+                                        <b>M3&nbsp;Solutions&nbsp;MI&nbsp;&nbsp;|&nbsp;&nbsp;STOCKS</b>
+                                        <div class="w3-large" style="display:flex;font-size:22px !important;">
+                                            Stock&nbsp;Trading&nbsp;Advisor<div class="w3-hide-small w3-hide-medium">
+                                                &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;m3-solutions-mi.github.io/stocks
+                                            </div>
+                                        </div>
+
+                                        <div id="settings" class="w3-hide _w3-container w3-xlarge">
+                                            <hr style="border-top-color: black;" />
+                                            <div _style="display:inline-flex;"><label>KEY</label><input id="key"
+                                                    class="w3-input w3-border" type="text" placeholder="Enter key">
+                                            </div>
+                                            <div style="margin-top:10px;"><label>SECRET</label><input id="secret"
+                                                    class="w3-input w3-border" type="text" placeholder="Enter secret">
+                                            </div>
+                                            <div style="margin-top:10px;"><label>TOKEN</label><input id="token"
+                                                    class="w3-input w3-border" type="text" placeholder="Enter token">
+                                            </div>
+                                            <div style="margin-top:10px;"><label>PICKS</label><textarea id="picks"
+                                                    rows="4" class="w3-input w3-border" style="letter-spacing:2px;"
+                                                    type="text" placeholder="Enter picks"></textarea></div>
+                                            <div style="margin-top:10px;"><label>LIKES</label><textarea id="likes"
+                                                    rows="4" class="w3-input w3-border" style="letter-spacing:2px;"
+                                                    type="text" placeholder="Enter likes"></textarea></div>
+                                            <div style="margin-top:10px;"><label>STEADY PICKS</label><textarea
+                                                    id="steady_picks" rows="4" class="w3-input w3-border"
+                                                    style="letter-spacing:2px;" type="text"
+                                                    placeholder="Enter steady picks"></textarea></div>
+                                            <button class="w3-btn w3-round w3-white w3-margin-top w3-right"
+                                                onclick="update_settings()">Update</button>
+                                            <!-- <p id="">Settings</p> -->
+                                            <!-- <div id="chart8"></div> -->
+                                        </div>
+                                    </h1>
+                                </div>
+                            </div>
+
+                            <div class="w3-col s12 m3 w3-center w3-xxxlarge w3-text-black"
+                                style="margin-top:8px;display:inline-grid;">
+                                <b><span id="clock" style="letter-spacing:4px;"></span></b>
+                                <span id="date" class="w3-large"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- End Top -->
+
+
+                <!--# Left Column -->
+                <div class="w3-col s12 m4">
+
+                    <div class="w3-white w3-card" style="min-height: 1306px;">
+                        <div class="w3-container _w3-large">
+                            <br />
+                            <h3 class="w3-center">
+                                <b>
+                                    Browser-based trading dashboard for stocks, featuring technical analysis,
+                                    simulated or real trading, and a customizable, user-friendly interface.
+                                    <!--<i class="w3-text-green">M3 Solutions MI</i>.-->
+                                </b>
+                            </h3>
+                            <hr>
+
+                            <div class="w3-xlarge" style="margin-top:28px;"><b><i
+                                        class="fa fa-bookmark-o fa-fw w3-margin-right w3-text-green"></i>Symbols |
+                                    <span id="symbols-total-pct" class="w3-large"
+                                        style="_font-size: 56px !important;">%</span>
+                                    <br class="w3-hide-medium w3-hide-large" />
+                                    <span id="symbols-total"
+                                        class="w3-tag w3-green w3-round w3-xlarge w3-text-white w3-right"
+                                        style="letter-spacing:4px;">$-K
+                                    </span>
+                                </b>
+                            </div>
+                            <div id="chart" class="w3-padding"></div>
+
+                            <div class="w3-xlarge" style="margin-top:8px;"><b><i
+                                        class="fa fa-calendar-o fa-fw w3-margin-right w3-xlarge w3-text-green"></i>Months
+                                    |
+                                    <span id="months-average-pct" class="w3-large"
+                                        style="_font-size: 56px !important;">%</span>
+                                    <span id="months-average"
+                                        class="w3-tag w3-green w3-round w3-xlarge w3-text-white w3-right"
+                                        style="letter-spacing:4px;">$-K</span>
+                                    <div id="chart2" class="w3-padding"></div>
+
+                                    <!-- <span class="w3-large"><b><i class="fa fa-lightbulb-o w3-xlarge w3-text-green"></i>
+                                        &nbsp;Products Created&nbsp;@ AVL</span>
+                                <div id="chart3"></div> -->
+
+                                    <!-- <span class="w3-large"><b><i class="fa fa-graduation-cap w3-xlarge w3-text-green"></i>
+                                        &nbsp;Applications&nbsp;Knowledge</span>
+                                <div id="chart4"></div> -->
+                            </div>
+
+                            <div class="w3-xlarge" style="margin-top:16px;"><b><i
+                                        class="fa fa-calendar-o fa-fw w3-margin-right w3-xlarge w3-text-green"></i>Combined
+                                    |
+                                    <span id="symbols-combined-pct" class="w3-large"
+                                        style="_font-size: 56px !important;">%</span>
+                                    <span id="symbols-combined"
+                                        class="w3-tag w3-green w3-round w3-xlarge w3-text-white w3-right"
+                                        style="letter-spacing:4px;">$-K</span>
+                                    <div id="chart3" class="w3-padding"></div>
+
+                                    <!-- &nbsp; -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!--# End Left Column -->
+
+                <!--# Right Column -->
+                <div class="w3-col s12 m8" style="line-height:normal;">
+
+                    <div class="w3-container w3-card w3-white w3-margin-bottom" style="min-height: 1306px;">
+                        <br />
+                        <span class=""
+                            style="font-size: 56px !important;"><!--<i
+                            class="fa fa-hourglass-half fa-fw w3-margin-right w3-xxlarge w3-text-green"></i>Recent&nbsp;Activity-->
+                            <div class="w3-right w3-margin-top">
+                                <div class="w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                    onclick="buy_all()">Buy All</div>
+                                <div class="w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                    onclick="liquidate()">Liquidate</div>
+
+                                <!--@ TEST BUTTON -->
+                                <!-- <div class="w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                onclick="test()">Test</div> -->
+                            </div>
+
+                            <h5 class="w3-hide-small w3-text-green _w3-right">
+                                <span id="last-total" class="w3-tag w3-green w3-round w3-margin w3-padding"
+                                    style="font-size: 72px !important;font-weight: 900;letter-spacing: 12px;">K</span>
+                                <b><span id="last-pct" class="w3-padding w3-text-green"
+                                        style="font-size: 56px !important;letter-spacing: 4px;">%</span></b>
+                                <b><span id="last-seed" class="w3-text-grey"
+                                        style="font-size: 24px !important;letter-spacing: 4px;">-</span></b>
+
+
+                            </h5>
+                        </span>
+
+                        <!-- <span id="last-total" class="w3-tag w3-green w3-round w3-margin-right w3-padding w3-right">K</span>
+                            <b><span id="last-pct" class="w3-padding">%</span></b> -->
+
+                        <!-- <div class="w3-container">
+                        <h6 class="w3-hide-small w3-xlarge w3-right w3-text-green w3-bold"><i
+                                class="fa fa-calendar fa-fw w3-margin-right"></i>2025 -
+                            <span class="w3-tag w3-green w3-round">Current</span>
+                        </h6>
+                        <h5 class="w3-xlarge _w3-opacity"><b>M3 Solutions MI</b><br /> <span
+                                class="w3-text-green">Proprietor | Developer |
+                                Consultant</span></h5>
+                        <h5 class="w3-hide-medium w3-hide-large w3-xlarge w3-text-green w3-bold"><i
+                                class="fa fa-calendar fa-fw w3-margin-right"></i>2025 -
+                            <span class="w3-tag w3-green w3-round">Current</span>
+                        </h5>
+                        <h5 class="list"><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Owner |
+                            Proprietor</h5>
+                        <h5 class="list"><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Consulting
+                        </h5>
+                        <h5 class="list"><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Software
+                            Devlopment</h5>
+                        <hr>
+                    </div> -->
+
+                        <!-- CURRENT TRADES -->
+                        <hr>
+                        <div class="w3-container">
+
+                            <div class="w3-text-grey w3-xxlarge _w3-opacity"><span id="toggle-title">Current
+                                    Positions</span>
+                                <span class="w3-right"
+                                    onclick="togglePositions(this)"><!--<span class="w3-xlarge">Postions </span>--><i
+                                        class="fa fa-toggle-on w3-text-gray" aria-hidden="true"></i></span>
+                            </div>
+                            <div id="chart5" class="_w3-col s8"></div>
+
+                            <div class="w3-text-grey w3-xxlarge _w3-opacity">This Week
+                                <span id="this-week"
+                                    class="w3-tag w3-round w3-xlarge w3-padding w3-text-white w3-right"
+                                    style="letter-spacing:4px;">$-K</span>
+                            </div>
+                            <div id="chart9" class="_w3-col s4" style="min-height: 315px;"></div>
+
+
+                            <div class="w3-text-grey w3-xxlarge _w3-opacity">3 Weeks</div>
+                            <div id="chart6"></div>
+
+                            <div class="w3-text-grey w3-xxlarge _w3-opacity">3 Weeks - Combined</div>
+                            <div id="chart7"></div>
+
+
+                            <!-- <div class="w3-xxlarge _w3-opacity">Last 3 Weeks</div>
+                        <div id="chart6" class="w3-col s9"></div>
+                        <div id="chart7" class="w3-col s3"></div> -->
+
+
+                            <!-- <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Senior
+                            Software Devloper</h5>
+                        <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Senior
+                            Software Solution Specialist</h5>
+                        <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Skill Team
+                            Leader</h5>
+                        <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Custom
+                            Software Applications Specialist</h5>
+                        <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Software
+                            Testing Manager</h5>
+                        <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Project
+                            Manager & Software Developer</h5>
+                        <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Software
+                            Developer</h5> -->
+
+                            <br />
+                            <!-- <h5 class="w3-xlarge w3-text-green">Projects | Highlights:</h5>
+                        <h5 class="list "><i class="fa fa-check-square-o fa-fw w3-margin-right"></i>Created
+                            PULSE Addons<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(API | CTMS | Grafana |
+                            Charge Monitor | Location Tracking | Program Tracking)
+                        </h5>
+                        <h5 class="list "><i class="fa fa-check-square-o fa-fw w3-margin-right"></i>Hired and
+                            Managed PULSE DEV Team</h5>
+                        <h5 class="list "><i class="fa fa-check-square-o fa-fw w3-margin-right"></i>Created AVL
+                            PULSE Product</h5>
+                        <h5 class="list "><i class="fa fa-check-square-o fa-fw w3-margin-right"></i>Created
+                            Data Load Ramp for importing data to Santorin ( billions of records / day )</h5>
+                        <h5 class="list "><i class="fa fa-check-square-o fa-fw w3-margin-right"></i>Managed
+                            Software Testing Team for North America R & D</h5>
+                        <h5 class="list "><i class="fa fa-check-square-o fa-fw w3-margin-right"></i>Created CME
+                            (Manual Input Application) Product</h5>
+                        <h5 class="list "><i class="fa fa-check-square-o fa-fw w3-margin-right"></i>Managed GM
+                            One Lab Component Test Cells Project</h5>
+                        <hr> -->
+                        </div>
+
+                        <!-- MTS -->
+                        <!-- <div class="w3-container">
+                        <h6 class="w3-hide-small w3-xlarge w3-right w3-text-green w3-bold"><i
+                                class="fa fa-calendar fa-fw w3-margin-right"></i>1998 - 2005</h6>
+                        <h5 class="w3-xlarge _w3-opacity"><b>MTS Systems</b></h5>
+                        <h5 class="w3-hide-medium w3-hide-large w3-xlarge w3-text-green w3-bold"><i
+                                class="fa fa-calendar fa-fw w3-margin-right"></i>1998 - 2005</span>
+                        </h5>
+                        <h5 class="w3-xlarge w3-text-green">Positions:</h5>
+                        <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Software
+                            Devlopment</h5>
+                        <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Software
+                            Testing</h5>
+                        <h5 class="list "><i class="fa fa-dot-circle-o fa-fw w3-margin-right"></i>Systems
+                            Performance Engineer</h5>
+                    </div> -->
+                        <!-- <br />
+                    &nbsp; -->
+
+                    </div>
+
+                </div>
+
+                <!-- End Right Column -->
+
+                <!-- Bottom -->
+                <div class="w3-col s12" style="margin-top:5px;">
+                    <div class="w3-large w3-container w3-card w3-white">
+
+                        <!-- Bottom Panel -->
+                        <h2 class="w3-text-grey w3-padding-16"><i
+                                class="fa fa-line-chart fa-fw w3-margin-right w3-xxlarge w3-text-green"
+                                style="cursor:pointer;" onclick="toggleSymbolDayChart()"></i>
+                            Stock Symbol Chart
+
+                            <!-- Configuration Selections -->
+                            <div class="w3-right" style="display:inline-flex;align-content: center;">
+                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config"
+                                    value="stocks" onclick="click_config(this.value)" checked>
+                                <label style="margin:-2px 20px 0px 10px;">Stocks</label>
+
+                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config" value="trend"
+                                    onclick="click_config(this.value)">
+                                <label style="margin:-2px 20px 0px 10px;" l>Trending</label>
+
+                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config"
+                                    value="symbols" onclick="click_config(this.value)">
+                                <label style="margin:-2px 20px 0px 10px;" l>Symbols</label>
+
+                                <input class="w3-radio" style="cursor:pointer;" type="checkbox"
+                                    onclick="set_num_days(this.checked)" checked>
+                                <label style="margin:-2px 20px 0px 10px;" l>15 days</label>
+                            </div>
+
+                            <!-- Symbol Chart -->
+                            <div id="symbol-day-chart" class="w3-hide w3-container w3-center w3-xlarge">
+                                <p id="symbol-days-title">Symbol OHLC Day Chart</p>
+                                <div id="chart8"></div>
+                            </div>
+                        </h2>
+
+                        <!-- Symbol Boxes -->
+                        <div id="symbol-names-input" class="w3-center w3-margin w3-text-grey"
+                            style="display:none;_display:flex;justify-content:center;">
+                            <label style="margin-right:15px;margin-top:8px;">Symbol&nbsp;Names</label>
+                            <textarea id="symbol-names" class="w3-input w3-border" style="width:60%;" type="text"
+                                placeholder="Enter key"></textarea>
+                        </div>
+
+                        <div id="symbol-boxes-stocks" class="w3-center" style="display:block;"></div>
+                        <div id="symbol-boxes-trend" class="w3-center w3-xlarge w3-text-grey" style="display:none;">
+                            Trending
+                            <div id="symbols-trending"></div>
+                        </div>
+                        <div id="symbol-boxes-symbols" style="display:none;">
+                            <div id="symbols-for-letter" class="w3-center"></div>
+                            <hr />
+                            <div id="letters" class="w3-center"></div>
+                        </div>
+                        <br />
+                        &nbsp;
+                    </div>
+                </div>
+
+                <!-- End Grid -->
+
+            </span>
+            <!-- <div class="w3-container w3-col s12 w3-card w3-green w3-center w3-margin-top">&nbsp;<br />&nbsp;</div> -->
+        </div>
+
+
+
+        <!-- End Page Container -->
+    </div>
+
+
+    <script>
+        /* PRINT THE VERSION */
+        const print_version = () => {
+            console.log(`%c------------------------------------------------------------------------------------------`, 'color:lime');
+            console.log(`%c  ███      ███  ████\n  ██ ██  ██ ██    ██\n  ██   ██   ██  ████\n  ██        ██    ██\n  ██        ██  ████`, 'color:lime');
+            console.log('%c   M3 STOCKS v6.0.0', 'color:lime');
+            console.log(`%c------------------------------------------------------------------------------------------`, 'color:lime');
+        }
+        print_version();
+        let count = 0;
+        setInterval(() => {
+            const d = new Date();
+            if (d.getSeconds() === 0) {
+                count++;
+                if (d.getMinutes() === 0 || count > 30) {
+                    console.clear();
+                    count = 0;
+                    print_version();
+                }
+            }
+        }, 1000);
+    </script>
+
+    <!-- 
+        ------------------------------------------------------
+        MUST BE AT THE BOTTOM - HTML ELEMENTS MUST EXIST 
+        ------------------------------------------------------
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="./shared/helper-functions.js"></script>
+    <script src="./shared/HackTimer.js"></script>
+    <script src="./shared/colors.js"></script>
+    <script src="./shared/calendar.js"></script>
+    <script src="./shared/tops_by_week.js"></script>
+    <!-- <script src="./bollinger-bands.js"></script> -->
+    <!-- <script src="./buy-sell-positions.js"></script> -->
+    <!-- <script src="./calculate-trendline.js"></script> -->
+    <script src="./charts/chart-bar-options.js"></script>
+    <script src="./charts/chart-area-spline-options.js"></script>
+    <script src="./shared/alpaca.js"></script>
+    <script src="./shared/stock_symbols_detail.js"></script>
+    <script src="./shared/bollinger-bands.js"></script>
+    <script src="./shared/calculate-trendline.js"></script>
+    <script src="./scripts/run_top_25_each_week.js"></script>
+    <script src="./config.js"></script>
+    <script src="./treemap.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>
