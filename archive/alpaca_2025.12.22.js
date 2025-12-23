@@ -92,8 +92,8 @@ class AlpacaData {
         // get_reset_window: (t) => { return getMonthName(new Date(t)); },
         // get_reset_window: (t) => { return getQuarterName(new Date(t)); },
 
-        sell_dates: this.WINDOWS.NONE,
-        // sell_dates: this.WINDOWS.WEEKS,
+        // sell_dates: this.WINDOWS.NONE,
+        sell_dates: this.WINDOWS.WEEKS,
         // sell_dates: this.WINDOWS.MONTHS,
         // sell_dates: this.WINDOWS.QUARTERS,
     };
@@ -499,27 +499,6 @@ class AlpacaData {
             resolve(res);
         })
     }
-    add_bars_2(res) {
-        const open = res.bars[0].o;
-        const qty = (1000 / open);
-        res.bars_2 = [];
-        res.bars.map((v) => {
-            res.bars_2.push({
-                e: v.e,
-                t: v.t,
-                tl: v.tl,
-                thm: v.thm,
-                c: round2((v.c * qty) - 1000),
-                o: round2(v.o * qty - 1000),
-                h: round2(v.h * qty - 1000),
-                l: round2(v.l * qty - 1000),
-                v: v.v,
-                n: v.n,
-                vw: v.vw
-            });
-        });
-        return res;
-    }
     async positions(symbol, positions, res) {
         return new Promise(async (resolve) => {
             const p = positions.length > 0 ? positions[0] : null;
@@ -635,107 +614,11 @@ class AlpacaData {
                     .then((res) => this.positions(symbol, open_positions, res))
                     .then((res) => this.orders(symbol, orders_list, res))
                     .then((res) => add30 ? this.add30Min(res, end) : res)
-                    .then((res) => this.add_bars_2(res))
                     .then((res) => resolve(res));
             } else {
                 resolve(null);
             }
         });
-    }
-    async bars_simplified(symbols, start = this.START_OF_YEAR, end = new Date().toISOString()) {
-        return new Promise(async (resolve) => {
-            const promises = symbols.map((s) => this.bars(s, '1D', start, end, [], [], false, 100, false));
-            const results = await Promise.all(promises);
-            const obj = [];
-            results.forEach((res) => {
-                if (res && res.bars && res.bars.length > 0) {
-                    // const months = res.bars_2.filter((v)=>v.t.indexOf('-01') > 0);
-                    let prev = -1;
-                    const months = [];
-                    res.bars_2.forEach((v, i) => {
-                        const m = new Date(v.t).getMonth();
-                        if (m !== prev || i === res.bars_2.length - 1) {
-                            v.d = i > 0 ? v.c - months[months.length - 1].c : v.c;
-                            // months.push(v);
-                            months.push({
-                                e: v.e,
-                                t: v.t,
-                                d: round2(v.d),
-                                c: round2(v.c),
-                            });
-                            prev = m;
-                        }
-                    });
-                    //* DAYS
-                    prev = -1;
-                    const days = [];
-                    res.bars_2.forEach((v, i) => {
-                        const d = new Date(v.t).getDate();
-                        if (d !== prev || i === res.bars_2.length - 1) {
-                            v.d = i > 0 ? v.c - days[days.length - 1].c : v.c;
-                            days.push({
-                                e: v.e,
-                                t: v.t,
-                                d: round2(v.d),
-                                c: round2(v.c),
-                            });
-                            prev = d;
-                        }
-                    });
-                    obj.push({
-                        symbol: res.symbol,
-                        days,
-                        months,
-                        months_total: round2(months.map((v) => v.d).reduce((p, c) => p + c)),
-                        months_last: round2(months[months.length - 1].d),
-                        months_min: round2(Math.min(...months.map((v) => v.d))),
-                        months_max: round2(Math.max(...months.map((v) => v.d))),
-                        months_avg: round2(months.map((v) => v.d).reduce((p, c) => p + c) / months.length),
-                        bars: res.bars_2,
-                    });
-                }
-            });
-
-            const summary_days = {};
-            const summary = {};
-            obj.forEach((v) => {
-                v.months.forEach((m, i) => {
-                    const k = m.t.split('T')[0];
-                    if (!summary[k]) {
-                        summary[k] = 0;
-                    }
-                    summary[k] += round3(m.d);
-                });
-                v.days.forEach((d, i) => {
-                    const k = d.t.split('T')[0];
-                    if (!summary_days[k]) {
-                        summary_days[k] = 0;
-                    }
-                    summary_days[k] += round3(d.d);
-                });
-
-            });
-            Object.entries(summary).map((v) => summary[v[0]] = round2(v[1]));
-            Object.entries(summary_days).map((v) => summary_days[v[0]] = round2(v[1]));
-
-            const t = round2(Object.values(summary).reduce((p, c) => p + c, 0));
-            const a = round2(t / Object.values(summary).length);
-            const result = {
-                total: t,
-                average: a,
-                days: summary_days,
-                months: summary,
-                symbols: obj,
-            };
-            // console.log(result);
-            // console.log('results');
-            // console.log(obj);
-            // console.log(summary);
-            // console.log('total', round2(t));
-            // console.log('average', round2(a));
-
-            resolve(result);
-        })
     }
     buy(symbol, spend = 1000) {
         return new Promise((resolve, reject) => {

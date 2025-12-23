@@ -96059,6 +96059,9 @@ const stock_symbols_detail = [
     {symbol: 'WM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'SCCO', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'NEM', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'SLV', name: '-', status: 'active', tradable: true, fractionable: true}, // SILVER
+    {symbol: 'GLTR', name: '-', status: 'active', tradable: true, fractionable: true}, // GOLD
+    {symbol: 'PALL', name: '-', status: 'active', tradable: true, fractionable: true}, // PALLADIUM
     {symbol: 'VIXY', name: '-', status: 'active', tradable: true, fractionable: true},
 ]
 .filter((v)=>v.status === 'active')

@@ -96,6 +96,11 @@ class Treemap {
                 show: true,
                 format: 'dd MMM | HH:mm',
             },
+            y : {
+                formatter: function (value) {
+                    return value.toLocaleString();
+                }
+            }
         },
         dataLabels: {
             enabled: true,

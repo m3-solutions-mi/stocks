@@ -90,9 +90,6 @@ let steady = (localStorage.getItem('m3-stocks-steady') || '').split(',');
 // config_stocks.symbols = likes; //@ enable to change to symbols from 'likes'
 
 
-let treemap_top_1 = new Treemap('#top-chart-1');
-
-
 //#-------------------------------------------
 //# UPDATE CHART [METHOD]
 //#-------------------------------------------
@@ -286,7 +283,7 @@ const update_charts = (config = config_stocks) => {
         const e2 = Math.max(...epochs);
         epochs.forEach((ee) => {
             const m = new Date(ee).getMonth() - 2;
-            const seed_base = symbols.length * 1000;
+            const seed_base = 25 * 1000;
             const add_per_month = 0 * 1000;
             // const seed = (25*1000) + (m * 1000);
             const seed = (seed_base) + (m * add_per_month);
@@ -342,7 +339,7 @@ const update_charts = (config = config_stocks) => {
     });
     line_combined_current_mobile.options.annotations.points = [...annotations_x,...line_combined_current_mobile.options.annotations.points];
 
-    data = combined.data.slice(-90);
+    data = combined.data;
     update_ui(line_combined_current_mobile);
     line_combined_current.options = deepClone(line_combined_current_mobile.options);
     update_ui(line_combined_current);
@@ -350,14 +347,12 @@ const update_charts = (config = config_stocks) => {
     color = total >= 0 ? 'green' : 'red';
     elem = document.getElementById('this-week');
     elem.style.backgroundColor = colors[color];
-    elem.innerHTML = `${get_indicator(total)} ${round1(total).toLocaleString()}K`;
+    elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}K`;
 
 
     const points = line_combined_current_mobile.options.annotations.points;
     const last_window = points[points.length - 1].y - points[points.length - 2].y;
-    // const last_day = data[data.length - 1].y - data[data.length - 2].y;
-    const last_day = config_stocks.data.map((s, i)=>s.bars_2.slice(-1)[0].c).reduce((p,c)=>p+c) - config_stocks.data.map((s, i)=>s.bars_2.slice(-2)[0].c).reduce((p,c)=>p+c);
-    document.getElementById('last_dollars').innerHTML = `${get_indicator(last_window)}$${round1(last_window).toLocaleString()} |  ${get_indicator(last_day)}$${round1(last_day).toLocaleString()}`;
+    document.getElementById('last_dollars').innerHTML = `${get_indicator(last_window)} $${round1(last_window).toLocaleString()}`;
 
     // -------------------------------------------
     // series = { name: 'Close', type: 'area', data: [] };
@@ -534,11 +529,10 @@ async function click_symbol(s, elem) {
     }
     // const bars = entry.bars.slice(num_symbol_days) || []; //* recent days
     const bars = (num_symbol_days === -15 ? entry.recent.bars : entry.bars/*.slice(num_symbol_days)*/) || []; //* recent 5 minute data
-    const num = 1000 / bars[0].o;
-    series[0].data = bars.map((b) => { return { x: b.e, y: round2(b.c * num) } });
+    series[0].data = bars.map((b) => { return { x: b.e, y: round2(b.c) } });
     if (num_symbol_days !== -15) {
-        series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.o * num) } });
-        series[2].data = bars.map((b) => { return { x: b.e, y: round2((b.lb * num) * (config_stocks.alpaca.CONFIG.stop_pct)) } });
+        series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.o) } });
+        series[2].data = bars.map((b) => { return { x: b.e, y: round2(b.lb * (config_stocks.alpaca.CONFIG.stop_pct)) } });
 
         const tl = calculateTrendline(series[0].data.map((v) => v.y));
         series.push({ name: 'Trendline', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
@@ -603,7 +597,7 @@ async function click_symbol(s, elem) {
     update_ui(treemap_symbol_days);
 
     const detail = stock_symbols_detail.find((v) => v.symbol === s);
-    const g = round((series[0].data[series[0].data.length - 1].y - series[0].data[0].y));// * (1000 / series[0].data[0].y));
+    const g = round((series[0].data[series[0].data.length - 1].y - series[0].data[0].y) * (1000 / series[0].data[0].y));
     let html = '';
     html += `${get_indicator(g)} ${s}`;
     html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
