@@ -60,6 +60,10 @@ function get_indicator(v, outline = false, color = '') {
     const char = v > 0 ? (outline ? '△' : '▲') : (v < 0 ? (outline ? '▽' : '▼') : '');
     return `<span style="color:${color}">${char}</span>`;
 };
+// function get_color(v, outline = false, color = '') {
+//     const char = v > 0 ? (outline ? '△' : '▲') : (v < 0 ? (outline ? '▽' : '▼') : '');
+//     return `<span style="color:${color}">${char}</span>`;
+// };
 function reduceArray(arr, defaultValue = 0) {
     if (arr.length === 0) return defaultValue;
     return arr.reduce((p, c) => p + c, 0);
@@ -245,7 +249,7 @@ function getLastFridayOfMonth(year, month) {
 }
 
 function test_tops() {
-    Array.from(Object.entries(countDistinctStrings(Object.values(TOPS).reverse().reduce((p, c) => [...p, ...c]))), ([key, value]) =>({
+    Array.from(Object.entries(countDistinctStrings(Object.values(TOPS).reverse().reduce((p, c) => [...p, ...c]))), ([key, value]) => ({
         property: key,
         data: value
     })).sort((a, b) => b.data - a.data)
@@ -370,6 +374,12 @@ function getQuarterName(d) {
     let quarter = d.getFullYear() + '_' + (q).toString().padStart(2, '0');
     return quarter;
 }
+// function getThirdName(d) {
+//     let q = d.getMonth() + 1;
+//     q = q < 3 ? 1 : (q < 5 ? 2 : (q < 10 ? 3 : 4));
+//     let quarter = d.getFullYear() + '_' + (q).toString().padStart(2, '0');
+//     return quarter;
+// }
 console.yellow = function (text) {
     console.log(`%c${text}`, 'color:yellow;')
 }
@@ -382,6 +392,15 @@ console.red = function (text) {
 console.lime = function (text) {
     console.log(`%c${text}`, 'color:lime;')
 }
+const scrambleString = (str) => {
+    let temp = [...str]
+        .sort(() => Math.random() - 0.5)
+        .join('');
+    if (temp === str) {
+        temp = scrambleString(temp);
+    }
+    return temp;
+};
 /**
  * Displays a simple vertical bar chart in the console using the provided data array.
  * Each value in the data array is represented as a column of bars.
@@ -451,3 +470,25 @@ function cumulativeSumArray(arr = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21]) {
 
     // console.log(cumulativeSumArray);
 }
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Nov', 'Dec'];
+const KEY_MAP = {
+    "2025_04_Apr": '2025-03',
+    "2025_05_May": '2025-04',
+    "2025_06_Jun": '2025-05',
+    "2025_07_Jul": '2025-06',
+    "2025_08_Aug": '2025-07',
+    "2025_09_Sep": '2025-08',
+    "2025_10_Oct": '2025-09',
+    "2025_11_Nov": '2025-10',
+    "2025_12_Dec": '2025-11',
+    "2025_12_Dec_2": '2025-12',
+    // QUATERS
+    '2025_01': '2024-04',
+    '2025_02': '2025-01',
+    '2025_03': '2024-02',
+    '2025_04': '2024-03',
+    '2025_04_2': '2024-04',
+    '2026_01': '2025-04',
+}
+//* GET LABEL */
+const get_map_label = (input) => { return KEY_MAP[input] || input }

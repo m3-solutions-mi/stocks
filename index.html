@@ -8,7 +8,9 @@
     <link rel="icon" type="image/x-icon" href="./favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1 minimum-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
@@ -41,7 +43,7 @@
                     </div>
 
                 </div>
-                <div class="w3-col s12 w3-card w3-center w3-xxxlarge w3-text-black"
+                <div class="w3-hide w3-col s12 w3-card w3-center w3-xxxlarge w3-text-black"
                     style="margin-top:5px;min-height:90px;">
                     <!--* banner *-->
                     <div id="mobile-banner" class="w3-padding w3-xxlarge w3-text-black"
@@ -55,9 +57,9 @@
             </div>
             <!--* End Mobile View -->
 
-            <span class="w3-hide-small">
+            <span class="_w3-hide-small">
                 <!-- Top -->
-                <div class="w3-col s12" style="margin-bottom:20px;">
+                <div class="w3-col s12 w3-hide-small" style="margin-bottom:20px;">
                     <div class="_w3-col s12" style="margin-top:5px;">
                         <div class="w3-large w3-container w3-card w3-green w3-padding">
                             <div class="w3-col s2 w3-center">
@@ -79,6 +81,26 @@
 
                                         <div id="settings" class="w3-hide _w3-container w3-xlarge">
                                             <hr style="border-top-color: black;" />
+
+                                            <!-- CONFIGURATIONS -->
+                                            <div class="w3-center w3-xxlarge"
+                                                style="letter-spacing:4px;display: flex;align-items: center;justify-content: center;">
+                                                <input class="w3-radio w3-margin-right" style="cursor:pointer;"
+                                                    type="radio" name="accounts" value="paper"
+                                                    onclick="click_account(this.value)" checked>
+                                                <label class="w3-margin-top" style="margin-right: 45px;">PAPER</label>
+
+                                                <input class="w3-radio w3-margin-right" style="cursor:pointer;"
+                                                    type="radio" name="accounts" value="live"
+                                                    onclick="click_account(this.value)">
+                                                <label class="w3-margin-top" style="margin-right: 45px;" l>LIVE</label>
+
+                                                <!-- <input class="w3-radio w3-margin-right" style="cursor:pointer;"
+                                                    type="radio" name="accounts" value="crypto"
+                                                    onclick="click_account(this.value)">
+                                                <label class="w3-margin-top" style="" l>CRYPTO</label> -->
+                                            </div>
+
                                             <div _style="display:inline-flex;"><label>KEY</label><input id="key"
                                                     class="w3-input w3-border" type="text" placeholder="Enter key">
                                             </div>
@@ -88,15 +110,20 @@
                                             <div style="margin-top:10px;"><label>TOKEN</label><input id="token"
                                                     class="w3-input w3-border" type="text" placeholder="Enter token">
                                             </div>
-                                            <div style="margin-top:10px;"><label>PICKS</label><textarea id="picks"
-                                                    rows="4" class="w3-input w3-border" style="letter-spacing:2px;"
-                                                    type="text" placeholder="Enter picks"></textarea></div>
+                                            <div style="margin-top:10px;"><label>SEED ( dollars / symbol )</label><input
+                                                    id="seed" class="w3-input w3-border" type="number" value="1000"
+                                                    placeholder="Enter seed dollars">
+                                            </div>
+                                            <div style="margin-top:10px;"><label>SYMBOLS</label><textarea
+                                                    id="symbol_picks" rows="4" class="w3-input w3-border"
+                                                    style="letter-spacing:2px;" type="text"
+                                                    placeholder="Enter picks"></textarea></div>
                                             <div style="margin-top:10px;"><label>LIKES</label><textarea id="likes"
                                                     rows="4" class="w3-input w3-border" style="letter-spacing:2px;"
                                                     type="text" placeholder="Enter likes"></textarea></div>
-                                            <div style="margin-top:10px;"><label>STEADY PICKS</label><textarea
-                                                    id="steady_picks" rows="4" class="w3-input w3-border"
-                                                    style="letter-spacing:2px;" type="text"
+                                            <div style="display:none;margin-top:10px;"><label>STEADY
+                                                    PICKS</label><textarea id="steady_picks" rows="4"
+                                                    class="w3-input w3-border" style="letter-spacing:2px;" type="text"
                                                     placeholder="Enter steady picks"></textarea></div>
                                             <button class="w3-btn w3-round w3-white w3-margin-top w3-right"
                                                 onclick="update_settings()">Update</button>
@@ -119,23 +146,85 @@
                 <!-- End Top -->
 
                 <!--# TOP NEW -->
-                <div class="w3-col s12 w3-xxlarge w3-center w3-card w3-white w3-margin-bottom w3-padding">
-                    New&nbsp;
+                <div class="w3-col s12 w3-xxlarge w3-card w3-white w3-margin-bottom w3-padding">
+                    <div class="_w3-center">
+
+                        <span class=""
+                            style="font-size: 56px !important;"><!--<i
+                            class="fa fa-hourglass-half fa-fw w3-margin-right w3-xxlarge w3-text-green"></i>Recent&nbsp;Activity-->
+                            <div class="w3-right _w3-margin-top" style="letter-spacing: 4px;">
+                                <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                    style="cursor:pointer;" onclick="buy_all()">Buy All</div>
+                                <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                    style="cursor:pointer;" onclick="liquidate()">Liquidate</div>
+
+                                <!--@ TEST BUTTON -->
+                                <!-- <div class="w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                onclick="test()">Test</div> -->
+                            </div>
+
+                            <h5 class="w3-text-green _w3-right">
+                                <span id="last-total" class="w3-tag w3-green w3-round w3-margin w3-padding"
+                                    style="font-size: 72px !important;font-weight: 900;letter-spacing: 12px;">K</span>
+                                <b><span id="last-pct" class="w3-padding w3-text-green"
+                                        style="font-size: 56px !important;letter-spacing: 4px;">%</span></b>
+                                <b><span id="last-seed" class="w3-text-grey"
+                                        style="font-size: 24px !important;letter-spacing: 4px;">-</span></b>
+                            </h5>
+                        </span>
+                    </div>
+
                     <div class="w3-row w3-padding-top" style="border-top:1px solid lightgrey;">
-                        <div class="w3-col s12 m4 w3-xxlarge w3-center w3-padding w3-border-right">
-                            YTD
-                            <div id="top-chart-1"></div>
+                        <div class="w3-col s12 m4 w3-xxlarge w3-padding w3-border-right">
+                            <div class="w3-xxlarge" style="margin-top:16px;">
+                                <i class="fa fa-bookmark-o fa-fw w3-text-green"></i> Breakdown
+                                <!-- <span id="top-symbols-total-pct" class="w3-small"
+                                        style="_font-size: 56px !important;">%</span> -->
+                                <span id="top-symbols-total"
+                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                                    style="letter-spacing:4px;">$-K
+                                    <br />
+                                </span>
+                                <div id="top-chart-1" class="w3-margin-top"></div>
+                            </div>
+                            <div class="w3-xxlarge" style="margin-top:36px;"><i
+                                    class="fa fa-calendar-o fa-fw w3-text-green"></i> Months
+                                <!-- <span id="top-months-total-pct" class="w3-large"
+                                        style="_font-size: 56px !important;">%</span> -->
+                                <span id="top-months-total"
+                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                                    style="letter-spacing:4px;">$-K</span>
+                                <div id="top-chart-2" class="w3-margin-top"></div>
+                            </div>
                         </div>
                         <div class="w3-col s12 m8 w3-xxlarge w3-center w3-padding">
-                            Recent
-                            <div id="top-chart-2"></div>
+                            <div class="w3-xxlarge" style="margin-top:32px;"><i
+                                    class="fa fa-line-chart fa-fw w3-margin-right w3-text-green"></i>Cumulative
+                                |
+                                <span id="top-combined-total-pct" class="w3-large"
+                                    style="_font-size: 56px !important;">%</span>
+                                <span id="top-combined-total"
+                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                                    style="letter-spacing:4px;">$-K</span>
+                                <div id="top-chart-3" class="w3-margin-top"></div>
+                            </div>
+                            <div class="w3-xxlarge" style="margin-top:24px;"><i
+                                    class="fa fa-tags fa-fw w3-margin-right w3-text-green"></i>Positions
+                                |
+                                <span id="top-combined-total-pct" class="w3-large"
+                                    style="_font-size: 56px !important;">%</span>
+                                <span id="top-combined-total"
+                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                                    style="letter-spacing:4px;">$-K</span>
+                                <div id="top-chart-4" class="w3-margin-top"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
 
                 <!--# Left Column -->
-                <div class="w3-col s12 m4">
+                <div class="w3-col s12 m4 w3-hide">
 
                     <div class="w3-white w3-card" style="min-height: 1306px;">
                         <div class="w3-container _w3-large">
@@ -200,7 +289,7 @@
                 <!--# End Left Column -->
 
                 <!--# Right Column -->
-                <div class="w3-col s12 m8" style="line-height:normal;">
+                <div class="w3-col s12 m8 w3-hide" style="line-height:normal;">
 
                     <div class="w3-container w3-card w3-white w3-margin-bottom" style="min-height: 1306px;">
                         <br />
@@ -354,7 +443,7 @@
                         <h2 class="w3-text-grey w3-padding-16"><i
                                 class="fa fa-line-chart fa-fw w3-margin-right w3-xxlarge w3-text-green"
                                 style="cursor:pointer;" onclick="toggleSymbolDayChart()"></i>
-                            Stock Symbol Chart
+                            Stock Symbols Chart
 
                             <!-- Configuration Selections -->
                             <div class="w3-right" style="display:inline-flex;align-content: center;">
@@ -371,14 +460,21 @@
                                 <label style="margin:-2px 20px 0px 10px;" l>Symbols</label>
 
                                 <input class="w3-radio" style="cursor:pointer;" type="checkbox"
+                                    onclick="set_use_raw(this.checked)" checked>
+                                <label style="margin:-2px 20px 0px 10px;">Raw</label>
+
+                                <!-- <input class="w3-radio" style="cursor:pointer;" type="checkbox"
                                     onclick="set_num_days(this.checked)" checked>
-                                <label style="margin:-2px 20px 0px 10px;" l>15 days</label>
+                                <label style="margin:-2px 20px 0px 10px;">40 Days</label> -->
                             </div>
 
                             <!-- Symbol Chart -->
                             <div id="symbol-day-chart" class="w3-hide w3-container w3-center w3-xlarge">
                                 <p id="symbol-days-title">Symbol OHLC Day Chart</p>
-                                <div id="chart8"></div>
+                                <div id="chart8" class='w3-col s9 w3-padding' _style="border:1px solid lightgray;">
+                                </div>
+                                <div id="chart10" class='w3-col s3 w3-padding' _style="border:1px solid lightgray;">
+                                </div>
                             </div>
                         </h2>
 
@@ -411,9 +507,77 @@
             <!-- <div class="w3-container w3-col s12 w3-card w3-green w3-center w3-margin-top">&nbsp;<br />&nbsp;</div> -->
         </div>
 
+        <!-- COSTS MODAL -->
 
 
-        <!-- End Page Container -->
+        <!-- Pricing Tables -->
+        <div class="w3-hide w3-xlarge w3-row-padding w3-margin" style="margin:0 -16px;font-family:Raleway;">
+            <div class="w3-third w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xxlarge w3-padding-32">Week</li>
+                    <li class="w3-padding-16">Web Design</li>
+                    <li class="w3-padding-16">Photography</li>
+                    <li class="w3-padding-16">1GB Storage</li>
+                    <li class="w3-padding-16">Mail Support</li>
+                    <li class="w3-padding-16">
+                        <h2>$ 10</h2>
+                        <span class="w3-opacity">per month</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="w3-third w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-hover-opacity-off">
+                    <li class="w3-green w3-xxlarge w3-padding-32">Month</li>
+                    <li class="w3-padding-16">Web Design</li>
+                    <li class="w3-padding-16">Photography</li>
+                    <li class="w3-padding-16">50GB Storage</li>
+                    <li class="w3-padding-16">Endless Support</li>
+                    <li class="w3-padding-16">
+                        <h2>$ 25</h2>
+                        <span class="w3-opacity">per month</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="w3-third">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xxlarge w3-padding-32">Year</li>
+                    <li class="w3-padding-16 w3-xxlarge" style="letter-spacing:4px;">+200 %</li>
+                    <li class="w3-padding-16">Photography</li>
+                    <li class="w3-padding-16">Unlimited Storage</li>
+                    <li class="w3-padding-16">Endless Support</li>
+                    <li class="w3-padding-16">
+                        <h2>$ 25</h2>
+                        <span class="w3-opacity">per month</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- End Page Container -->
+    </div>
+
+    <div id="modal-positions" class="w3-modal">
+        <div class="w3-modal-content">
+            <div class="w3-container" style="font-size:228px;">
+                <span onclick="document.getElementById('modal-positions').style.display='none'"
+                    class="w3-button w3-display-topright">&times;</span>
+                <p>Some text. Some text. Some text.</p>
+                <p>Some text. Some text. Some text.</p>
+            </div>
+        </div>
     </div>
 
 
@@ -426,15 +590,16 @@
             console.log(`%c------------------------------------------------------------------------------------------`, 'color:lime');
         }
         print_version();
-        let count = 0;
+        // let count = 0;
         setInterval(() => {
             const d = new Date();
             if (d.getSeconds() === 0) {
-                count++;
-                if (d.getMinutes() === 0 || count > 30) {
+                // count++;
+                if (d.getMinutes() === 0 /*|| count > 30*/) {
                     console.clear();
-                    count = 0;
+                    // count = 0;
                     print_version();
+                    update();
                 }
             }
         }, 1000);
@@ -457,12 +622,17 @@
     <script src="./charts/chart-bar-options.js"></script>
     <script src="./charts/chart-area-spline-options.js"></script>
     <script src="./shared/alpaca.js"></script>
+    <script src="./shared/nasdaq-symbols.js"></script>
     <script src="./shared/stock_symbols_detail.js"></script>
     <script src="./shared/bollinger-bands.js"></script>
     <script src="./shared/calculate-trendline.js"></script>
     <script src="./scripts/run_top_25_each_week.js"></script>
+    <script src="./shared/combine-data.js"></script>
     <script src="./config.js"></script>
     <script src="./treemap.js"></script>
+    <script src="./index-ui.js"></script>
+    <!-- <script src="./index-charts.js"></script> -->
+    <script src="./index-interval.js"></script>
     <script src="./index.js"></script>
 </body>
 

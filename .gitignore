@@ -1,0 +1,32 @@
+# This is a comment
+# Blank lines are ignored for readability
+
+# Ignore all files ending in .log at any level
+_obfuscate/
+
+#-------------------------------------------------------------------------------------------------------
+
+# This is a comment
+# Blank lines are ignored for readability
+
+# Ignore all files ending in .log at any level
+#*.log
+
+# Ignore a specific file named "secrets.txt" in the root directory
+#/secrets.txt
+
+# Ignore the entire "node_modules" directory and everything inside it
+#node_modules/
+
+# Ignore all files in the "build" directory (and its subdirectories)
+#build/**
+
+# Ignore all files with the .tmp extension in any directory
+#**/*.tmp
+
+# Ignore specific OS-generated files
+#.DS_Store # macOS files
+#Thumbs.db # Windows files
+
+# Negate a pattern: include a specific important log file that would otherwise be ignored by *.log
+#!important.log

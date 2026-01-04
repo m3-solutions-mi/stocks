@@ -12,7 +12,7 @@ class Treemap {
             show: false
         },
         chart: {
-            height: 300,
+            height: 350,
             type: 'treemap',
             animations: {
                 enabled: false,
@@ -20,6 +20,14 @@ class Treemap {
             toolbar: {
                 show: false,
             },
+            sparkline: {
+                enabled: true,
+            }
+        },
+        annotations: {
+            xaxis: [],
+            yaxis: [],
+            points: [],
         },
         // annotations: {
         //     yaxis: [{
@@ -96,7 +104,7 @@ class Treemap {
                 show: true,
                 format: 'dd MMM | HH:mm',
             },
-            y : {
+            y: {
                 formatter: function (value) {
                     return value.toLocaleString();
                 }
@@ -106,6 +114,9 @@ class Treemap {
             enabled: true,
             textAnchor: 'middle',
             offsetY: -5,
+            style: {
+                fontSize: '20px',
+            }
         },
         colors: [
             '#4CAF50',

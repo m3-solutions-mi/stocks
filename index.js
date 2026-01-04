@@ -28,8 +28,14 @@ const config_stocks = new Config(
         //@ STEADY PICKS - TOP 10
         // ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC').split(','),
 
-        //@ STEADY PICKS - TOP 25
-        ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC,CLLS,CRDO,APYX,VSAT,INDV,EYPT,RLAY,ESPR,FDMT,CMPX,ERAS,ORKA,AVTX,TTMI,TSEM').split(','),
+        //@ STEADY PICKS - TOP 25 [32]
+        // ,FDMT,CRDO
+        ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC,CLLS,APYX,VSAT,INDV,EYPT,RLAY,ESPR,CMPX,ERAS,ORKA,AVTX,TTMI,TSEM').split(','),
+        ...('GLTR,PALL,SLV,COPX,REMX').split(','),
+        ...('MU,SNDK').split(','),
+
+        //@ LARGE SET / PICKS
+        // ...('AAOI,ABVX,AEIS,AENT,AIP,ALNT,AMKR,ANAB,ANNX,ARWR,ATEC,ATRO,AUPH,AVDL,AUPH,AXTI,B,BBIO,BELFB,BIOA,BLTE,BTSG,CECO,CELC,CENX,CG,CMPX,CMTL,COPX,CTMX,DHC,DNTH,DOOO,DSGN,DYN,ENTA,ERAS,ESPR,EYPT,FBIO,FIVE,FLEX,FLNC,FORM,FSLR,FTRE,FULC,GCT,GDX,GH,GLTR,GLUE,GNOM,GOOG,GOOGL,GRAL,GSAT,GTX,HOOD,IDYA,IESC,IHRT,IMNM,INDV,INSM,IONS,JBIO,JOYY,KNSA,KOD,LASR,LGND,LITE,LMND,LQDA,LRCX,LYEL,MKSI,MU,NAUT,NEM,NESR,NXT,ORKA,PALL,PBYI,PHAT,PL,PLTR,POWL,PRAX,PRLD,PTGX,RAPP,RAPT,REAL,REMX,RLAY,ROIV,RVMD,SEPN,SETM,SHLS,SLV,SMTC,SNDK,STRO,SVRA,TBPH,TCMD,TER,TLN,TNGX,TORO,TRVI,TSEM,TTMI,TYRA,UPB,VICR,VRDN,WBD,WDC,WLDN,XMTR,XPEL,ZBIO,ZEUS,ZYME').split(','),
 
 
         //@ STEADY PICKS - TOP 30
@@ -42,10 +48,10 @@ const config_stocks = new Config(
         // ...('TMC,TSEM,RKLB,APP,GEV,HUT,TTMI,PSIX,CIFR,KOPN,SNDK,OKLO,QUBT,CRDO,HOOD').split(','),
     ].filter((v, i, a) => i === a.indexOf(v)).sort(),
     1000,
-    // '2025-03-15T00:00:00', // start
-    '2025-04-01T00:00:00', // start
-    // '2025-12-07T00:00:00' // end
-    // '2025-12-14T00:00:00' // end
+    // '2025-03-15T00:00:00Z', // start
+    '2025-04-01T00:00:00Z', // start
+    // '2025-12-07T00:00:00Z' // end
+    // '2025-12-14T00:00:00Z' // end
 );
 
 let alpaca = new AlpacaData(
@@ -80,17 +86,22 @@ let treemap_last_symbols_mobile = new Treemap('#mobile-chart5');
 let treemap_recent_weeks = new Treemap('#chart6');
 let line_combined_last_n = new Treemap('#chart7');
 let treemap_symbol_days = new Treemap('#chart8');
+let treemap_symbol_days_recent = new Treemap('#chart10');
 let line_combined_current_mobile = new Treemap('#mobile-chart9');
 let line_combined_current = new Treemap('#chart9');
 let data = null;
 let num_symbol_days = -15;
+let use_raw = true;
 let picks = (localStorage.getItem('m3-stocks-picks') || '').split(',');
 let likes = (localStorage.getItem('m3-stocks-likes') || '').split(',');
 let steady = (localStorage.getItem('m3-stocks-steady') || '').split(',');
 // config_stocks.symbols = likes; //@ enable to change to symbols from 'likes'
 
 
-let treemap_top_1 = new Treemap('#top-chart-1');
+let chart_top_1 = new Treemap('#top-chart-1');
+let chart_top_2 = new Treemap('#top-chart-2');
+let chart_top_3 = new Treemap('#top-chart-3');
+let chart_top_4 = new Treemap('#top-chart-4');
 
 
 //#-------------------------------------------
@@ -179,48 +190,48 @@ const update_charts = (config = config_stocks) => {
     document.getElementById('symbols-combined').innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
     document.getElementById('symbols-combined-pct').innerHTML = `${round1(total / (config.symbols.length * 1000) * 100).toLocaleString()}%`;
 
-    //#------------------------------------------------------
-    //# CURRENT POSITIONS | BANNER | CHART | TITLE [RIGHT]
-    //#------------------------------------------------------
-    data = show_positions
-        ? config.data.map((v) => { return { x: v.symbol, y: round(v.position ? v.position.gain : 0) } })
-        : config.data.map((v) => { return { x: v.symbol, y: round(v.trades[v.trades.length - 1].gain_1K) } });
-    data = data.sort((a, b) => a.y < b.y ? 1 : -1);
-    treemap_last_symbols.options.dataLabels.formatter = function (text, op) {
-        return [text, op.value]
-    };
-    update_ui(treemap_last_symbols);
-    treemap_last_symbols_mobile.options.chart.height = 220;
-    update_ui(treemap_last_symbols_mobile);
+    // //#------------------------------------------------------
+    // //# CURRENT POSITIONS | BANNER | CHART | TITLE [RIGHT]
+    // //#------------------------------------------------------
+    // data = show_positions
+    //     ? config.data.map((v) => { return { x: v.symbol, y: round(v.position ? v.position.gain : 0) } })
+    //     : config.data.map((v) => { return { x: v.symbol, y: round(v.trades[v.trades.length - 1].gain_1K) } });
+    // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
+    // treemap_last_symbols.options.dataLabels.formatter = function (text, op) {
+    //     return [text, op.value]
+    // };
+    // update_ui(treemap_last_symbols);
+    // treemap_last_symbols_mobile.options.chart.height = 220;
+    // update_ui(treemap_last_symbols_mobile);
 
-    //* last total
-    total = round2(data.map((v) => v.y).reduce((p, c) => p + c));
-    let elem = document.getElementById('last-total');
-    elem.innerHTML = `${get_indicator(total)} ${Math.abs(round(total)).toLocaleString()}&nbsp;`;
-    total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+    // //* last total
+    // total = round2(data.map((v) => v.y).reduce((p, c) => p + c));
+    // let elem = document.getElementById('last-total');
+    // elem.innerHTML = `${get_indicator(total)} ${Math.abs(round(total)).toLocaleString()}&nbsp;`;
+    // total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
 
-    //* last pct
-    const percent = round1(total / (data.length * 1000) * 100);
-    elem = document.getElementById('last-pct');
-    elem.innerHTML = `${percent.toLocaleString()}%`;
-    total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+    // //* last pct
+    // const percent = round2(total / (data.length * 1000) * 100);
+    // elem = document.getElementById('last-pct');
+    // elem.innerHTML = `${percent.toLocaleString()}%`;
+    // total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
 
-    //* seed money
-    elem = document.getElementById('last-seed');
-    elem.innerHTML = `[${round1(data.length).toLocaleString()}K]`;
+    // //* seed money
+    // elem = document.getElementById('last-seed');
+    // elem.innerHTML = `[${round1(data.length).toLocaleString()}K]`;
 
-    //@ mobile banner
-    let color = total >= 0 ? 'green' : 'red';
-    document.getElementById('mobile-banner').innerHTML = `
-        <span class="w3-center w3-padding w3-${color}"
-        style="font-size:72px;letter-spacing:8px;">
-            <b>${get_indicator(total)}${Math.abs(round(total)).toLocaleString()}</b>
-        </span> 
-        <span class="w3-xxxlarge w3-text-${color}" style='letter-spacing:4px;'><b>${percent.toLocaleString()}%</b></span>
-    `;
+    // //@ mobile banner
+    // let color = total >= 0 ? 'green' : 'red';
+    // document.getElementById('mobile-banner').innerHTML = `
+    //     <span class="w3-center w3-padding w3-${color}"
+    //     style="font-size:72px;letter-spacing:8px;">
+    //         <b>${get_indicator(total)}${Math.abs(round(total)).toLocaleString()}</b>
+    //     </span> 
+    //     <span class="w3-xxxlarge w3-text-${color}" style='letter-spacing:4px;'><b>${percent.toLocaleString()}%</b></span>
+    // `;
 
-    //* browser tab title
-    document.title = `M3 Stocks | $${round(total).toLocaleString()}`;
+    // //* browser tab title
+    // document.title = `M3 Stocks | $${round(total).toLocaleString()}`;
 
     //#-------------------------------------------
     //# LAST N WEEKS CHART & TITLE [RIGHT]
@@ -274,39 +285,38 @@ const update_charts = (config = config_stocks) => {
     //#-------------------------------------------
     //# Recent Mobile Chart 
     //#-------------------------------------------
-    const combine_data = (symbols) => {
+    // const combine_data = (symbols) => {
 
-        const result = [];
-        const xy = (x, y) => { return { x: x, y: y } };
-        const push = (x, y) => { result.push(xy(x, y)); }
-        const annotations = [];
+    //     const result = [];
+    //     const xy = (x, y) => { return { x: x, y: y } };
+    //     const push = (x, y) => { result.push(xy(x, y)); }
+    //     const annotations = [];
 
-        const epochs = symbols.map((b) => b.map((v) => v.e)).flat().filter((v, i, a) => i === a.indexOf(v)).sort((a, b) => a - b);
-        let e = Math.min(...epochs);
-        const e2 = Math.max(...epochs);
-        epochs.forEach((ee) => {
-            const m = new Date(ee).getMonth() - 2;
-            const seed_base = symbols.length * 1000;
-            const add_per_month = 0 * 1000;
-            // const seed = (25*1000) + (m * 1000);
-            const seed = (seed_base) + (m * add_per_month);
-            let y = 0;
-            symbols.forEach((b, i) => {
-                // b = b.slice(13);
-                const entry = b.find((vv) => vv.e === ee);
-                const o = b[0].o;
-                y += entry ? ((entry.c - o) * ((seed / symbols.length) / o)) : 0;
+    //     const epochs = symbols.map((b) => b.map((v) => v.e)).flat().filter((v, i, a) => i === a.indexOf(v)).sort((a, b) => a - b);
+    //     let e = Math.min(...epochs);
+    //     const e2 = Math.max(...epochs);
+    //     epochs.forEach((ee) => {
+    //         const m = new Date(ee).getMonth() - 2;
+    //         const seed_base = symbols.length * 1000;
+    //         const add_per_month = 0 * 1000;
+    //         const seed = (seed_base) + (m * add_per_month);
+    //         let y = 0;
+    //         symbols.forEach((b, i) => {
+    //             // b = b.slice(13);
+    //             const entry = b.find((vv) => vv.e === ee);
+    //             const o = b[0].o;
+    //             y += entry ? ((entry.c - o) * ((seed / symbols.length) / o)) : 0;
 
-                if ((i === (symbols.length - 1) && entry) && (entry.thm === 930 || entry.thm === 1600)) {
-                    annotations.push({ x: entry.e, y, marker: { size: 4.5, fillColor: entry.thm === 930 ? colors.orange : colors.black } });
-                }
-            });
+    //             if ((i === (symbols.length - 1) && entry) && (entry.thm === 930 || entry.thm === 1600)) {
+    //                 annotations.push({ x: entry.e, y, marker: { size: 4.5, fillColor: entry.thm === 930 ? colors.orange : colors.black } });
+    //             }
+    //         });
 
-            push(ee, round(y));
-        });
-        annotations.push({ x: result[result.length - 1].x, y: result[result.length - 1].y, marker: { size: 6, fillColor: colors.deeppink } });
-        return { data: result, annotations };
-    };
+    //         push(ee, round(y));
+    //     });
+    //     annotations.push({ x: result[result.length - 1].x, y: result[result.length - 1].y, marker: { size: 6, fillColor: colors.deeppink } });
+    //     return { data: result, annotations };
+    // };
 
     //# get combined data
     // let combined = combine_data([config.data[12].bars]);
@@ -340,9 +350,9 @@ const update_charts = (config = config_stocks) => {
             m = cm;
         }
     });
-    line_combined_current_mobile.options.annotations.points = [...annotations_x,...line_combined_current_mobile.options.annotations.points];
+    line_combined_current_mobile.options.annotations.points = [...annotations_x, ...line_combined_current_mobile.options.annotations.points];
 
-    data = combined.data.slice(-90);
+    data = combined.data;//.slice(-90);
     update_ui(line_combined_current_mobile);
     line_combined_current.options = deepClone(line_combined_current_mobile.options);
     update_ui(line_combined_current);
@@ -356,7 +366,7 @@ const update_charts = (config = config_stocks) => {
     const points = line_combined_current_mobile.options.annotations.points;
     const last_window = points[points.length - 1].y - points[points.length - 2].y;
     // const last_day = data[data.length - 1].y - data[data.length - 2].y;
-    const last_day = config_stocks.data.map((s, i)=>s.bars_2.slice(-1)[0].c).reduce((p,c)=>p+c) - config_stocks.data.map((s, i)=>s.bars_2.slice(-2)[0].c).reduce((p,c)=>p+c);
+    const last_day = config_stocks.data.map((s, i) => s.bars_2.slice(-1)[0].c).reduce((p, c) => p + c) - config_stocks.data.map((s, i) => s.bars_2.slice(-2)[0].c).reduce((p, c) => p + c);
     document.getElementById('last_dollars').innerHTML = `${get_indicator(last_window)}$${round1(last_window).toLocaleString()} |  ${get_indicator(last_day)}$${round1(last_day).toLocaleString()}`;
 
     // -------------------------------------------
@@ -409,165 +419,305 @@ const update_charts = (config = config_stocks) => {
     //#-------------------------------------------
     const template = `<span class="w3-tag w3-round w3-padding w3-{c}" style="cursor:pointer;min-width:85px;margin-bottom:5px;" onclick="{f}('{s}')">{0}<br/>{1}</span>`
     let html = '';
-    config.symbols.forEach((s) => {
-        const entry = config.data.find((v) => v.symbol === s)
-        const g = entry.position ? entry.position.gain : entry.trades[entry.trades.length - 1].gain_1K;
-        const color = g >= 0 ? 'green' : 'red';
+    // config.symbols.forEach((s) => {
+    //     const entry = config.data.find((v) => v.symbol === s)
+    //     const g = entry.position ? entry.position.gain : entry.trades[entry.trades.length - 1].gain_1K;
+    //     const color = g >= 0 ? 'green' : 'red';
 
-        const own = config_stocks.data.find((v) => v.symbol === s).own;
-        const indicator = own < 0 ? get_indicator(own, own >= 0, colors.aqua) : '';
-        html += template.replace('{c}', color).replace('{0}', `${indicator}${s}`).replace('{1}', round(g)).replace('{s}', s).replace('{f}', 'click_symbol') + '\n';
-    })
-    document.getElementById('symbol-boxes-stocks').innerHTML = html;
-    // document.getElementById('symbol-names-input').style.display = 'none';
-    document.getElementById('symbol-names').value = config.symbols.join(',');
+    //     const own = config_stocks.data.find((v) => v.symbol === s).own;
+    //     const indicator = own < 0 ? get_indicator(own, own >= 0, colors.aqua) : '';
+    //     html += template.replace('{c}', color).replace('{0}', `${indicator}${s}`).replace('{1}', round(g)).replace('{s}', s).replace('{f}', 'click_symbol') + '\n';
+    // })
+    // document.getElementById('symbol-boxes-stocks').innerHTML = html;
+    // // document.getElementById('symbol-names-input').style.display = 'none';
+    // document.getElementById('symbol-names').value = config.symbols.join(',');
 
     //#-------------------------------------------
     //# All Symbols by Letter
     //#-------------------------------------------
-    html = '';
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach((letter) => {
-        html += template.replace('{c}', 'white').replace('{0}', letter).replace('{1}', '').replace('{s}', letter).replace('{f}', 'click_letter') + '\n';
-    });
-    document.getElementById('letters').innerHTML = html;
-}
-
-//#-------------------------------------------
-//# UPDATE EACH MINUTE
-//#-------------------------------------------
-update_data = (config) => {
-    config.get_data().then((c) => {
-        console.log(c);
-        update_charts();
-    });
-}
-setInterval(async () => {
-    const d = new Date()
-    document.getElementById('mobile-clock').innerHTML = d.toLocaleTimeString();
-    document.getElementById('clock').innerHTML = d.toLocaleTimeString();//.split(' ')[0];
-    document.getElementById('date').innerHTML = getYMD(d);
-    if (!init || d.getSeconds() === 1) {
-        init = true;
-        update_data(config_stocks);
-        // config_stocks.get_data().then((c) => {
-        //     update_charts();
-        // });
-        // config_symbol.get_data().then((c) => {
-        //     update_charts(config_symbol);
-        // });
-    };
-}, 1000);
-toggleSymbolDayChart();
-
-//@---------------------------------------------------------------------------------------------------------------------------------
-//@ -----------------------------------------              UI Event Handlers               -----------------------------------------
-//@---------------------------------------------------------------------------------------------------------------------------------
-
-//#----------------------------
-//# click config
-//#----------------------------
-function click_config(name) {
-    console.log(name);
-    ['stocks', 'trend', 'symbols'].forEach((v) => {
-        document.getElementById(`symbol-boxes-${v}`).style.display = 'none'
-    });
-    document.getElementById(`symbol-boxes-${name}`).style.display = 'block'
-}
-
-//#----------------------------
-//# set number of days
-//#----------------------------
-function set_num_days(checked) {
-    num_symbol_days = checked ? -15 : 15;
-    // console.log(num_symbol_days);
-}
-
-//#----------------------------
-//# click letter
-//#----------------------------
-function click_letter(letter) {
-    // console.log(letter);
-    const filtered = stock_symbols_detail.filter((v) => v.symbol.startsWith(letter));
-    const template = `<span class="symbol w3-tag w3-round w3-padding w3-white" style="border:{b};cursor:pointer;min-width:85px;margin-bottom:5px;" onclick="click_symbol('{s}', this)">{0}</span>`
-    let html = '';
-    // const likes = ['AEIS','KLAC','MCHP','MXIM','ON','QCOM','SWKS','TXN','VERA','VRDN','ESPR','HUBG','LITE','SRDX','GLUE','IRON','IAC'];
-    filtered.map((v) => v.symbol).sort().forEach((s) => {
-        // .replace('{1}', s.name)
-        html += template
-            .replace('{0}', s)
-            .replace('{s}', s)
-            .replace('{b}',
-                likes.indexOf(s) >= 0 ? '4px solid green' : (config_stocks.symbols.indexOf(s) > 0 ? '3px solid black' : '')) + '\n';
-    });
-    document.getElementById('symbols-for-letter').innerHTML = html;
-    // ['stocks', 'trend', 'symbols'].forEach((v) => {
-    //     document.getElementById(`symbol-boxes-${v}`).style.display = 'none'
+    // html = '';
+    // 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach((letter) => {
+    //     html += template.replace('{c}', 'white').replace('{0}', letter).replace('{1}', '').replace('{s}', letter).replace('{f}', 'click_letter') + '\n';
     // });
-    // document.getElementById(`symbol-boxes-${name}`).style.display = 'block'
+    // document.getElementById('letters').innerHTML = html;
 }
 
+//@-----------------------------------------------------------------------------------------------------------------
+//@ CLASS VERSION of NEW METHOD
+//@-----------------------------------------------------------------------------------------------------------------
+// const FIELD_PROCESSED_DATA = 'PROCESSED_DATA';
+// const FIELD_POSITIONS = 'POSITIONS';
+// const FIELD_ORDERS = 'ORDERS';
+// const FIELD_KEY = 'KEY';
+// const FIELD_SECRET = 'SECRET';
+// const FIELD_TOKEN = 'TOKEN';
+// const FIELD_SYMBOLS = 'SYMBOLS';
+class Stocks {
+    NAME = null;
+    PROCESSED_DATA = null;
+    POSITIONS = null;
+    ORDERS = null;
+    TOKEN = null;
+    SYMBOLS = null;
+    ALPACA = null;
+    START_AT = '2025-04-01';
 
-//#----------------------------
-//# click symbol
-//#----------------------------
-async function click_symbol(s, elem) {
-    // console.log(s, elem);
+    constructor(name, token, symbols = []) {
+        this.NAME = name;
+        this.TOKEN = token;
+        this.SYMBOLS = symbols;
+
+        //* ALPACA */
+        this.ALPACA = new AlpacaData(localStorage.getItem('m3-trader-v5-key'), localStorage.getItem('m3-trader-v5-secret'), this.START_AT, 'W');
+    }
+    set_field(name, value) {
+        this[name] = value;
+    }
+    get_field(name) {
+        return this[name];
+    }
+    async get_symbols(start_at = this.START_AT) {
+        return new Promise(async (resolve) => {
+            this.PROCESSED_DATA = await this.ALPACA.bars_simplified(this.SYMBOLS, this.START_AT);
+            // console.log('SYMBOLS', this.PROCESSED_DATA);
+            resolve(this.PROCESSED_DATA);
+        });
+    }
+}
+// const temp = new Stocks(
+//     'MINERALS',                              // NAME
+//     '123',                                   // TOKEN
+//     'GLTR,PALL,SLV,COPX,REMX'.split(',')     // SYMBOLS
+// );
+// console.log('STOCKS CONFIG', temp);
+// temp.get_symbols();
+
+
+//@-----------------------------------------------------------------------------------------------------------------
+//@ UPDATE - NEW METHOD
+//@-----------------------------------------------------------------------------------------------------------------
+let PROCESSED_DATA = null;
+let POSITIONS = null;
+let ORDERS = null;
+
+//* UPDATE DATA */
+async function update(instance) {
+    const s = Date.now();
+
+    //*@ GET PROCESSED DATA */
+    // config_stocks.alpaca.bars_simplified(config_stocks.symbols, config_stocks.start_at).then((results) => {
+    // config_stocks.alpaca.bars_simplified(config_stocks.symbols, '2025-04-21').then((results) => {
+    // config_stocks.alpaca.bars_simplified(config_stocks.symbols.slice(14,15), '2025-04-01').then((result) => {
+    // config_stocks.alpaca.bars_simplified(config_stocks.symbols, '2025-12-29').then((result) => {
+    config_stocks.alpaca.bars_simplified(config_stocks.symbols, '2025-04-01').then((result) => {
+        // instance.get_symbols().then((result) => {
+        PROCESSED_DATA = result;
+        console.log(`DATA | ${instance?.NAME || 'CONFIG'}`, PROCESSED_DATA)
+        // console.log(Date.now() - s);
+
+        //* BREAKDOWN */
+        const render_breakdown = () => {
+            data = PROCESSED_DATA.symbols.map((v) => { return { x: v.symbol, y: round2(v.months_total) } });
+            data = data.sort((a, b) => a.y < b.y ? 1 : -1);
+            chart_top_1.options.chart.height = 415;
+            update_ui(chart_top_1);
+            let total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.months_total)).reduce((p, c) => p + c));
+            const elem = document.getElementById('top-symbols-total');
+            total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+            elem.innerHTML = `${get_indicator(total)} ${round1(total / 1000).toLocaleString()}K`;
+            // document.getElementById('top-symbols-total-pct').innerHTML = `${round1(total / (data.length * 1000) * 100).toLocaleString()}%`;
+        }
+
+        //* MONTHS */
+        const render_months = () => {
+            data = Object.entries(PROCESSED_DATA.months).map((v) => { return { x: v[0].slice(5), y: round2(v[1]) } });
+            // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
+            // chart_top_2.options.chart.height = 400;
+            // chart_top_2.options.dataLabels.enabled = false;
+            chart_top_2.options.chart.type = 'bar';
+            chart_top_2.options.dataLabels.offsetY = -32;
+            chart_top_2.options.dataLabels.style = { fontSize: '20px', colors: [colors.black] };
+            chart_top_2.options.dataLabels.formatter = (val, opts) => {
+                return round1(val / 1000)
+            };
+            chart_top_2.options.annotations.yaxis = [
+                { y: PROCESSED_DATA.months_avg, label: { _text: PROCESSED_DATA.months_avg / 1000 }, fillColor: colors.black, borderColor: colors.black },
+                { y: 0, label: { _text: '0' }, fillColor: colors.black, borderColor: colors.black }
+            ];
+            update_ui(chart_top_2);
+            total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.months_avg)).reduce((p, c) => p + c));
+            const elem = document.getElementById('top-months-total');
+            total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+            elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
+            // document.getElementById('top-months-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+        }
+
+        //* COMBINED / CUMULATIVE */
+        const render_combined = () => {
+            //* ADD POINT ANNOTATIONS */
+            const add_points = (field = 'month_') => {
+                let t = 0;
+                summary[field].xy.forEach((v) => {
+                    t += v.y;
+                    chart_top_3.options.annotations.points.push({ x: v.x, y: t, marker: { size: 4.5, fillColor: colors.blue } });
+                });
+            }
+
+            //* GENERATE CHART */
+            let combined = combine_data(PROCESSED_DATA.symbols.map((s) => s.bars/*.slice(-65)*/));
+            const summary = summarize_combined_data(PROCESSED_DATA.symbols);
+            series = { name: 'Close', type: 'area', data: [] };
+            chart_top_3.options.chart.type = 'area';
+            chart_top_3.options.chart.height = 400;
+            chart_top_3.options.chart.sparkline = { enabled: true };
+            chart_top_3.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
+            chart_top_3.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleDateString(); };
+            chart_top_3.options.dataLabels.enabled = false;
+            chart_top_3.options.fill = { type: 'solid' };
+            chart_top_3.options.yaxis = { type: 'datetime', min: Math.min(...combined.data.map((v) => v.y)) };
+            chart_top_3.options.annotations = { points: [...combined.annotations_x, ...combined.annotations] };
+            // add_points('week_');
+            // add_points('month_');
+            // add_points('quarter_');
+            data = combined.data;//.slice(-90);
+            update_ui(chart_top_3);
+            total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.days_total)).reduce((p, c) => p + c));
+            const elem = document.getElementById('top-combined-total');
+            total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+            elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
+            document.getElementById('top-combined-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+        }
+
+        //* RENDER METHODS */
+        render_breakdown();
+        render_months();
+        render_combined();
+    });
+
+    //*@ POSITIONS */
+    config_stocks.alpaca.get_positions().then((result) => {
+        POSITIONS = result;
+        console.log('POSITIONS', POSITIONS);
+
+        //* CHART /*
+        data = POSITIONS.map((v) => { return { x: v.symbol, y: round(v.unrealized_pl) } });
+        data = data.sort((a, b) => a.y < b.y ? 1 : -1);
+        chart_top_4.options.chart.height = 365;
+        chart_top_4.options.dataLabels.formatter = function (text, op) {
+            return [text, op.value]
+        };
+        update_ui(chart_top_4);
+
+        //* LAST TOTAL */
+        total = round2(POSITIONS.map((v) => +(v.unrealized_pl)).reduce((p, c) => p + c));
+        let elem = document.getElementById('last-total');
+        elem.innerHTML = `${get_indicator(total)} ${Math.abs(round(total)).toLocaleString()}&nbsp;`;
+        total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+
+        //* LAST PERCENT */
+        const percent = round2(total / (POSITIONS.length * 1000) * 100);
+        elem = document.getElementById('last-pct');
+        elem.innerHTML = `${percent.toLocaleString()}%`;
+        total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+
+        //* SEED MONEY */
+        elem = document.getElementById('last-seed');
+        elem.innerHTML = `[${round1(POSITIONS.length).toLocaleString()}K]`;
+
+
+        //* SYMBOLS LIST */
+        const template = `<span class="w3-tag w3-round w3-padding w3-{c}" style="cursor:pointer;min-width:108px;margin-bottom:5px;color:{fc}!important;" onclick="{f}('{s}')">{0}<br/>{1}</span>`
+        let html = '';
+        POSITIONS.forEach((s) => {
+            const g = +(s.unrealized_pl);
+            const color = g >= 0 ? 'green' : 'red';
+            const font_color = g >= 0 ? 'black' : 'white';
+
+            // const own = config_stocks.data.find((v) => v.symbol === s).own;
+            // const indicator = own < 0 ? get_indicator(own, own >= 0, colors.aqua) : '';
+            const indicator = get_indicator(g);
+            html += template
+                .replace('{c}', color)
+                .replace('{0}', `${indicator} ${s.symbol}`)
+                .replace('{1}', round(g))
+                .replace('{s}', s.symbol)
+                .replace('{f}', 'click_symbol')
+                .replace('{fc}', font_color)
+                .replace('{fc}', font_color)
+                + '\n';
+        });
+        // html += template
+        //     .replace('{c}', 'grey')
+        //     .replace('{0}', `Combined`)
+        //     .replace('{1}', '-')
+        //     .replace('{s}', `Combined`)
+        //     .replace('{f}', 'click_symbol')
+        //     .replace('{fc}', colors.black)
+        //     .replace('{fc}', colors.black)
+        //     + '\n';
+        document.getElementById('symbol-boxes-stocks').innerHTML = html;
+        // document.getElementById('symbol-names-input').style.display = 'none';
+        document.getElementById('symbol-names').value = config_stocks.symbols.join(',');
+
+        //* ALL SYMBOLS BY LETTER */
+        html = '';
+
+        'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,▶,⏸,⏺'.split(',').forEach((letter) => {
+            html += template.replace('{c}', 'white').replace('{0}', letter).replace('{1}', '').replace('{s}', letter).replace('{f}', 'click_letter') + '\n';
+        });
+        document.getElementById('letters').innerHTML = html;
+    });
+
+    //*@ ORDERS */
+    config_stocks.alpaca.get_orders().then((result) => {
+        ORDERS = result;
+        console.log('ORDERS', ORDERS.slice(0, 25));
+    });
+}
+
+//@-----------------------------------------------------------------------------------------------------------------
+//@ CLICK SYMBOL
+//@-----------------------------------------------------------------------------------------------------------------
+let selected_symbol = null;
+async function click_symbol(s, elem, check_score = false) {
+    selected_symbol = s;
     if (elem) {
         Array.from(document.getElementsByClassName('symbol')).forEach((v) => v.classList.replace('w3-green', 'w3-white'));
         elem.classList.replace('w3-white', 'w3-green');
     }
 
-    const tz = new Date(`2025-04-01T12:00:00`).getTimezoneOffset() / 60;
-    const start = new Date(`2025-04-01T00:00:00-0${tz}:00`);
+    const tz = new Date(`2025-01-01T12:00:00`).getTimezoneOffset() / 60;
+    const start = new Date(`2024-12-31T00:00:00-0${tz}:00`);
     const end = new Date(`${getYMD(new Date())}T23:59:59-0${tz}:00`);
 
 
     let series = [
-        // { name: 'Close', _type: 'line', data: [] },
         { name: 'Close', _type: 'line', data: [] },
         { name: 'Open', type: 'line', color: colors.blue, data: [] },
-        { name: 'Lower Bound', type: 'line', color: colors.red, data: [] },
+        // { name: 'Lower Bound', type: 'line', color: colors.red, data: [] },
     ];
-    let entry = config_stocks.data.find((v) => v.symbol === s);
-    if (!entry) {
-        entry = await alpaca.bars(s, '1D', start.toISOString(), end.toISOString(), [], []);
-    }
+    // let entry = PROCESSED_DATA.symbols.find((v) => v.symbol === s);
+    // if (!entry) {
+    const temp = await alpaca.bars_simplified([s], start.toISOString());
+    let entry = temp.symbols[0];
+    // }
+
     // const bars = entry.bars.slice(num_symbol_days) || []; //* recent days
-    const bars = (num_symbol_days === -15 ? entry.recent.bars : entry.bars/*.slice(num_symbol_days)*/) || []; //* recent 5 minute data
-    const num = 1000 / bars[0].o;
-    series[0].data = bars.map((b) => { return { x: b.e, y: round2(b.c * num) } });
-    if (num_symbol_days !== -15) {
-        series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.o * num) } });
-        series[2].data = bars.map((b) => { return { x: b.e, y: round2((b.lb * num) * (config_stocks.alpaca.CONFIG.stop_pct)) } });
-
-        const tl = calculateTrendline(series[0].data.map((v) => v.y));
-        series.push({ name: 'Trendline', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+    const bars_source = use_raw ? entry.bars_raw : entry.bars;
+    if (entry.latest_raw && entry.latest) {
+        bars_source.push(use_raw ? entry.latest_raw : entry.latest);
     }
+    const bars = (num_symbol_days === -15 ? bars_source/*.slice(-40)*/ : bars_source); //* recent 5 minute data
+    const num = 1000 / entry.bars_raw[0].o;
+    series[0].data = bars.map((b) => { return { x: b.e, y: round2(b.c) } });
+    // series[0].data.push({x: entry.latest.e, y: entry.latest.c });
+    // if (num_symbol_days !== -15) {
+    series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.o) } });
+    // series[2].data = bars.map((b) => { return { x: b.e, y: round2((b.lb * num) * (config_stocks.alpaca.CONFIG.stop_pct)) } });
 
-    // // const bars_full = entry.bars || [];
-    // // const bars_recent = entry.recent.bars || [];
-    // // const bars = num_symbol_days === -15 ? entry.recent.bars : entry.bars.slice(num_symbol_days - 15) || [];
-    // const bars = (num_symbol_days === -15 ? entry.recent.bars : entry.bars.slice(num_symbol_days)) || [];
-    // series[0].data = bars.map((b) => { return { x: b.e, y: round2(b.c) } });
-    // series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.o) } });
-    // series[2].data = bars.map((b) => { return { x: b.e, y: round2(b.lb/* (config_stocks.alpaca.CONFIG.stop_pct)*/) } });
-    // const tl = calculateTrendline(series[0].data.map((v) => v.y));
-    // series.push({ name: 'Trendline', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
-    // series.forEach((ser) => {
-    //     ser.data = ser.data.slice(13);
-    // });
-    // series[2].data.forEach((v, i) => {
-    //     const found = entry.bars.find((v2) => v2.e === v.x);
-    //     if (found) {
-    //         v.y = found.lb;
-    //     }
-    // });
-    // // if (num_symbol_days === -15) {
-    // //     series[2].data = series[2].data.slice(series[2].data.length - 15);
-    // // } else {
-    // //     // series[2].data = series[2].data.slice(-(series[0].data.length - 15));
-    // // }
-
+    const tl = calculateTrendline(series[0].data.map((v) => v.y));
+    series.push({ name: 'Trendline', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+    // }
 
     treemap_symbol_days.options.chart.type = 'area';
     treemap_symbol_days.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
@@ -577,15 +727,15 @@ async function click_symbol(s, elem) {
     treemap_symbol_days.options.fill = { type: 'solid' };
     treemap_symbol_days.options.xaxis = { type: 'datetime' };
     treemap_symbol_days.options.stroke = { width: [3, 4, 4, 4], };
-    treemap_symbol_days.options.annotations = { xaxis: [], points: [] };
-    last_w = getWeekName(new Date(series[0].data[0].x));
+    treemap_symbol_days.options.annotations = { xaxis: [], yaxis: [], points: [] };
+    last_n = getMonthName(new Date(series[0].data[0].x));
     series[0].data.forEach((v, i) => {
-        const w = getWeekName(new Date(v.x));
-        if (w !== last_w) {
+        const n = getMonthName(new Date(v.x));
+        if (n !== last_n || i === series[0].data.length - 1 || i === series[0].data.length - 2) {
             treemap_symbol_days.options.annotations.xaxis.push({ x: v.x, borderColor: colors.black, fillColor: colors.black, opacity: 1 });
             // line_combtreemap_symbol_daysined_last_n.options.annotations.points.push({ x: v.x, y: v.y, marker: { radius: 5, fillColor: '#7fff00' } });
         }
-        last_w = w;
+        last_n = n;
 
         if (bars[i].thm === 930 || bars[i].thm === 1600) {
             treemap_symbol_days.options.annotations.points.push({ x: v.x, y: v.y, marker: { size: 6, fillColor: colors.orange } });
@@ -596,94 +746,46 @@ async function click_symbol(s, elem) {
             // }
         }
     })
+    const max = Math.max(...series[0].data.map((v) => v.y));
     treemap_symbol_days.options.annotations.points.push({ x: series[0].data[series[0].data.length - 1].x, y: series[0].data[series[0].data.length - 1].y, marker: { size: 6, fillColor: colors.black } });
+    treemap_symbol_days.options.annotations.yaxis.push({ y: max, borderColor: colors.black, fillColor: colors.black, opacity: 1 });
 
-    // treemap_symbol_days.options.series[0].data = day_data;
     data = series;
     update_ui(treemap_symbol_days);
+    // data = data.map((d) => d.data.slice(-15));
+    treemap_symbol_days_recent.options = deepClone(treemap_symbol_days.options);
+    data = deepClone(data);
+    data.forEach((d) => {
+        d.data = d.data.slice(-25);
+    })
+    update_ui(treemap_symbol_days_recent);
 
     const detail = stock_symbols_detail.find((v) => v.symbol === s);
     const g = round((series[0].data[series[0].data.length - 1].y - series[0].data[0].y));// * (1000 / series[0].data[0].y));
+    const last = series[0].data[series[0].data.length - 1].y;
+    const trend_delta = series[2].data[series[2].data.length - 1].y - series[2].data[0].y;
     let html = '';
     html += `${get_indicator(g)} ${s}`;
     html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
-    html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${g}`;
+    html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${g.toLocaleString()}`;
+    // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(max - last).toLocaleString()}`;
+    html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(trend_delta).toLocaleString()}`;
     document.getElementById('symbol-days-title').innerHTML = html;
 
     window.scrollTo(0, document.body.scrollHeight);
-}
 
-//#----------------------------
-//# toggle settings
-//#----------------------------
-function toggle_settings() {
-    document.getElementById('key').value = localStorage.getItem('m3-stocks-key') || '';
-    document.getElementById('secret').value = localStorage.getItem('m3-stocks-secret') || '';
-    document.getElementById('token').value = localStorage.getItem('m3-stocks-token') || '';
-    document.getElementById('picks').value = picks;
-    document.getElementById('likes').value = likes;
-    document.getElementById('steady_picks').value = steady;
-    document.getElementById('settings').classList.toggle('w3-hide');
-}
-
-//#----------------------------
-//# click symbol
-//#----------------------------
-function update_settings() {
-    localStorage.setItem('m3-stocks-key', document.getElementById('key').value);
-    localStorage.setItem('m3-stocks-secret', document.getElementById('secret').value);
-    localStorage.setItem('m3-stocks-token', document.getElementById('token').value);
-    localStorage.setItem('m3-stocks-picks', document.getElementById('picks').value);
-    picks = document.getElementById('picks').value;
-    localStorage.setItem('m3-stocks-likes', document.getElementById('likes').value);
-    likes = document.getElementById('likes').value;
-    localStorage.setItem('m3-stocks-steady', document.getElementById('steady_picks').value);
-    steady = document.getElementById('steady_picks').value;
-    document.getElementById('settings').classList.toggle('w3-hide');
-    console.yellow('settings updated');
-}
-
-//#----------------------------
-//# toggle positions
-//#----------------------------
-function togglePositions(elem) {
-    show_positions = elem.children[0].classList.contains('fa-toggle-on');
-    if (show_positions) {
-        document.getElementById('toggle-title').innerHTML = 'Suggested Trades';
-    } else {
-        document.getElementById('toggle-title').innerHTML = 'Current Positions';
+    //* ADD IF SCORE IS HIGH
+    if (trend_delta > 1000 && check_score) {
+        click_letter('⏺');
     }
-    elem.children[0].classList.toggle('fa-toggle-on');
-    elem.children[0].classList.toggle('fa-toggle-off');
-
-    //* update charts and titles
-    show_positions = !show_positions;
-    update_charts();
 }
-
-//#----------------------------
-//# toggle symbol day chart
-//#----------------------------
-function toggleSymbolDayChart() {
-    const elem = document.getElementById('symbol-day-chart');
-    elem.classList.toggle('w3-hide');
-}
-
-//#----------------------------
-//# buy all
-//#----------------------------
-function buy_all() {
-    const seed = 1000;
-    config_stocks.alpaca.buy_symbols(config_stocks.symbols.join(','), seed).then((res) => {
-        console.log(res);
-    });
-}
-
-//#----------------------------
-//# liquidate - sell all symbols
-//#----------------------------
-function liquidate() {
-    config_stocks.alpaca.liquidate().then((res) => {
-        console.log(res);
-    });
+function m3_129() {
+    config_stocks.alpaca.bars_simplified(
+        'AAOI,ABVX,AEIS,AENT,AIP,ALNT,AMKR,ANAB,ANNX,ARWR,ATEC,ATRO,AUPH,AVDL,AUPH,AXTI,B,BBIO,BELFB,BIOA,BLTE,BTSG,CECO,CELC,CENX,CG,CMPX,CMTL,COPX,CTMX,DHC,DNTH,DOOO,DSGN,DYN,ENTA,ERAS,ESPR,EYPT,FBIO,FIVE,FLEX,FLNC,FORM,FSLR,FTRE,FULC,GCT,GDX,GH,GLTR,GLUE,GNOM,GOOG,GOOGL,GRAL,GSAT,GTX,HOOD,IDYA,IESC,IHRT,IMNM,INDV,INSM,IONS,JBIO,JOYY,KNSA,KOD,LASR,LGND,LITE,LMND,LQDA,LRCX,LYEL,MKSI,MU,NAUT,NEM,NESR,NXT,ORKA,PALL,PBYI,PHAT,PL,PLTR,POWL,PRAX,PRLD,PTGX,RAPP,RAPT,REAL,REMX,RLAY,ROIV,RVMD,SEPN,SETM,SHLS,SLV,SMTC,SNDK,STRO,SVRA,TBPH,TCMD,TER,TLN,TNGX,TORO,TRVI,TSEM,TTMI,TYRA,UPB,VICR,VRDN,WBD,WDC,WLDN,XMTR,XPEL,ZBIO,ZEUS,ZYME'.split(','),
+        '2025-04-01'
+    )
+        .then((v) => {
+            console.log(v);
+            console.log(`%c$${round(v.total / 129 * 50).toLocaleString()}`, 'color:yellow;')
+        });
 }

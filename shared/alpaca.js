@@ -14,7 +14,7 @@ class AlpacaData {
     ALPACA_SECRET = null;
     START_OF_YEAR = null;
     WINDOWS = {
-        NONE: [],
+        NONE: ['2025-12-22'],
         WEEKS: [
             '2025-03-28',
             '2025-04-04',
@@ -92,9 +92,9 @@ class AlpacaData {
         // get_reset_window: (t) => { return getMonthName(new Date(t)); },
         // get_reset_window: (t) => { return getQuarterName(new Date(t)); },
 
-        sell_dates: this.WINDOWS.NONE,
+        // sell_dates: this.WINDOWS.NONE,
         // sell_dates: this.WINDOWS.WEEKS,
-        // sell_dates: this.WINDOWS.MONTHS,
+        sell_dates: this.WINDOWS.MONTHS,
         // sell_dates: this.WINDOWS.QUARTERS,
     };
     all_symbols = null;
@@ -500,25 +500,36 @@ class AlpacaData {
         })
     }
     add_bars_2(res) {
-        const open = res.bars[0].o;
-        const qty = (1000 / open);
-        res.bars_2 = [];
+        const close = res.bars[0].c;
+        const qty = (1000 / close);
+        res.bars_1K = [];
         res.bars.map((v) => {
-            res.bars_2.push({
+            res.bars_1K.push({
                 e: v.e,
                 t: v.t,
                 tl: v.tl,
                 thm: v.thm,
-                c: round2((v.c * qty) - 1000),
-                o: round2(v.o * qty - 1000),
-                h: round2(v.h * qty - 1000),
-                l: round2(v.l * qty - 1000),
+                c: round2((v.c * qty) - 1000), //? should I be subtracting 1000 ?
+                o: round2((v.o * qty) - 1000),
+                h: round2((v.h * qty) - 1000),
+                l: round2((v.l * qty) - 1000),
+                // c: round2((v.c * qty)), //? should I be subtracting 1000 ?
+                // o: round2((v.o * qty)),
+                // h: round2((v.h * qty)),
+                // l: round2((v.l * qty)),
                 v: v.v,
                 n: v.n,
                 vw: v.vw
             });
         });
         return res;
+    }
+    async add_latest_bar(res) {
+        return new Promise(async (resolve) => {
+            const latest = await this.latest_bar(res.symbol);
+            res.latest_raw = latest;
+            resolve(res);
+        });
     }
     async positions(symbol, positions, res) {
         return new Promise(async (resolve) => {
@@ -636,6 +647,7 @@ class AlpacaData {
                     .then((res) => this.orders(symbol, orders_list, res))
                     .then((res) => add30 ? this.add30Min(res, end) : res)
                     .then((res) => this.add_bars_2(res))
+                    .then((res) => isCrypto ? res : this.add_latest_bar(res))
                     .then((res) => resolve(res));
             } else {
                 resolve(null);
@@ -648,13 +660,14 @@ class AlpacaData {
             const results = await Promise.all(promises);
             const obj = [];
             results.forEach((res) => {
+                res.open = res.bars[0].o;
                 if (res && res.bars && res.bars.length > 0) {
-                    // const months = res.bars_2.filter((v)=>v.t.indexOf('-01') > 0);
+                    // const months = res.bars_1K.filter((v)=>v.t.indexOf('-01') > 0);
                     let prev = -1;
                     const months = [];
-                    res.bars_2.forEach((v, i) => {
+                    res.bars_1K.forEach((v, i) => {
                         const m = new Date(v.t).getMonth();
-                        if (m !== prev || i === res.bars_2.length - 1) {
+                        if (m !== prev || i === res.bars_1K.length - 1) {
                             v.d = i > 0 ? v.c - months[months.length - 1].c : v.c;
                             // months.push(v);
                             months.push({
@@ -669,29 +682,54 @@ class AlpacaData {
                     //* DAYS
                     prev = -1;
                     const days = [];
-                    res.bars_2.forEach((v, i) => {
+                    res.bars_1K.forEach((v, i) => {
                         const d = new Date(v.t).getDate();
-                        if (d !== prev || i === res.bars_2.length - 1) {
+                        if (d !== prev || i === res.bars_1K.length - 1) {
                             v.d = i > 0 ? v.c - days[days.length - 1].c : v.c;
                             days.push({
-                                e: v.e,
                                 t: v.t,
                                 d: round2(v.d),
                                 c: round2(v.c),
+                                o: round2(v.o),
+                                l: round2(v.l),
+                                h: round2(v.h),
+                                e: v.e,
                             });
                             prev = d;
                         }
                     });
+
+                    const qty = round5(1000 / res.open);
+                    if (res.latest_raw) {
+                        res.latest = deepClone(res.latest_raw);
+                        res.latest.o = round2((res.latest.o * qty) - 1000);
+                        res.latest.h = round2((res.latest.h * qty) - 1000);
+                        res.latest.l = round2((res.latest.l * qty) - 1000);
+                        res.latest.c = round2((res.latest.c * qty) - 1000);
+                    } else {
+                        res.latest_raw = null;
+                        res.latest = null;
+                    }
                     obj.push({
                         symbol: res.symbol,
                         days,
+                        days_total: round2(days.map((v) => v.d).reduce((p, c) => p + c)),
+                        days_last: round2(days[days.length - 1].d),
+                        days_min: round2(Math.min(...days.map((v) => v.d))),
+                        days_max: round2(Math.max(...days.map((v) => v.d))),
+                        days_avg: round2(days.map((v) => v.d).reduce((p, c) => p + c) / days.length),
                         months,
                         months_total: round2(months.map((v) => v.d).reduce((p, c) => p + c)),
                         months_last: round2(months[months.length - 1].d),
                         months_min: round2(Math.min(...months.map((v) => v.d))),
                         months_max: round2(Math.max(...months.map((v) => v.d))),
                         months_avg: round2(months.map((v) => v.d).reduce((p, c) => p + c) / months.length),
-                        bars: res.bars_2,
+                        bars_raw: res.bars,
+                        bars: res.bars_1K,
+                        latest_raw: res.latest_raw,
+                        latest: res.latest,
+                        open: res.open,
+                        qty,
                     });
                 }
             });
@@ -723,7 +761,11 @@ class AlpacaData {
             const result = {
                 total: t,
                 average: a,
+                days_last: round2(Object.values(summary_days)[Object.values(summary_days).length - 1]),
+                days_avg: round2(obj.map((v) => v.days_avg).reduce((p, c) => p + c)),
                 days: summary_days,
+                months_last: round2(Object.values(summary)[Object.values(summary).length - 1]),
+                months_avg: round2(obj.map((v) => v.months_avg).reduce((p, c) => p + c)),
                 months: summary,
                 symbols: obj,
             };
@@ -736,6 +778,137 @@ class AlpacaData {
 
             resolve(result);
         })
+    }
+    async bars_raw(symbol, timeframe = '1D', start = this.START_OF_YEAR, end = new Date().toISOString()) {
+        return new Promise(async (resolve) => {
+            // await sleep(delay);
+
+            const s = symbol.replace('/', '%2F');
+            const feed = 'sip';
+            // const feed = 'iex'; //! DO NOT USE IEX FOR ALPACA - LIMITED DATA
+
+            let options = { method: 'GET', headers: { accept: 'application/json' } };
+            let url = `${this.baseUrl}/v1beta3/crypto/us/bars?symbols=${s}&timeframe=${timeframe}&start=${start}&end=${end}&limit=5000&sort=asc`
+
+            const isCrypto = s.endsWith('USD');
+            if (isCrypto === false) {
+                options = {
+                    method: 'GET',
+                    headers: {
+                        accept: 'application/json',
+                        'APCA-API-KEY-ID': this.ALPACA_KEY || KEY,
+                        'APCA-API-SECRET-KEY': this.ALPACA_SECRET || SECRET
+                    }
+                };
+
+                let isOpen = true; //market_calendar.findIndex((v) => v.date === start.substring(0, 10)) >= 0;
+                const d = new Date();
+                const hm = +((d.getHours() * 100) + +(d.getMinutes().toString().padStart(2, '0')));
+                isOpen = isOpen ? (start.substring(0, 10) === getTodayLocal() ? hm > 930 : isOpen) : isOpen;
+                url = isOpen ? `${this.baseUrl}/v2/stocks/bars?symbols=${s}&start=${start}&end=${end}&timeframe=${timeframe}&limit=5000&adjustment=raw&feed=${feed}&sort=asc` : null;
+            }
+
+            if (url) {
+                fetch(url, options)
+                    .then(res => res.json())
+                    .then((res) => {
+                        // console.log(res); 
+                        return res;
+                    })
+                    .then((res) => this.get_next_page(symbol, url, 0, res, options))
+                    .then((res) => { res.symbol = symbol; return res; })
+                    .then((res) => {
+                        if (!res.bars[symbol]) {
+                            console.error(JSON.stringify(res));
+                            res.bars = { [symbol]: [{ o: 0, c: 0 }] };
+                        }
+                        return res;
+                    })
+                    .then((res) => { res.bars = res.bars[symbol] || []; return res })
+                    // .then((res) => this.addMetaData(res.bars))
+                    // .then((res) => timeframe === '1Min' ? this.addMissingData(res, s, end) : res)
+                    // .then((res) => this.addIMI(res, 14))
+                    // .then((res) => this.addBollingerBands('bands_c', res, isCrypto ? 28 : 14, 0.7, 1.0)) //TODO: get from config
+                    // .then((res) => this.addTrendlines(res))
+                    // .then((res) => this.addWeightedRollingAverage(res))
+                    // .then((res) => this.refactor(symbol, res))
+                    // .then((res) => this.analyze(symbol, res))
+                    // .then((res) => this.summarize(res))
+                    // .then((res) => this.levels(res))
+                    // .then((res) => this.trendline(res))
+                    // .then((res) => this.score(res))
+                    // .then((res) => this.positions(symbol, open_positions, res))
+                    // .then((res) => this.orders(symbol, orders_list, res))
+                    // .then((res) => add30 ? this.add30Min(res, end) : res)
+                    // .then((res) => this.add_bars_2(res))
+                    .then((res) => { res.bars.forEach((v) => v.e = new Date(v.t).getTime()); return res; })
+                    .then((res) => { res.bars.forEach((v) => v.tl = new Date(v.t).toLocaleString()); return res; })
+                    .then((res) => {
+                        console.log(res);
+                        return res;
+                    })
+                    .then((res) => resolve(res));
+            } else {
+                resolve(null);
+            }
+        });
+    }
+    async latest_bar(symbol) {
+        return new Promise(async (resolve) => {
+            // await sleep(delay);
+
+            const s = symbol.replace('/', '%2F');
+            const feed = 'sip';
+            // const feed = 'iex'; //! DO NOT USE IEX FOR ALPACA - LIMITED DATA
+
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    'APCA-API-KEY-ID': this.ALPACA_KEY || KEY,
+                    'APCA-API-SECRET-KEY': this.ALPACA_SECRET || SECRET
+                }
+            };
+            // https://data.alpaca.markets/v2/stocks/bars/latest?symbols=GLTR&feed=sip
+            let url = `${this.baseUrl}/v2/stocks/bars/latest?symbols=${s}&feed=sip`
+
+            if (url) {
+                fetch(url, options)
+                    .then(res => res.json())
+                    .then((res) => {
+                        // console.log(res); 
+                        return res;
+                    })
+                    // .then((res) => this.get_next_page(symbol, url, 0, res, options))
+                    .then((res) => res.bars[symbol])
+                    .then((res) => {
+                        res.e = new Date(res.t).getTime();
+                        res.tl = new Date(res.t).toLocaleString();
+                        res.thm = getHMM(res.tl);
+                        return res;
+                    })
+                    .then((res) => resolve(res));
+            } else {
+                resolve(null);
+            }
+        });
+    }
+    clock() {
+        return new Promise((resolve, reject) => {
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    'APCA-API-KEY-ID': this.ALPACA_KEY,
+                    'APCA-API-SECRET-KEY': this.ALPACA_SECRET,
+                },
+            }
+            let url = `${this.buy_sell_root_url}/v2/clock`;
+            fetch(url, options)
+                .then(res => res.json())
+                .then(res => { console.log('CLOCK', res); resolve(res.is_open) })
+                .catch((err) => { console.error('error in clock()', err) });
+        });
     }
     buy(symbol, spend = 1000) {
         return new Promise((resolve, reject) => {
@@ -860,6 +1033,23 @@ class AlpacaData {
             // orders().then((v)=>console.log(v.map((v2)=>{ return {symbol:v2.symbol, side: v2.side, price: v2.side === 'buy' ? -(+(v2.filled_avg_price*v2.filled_qty)) : +(v2.filled_avg_price*v2.filled_qty), stamp: new Date(v2.filled_at).toLocaleString()}}).map((v2)=>v2.price).reduce((p,c)=>p+c)))
             fetch(`${this.buy_sell_root_url}/v2/orders?status=all&limit=500&direction=desc`, options)
                 // fetch(`${buy_sell_root_url}/v2/orders?status=${status}&limit=500`, options)
+                .then(res => res.json())
+                .then(res => resolve(res))
+                .catch(err => console.error('error in orders()', err));
+        });
+    }
+    get_account() {
+        return new Promise((resolve, reject) => {
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    'APCA-API-KEY-ID': this.ALPACA_KEY,
+                    'APCA-API-SECRET-KEY': this.ALPACA_SECRET,
+                }
+            };
+
+            fetch('https://paper-api.alpaca.markets/v2/account', options)
                 .then(res => res.json())
                 .then(res => resolve(res))
                 .catch(err => console.error('error in orders()', err));

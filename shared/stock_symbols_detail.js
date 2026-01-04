@@ -1,3 +1,8 @@
+const nasdaq_stocks_list = () => {
+    fetch('https://www.nasdaqtrader.com/dynamic/symdir/nasdaqlisted.txt').then((resp)=>{
+        console.log(resp);
+    })
+}
 const stock_symbols_detail = [
     {
         "id": "3f1f0155-1c04-446a-a606-459b16b4d040",
@@ -96059,9 +96064,16 @@ const stock_symbols_detail = [
     {symbol: 'WM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'SCCO', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'NEM', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'SLV', name: '-', status: 'active', tradable: true, fractionable: true}, // SILVER
-    {symbol: 'GLTR', name: '-', status: 'active', tradable: true, fractionable: true}, // GOLD
-    {symbol: 'PALL', name: '-', status: 'active', tradable: true, fractionable: true}, // PALLADIUM
+    {symbol: 'AVDE', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'SLV', name: 'Silver', status: 'active', tradable: true, fractionable: true}, // SILVER
+    {symbol: 'GLTR', name: 'Gold', status: 'active', tradable: true, fractionable: true}, // GOLD
+    {symbol: 'B', name: 'BARRICK MINING CORPORATION - GOLD', status: 'active', tradable: true, fractionable: true}, // GOLD
+    {symbol: 'GDX', name: 'VanEck Gold Miners ETF', status: 'active', tradable: true, fractionable: true}, // GOLD
+    // {symbol: 'XAU', name: 'Gold', status: 'active', tradable: true, fractionable: true}, // GOLD
+    {symbol: 'PALL', name: 'Palladium', status: 'active', tradable: true, fractionable: true}, // PALLADIUM
+    {symbol: 'COPX', name: 'Global X Copper Miners ETF', status: 'active', tradable: true, fractionable: true}, // COPPER
+    {symbol: 'REMX', name: 'VanEck Rare Earth and Strategic Metals ETF', status: 'active', tradable: true, fractionable: true}, // 
+    {symbol: 'SETM', name: 'Sprott Critical Materials ETF', status: 'active', tradable: true, fractionable: true}, // 
     {symbol: 'VIXY', name: '-', status: 'active', tradable: true, fractionable: true},
 ]
 .filter((v)=>v.status === 'active')
@@ -96071,4 +96083,6 @@ const stock_symbols_detail = [
 .filter((v)=>v.symbol.indexOf('/USDT') < 0)
 .filter((v)=>v.tradable)
 .filter((v)=>v.fractionable)
+.filter((v,i,a)=> i === a.indexOf(v))
+.sort((a,b)=>a.symbol.localeCompare(b.symbol))
 ;
