@@ -31,6 +31,39 @@ function set_use_raw(checked) {
 //#----------------------------
 //# key down
 //#----------------------------
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('symbol')) {
+        console.log(event);
+        if (event.altKey) {
+            //* DELETE */
+            document.getElementById(selected_symbol).classList.remove('w3-border');
+            document.getElementById(selected_symbol).classList.remove('w3-border-blue');
+            document.getElementById(selected_symbol).style.border = '';
+
+            const elem = document.getElementById('likes');
+            let value = elem.value || localStorage.getItem('m3-stocks-likes');
+            value = value.replace(`,${selected_symbol}`, '');
+            value = value.split(',').filter((v, i, a) => i === a.indexOf(v)).sort().join(',');
+            elem.value = value;
+            update_settings(false);
+        } else if (event.ctrlKey) {
+            //* ADD */
+            document.getElementById(selected_symbol).classList.add('w3-border');
+            document.getElementById(selected_symbol).classList.add('w3-border-blue');
+
+            const elem = document.getElementById('likes');
+            let value = elem.value || localStorage.getItem('m3-stocks-likes');
+            value += `,${selected_symbol}`;
+            value = value.split(',').filter((v, i, a) => i === a.indexOf(v)).sort().join(',');
+            elem.value = value;
+            update_settings(false);
+        }
+    }
+});
+
+//#----------------------------
+//# key down
+//#----------------------------
 document.addEventListener('keydown', function (event) {
     // Check if the Ctrl key is pressed (event.ctrlKey is true)
     // and if the pressed key is the plus sign (event.key is '+')
@@ -42,6 +75,28 @@ document.addEventListener('keydown', function (event) {
 
         document.getElementById(selected_symbol).classList.add('w3-border');
         document.getElementById(selected_symbol).classList.add('w3-border-blue');
+
+        const elem = document.getElementById('likes');
+        let value = elem.value;
+        value += `,${selected_symbol}`;
+        value = value.split(',').filter((v, i, a) => i === a.indexOf(v)).sort().join(',');
+        elem.value = value;
+        update_settings(false);
+    }
+    if (event.ctrlKey && event.key === '-') {
+        // Prevent the default browser action (usually zooming in)
+        event.preventDefault();
+
+        document.getElementById(selected_symbol).classList.remove('w3-border');
+        document.getElementById(selected_symbol).classList.remove('w3-border-blue');
+        document.getElementById(selected_symbol).style.border = '';
+
+        const elem = document.getElementById('likes');
+        let value = elem.value;
+        value = value.replace(`,${selected_symbol}`, '');
+        value = value.split(',').filter((v, i, a) => i === a.indexOf(v)).sort().join(',');
+        elem.value = value;
+        update_settings(false);
     }
 });
 
@@ -88,13 +143,14 @@ async function click_letter(letter) {
         let html = '';
         filtered.map((v) => v.symbol).sort().forEach((s) => {
             const fc = s.endsWith('/USD') ? 'blue' : 'black'
+            // const border = `${likes.indexOf(s) >= 0 ? '2px solid blue' : ((config_stocks.symbols.indexOf(s) > 0 ? '3px solid black' : ''))}`;
             html += template
                 .replace('{id}', s)
                 .replace('{0}', s)
                 .replace('{s}', s)
                 .replace('{fc}', fc)
                 .replace('{b}',
-                    likes.indexOf(s) >= 0 ? '3px solid green' : (config_stocks.symbols.indexOf(s) > 0 ? '3px solid black' : '')) + '\n';
+                    likes.indexOf(s) >= 0 ? '3px solid blue' : picks.indexOf(s) > 0 ? '3px solid black' : '') + '\n';
         });
         document.getElementById('symbols-for-letter').innerHTML = html;
     }
@@ -195,18 +251,20 @@ function toggle_settings() {
 //#----------------------------
 //# click symbol
 //#----------------------------
-function update_settings() {
-    localStorage.setItem('m3-stocks-key', document.getElementById('key').value);
-    localStorage.setItem('m3-stocks-secret', document.getElementById('secret').value);
-    localStorage.setItem('m3-stocks-token', document.getElementById('token').value);
+function update_settings(all = true) {
+    if (all) {
+        localStorage.setItem('m3-stocks-key', document.getElementById('key').value);
+        localStorage.setItem('m3-stocks-secret', document.getElementById('secret').value);
+        localStorage.setItem('m3-stocks-token', document.getElementById('token').value);
+    }
     localStorage.setItem('m3-stocks-picks', document.getElementById('symbol_picks').value);
     picks = document.getElementById('symbol_picks').value;
     localStorage.setItem('m3-stocks-likes', document.getElementById('likes').value);
     likes = document.getElementById('likes').value;
     localStorage.setItem('m3-stocks-steady', document.getElementById('steady_picks').value);
     steady = document.getElementById('steady_picks').value;
-    document.getElementById('settings').classList.toggle('w3-hide');
     console.yellow('settings updated');
+    // document.getElementById('settings').classList.toggle('w3-hide');
 }
 
 //#----------------------------

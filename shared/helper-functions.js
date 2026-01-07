@@ -481,14 +481,18 @@ const KEY_MAP = {
     "2025_10_Oct": '2025-09',
     "2025_11_Nov": '2025-10',
     "2025_12_Dec": '2025-11',
-    "2025_12_Dec_2": '2025-12',
+    "2026_01_Jan": '2025-12',
+    "2026_01_Jan_2": '2026-01',
     // QUATERS
     '2025_01': '2024-04',
     '2025_02': '2025-01',
     '2025_03': '2024-02',
     '2025_04': '2024-03',
-    '2025_04_2': '2024-04',
-    '2026_01': '2025-04',
+    '2026_01_02': '2025-04',
 }
 //* GET LABEL */
 const get_map_label = (input) => { return KEY_MAP[input] || input }
+const get_symbol_logo = (symbol) => {
+    //https://assets.parqet.com/logos/symbol/AEIS?format=png
+    fetch(`https://assets.parqet.com/logos/symbol/${symbol}?format=png`).then((v) => { return v; })
+}

@@ -96062,9 +96062,11 @@ const stock_symbols_detail = [
     {symbol: 'PL', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'WD', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'WM', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'OKLO', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'SCCO', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'NEM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'AVDE', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'BTC', name: 'Bitcoin ETF', status: 'active', tradable: true, fractionable: true},
     {symbol: 'SLV', name: 'Silver', status: 'active', tradable: true, fractionable: true}, // SILVER
     {symbol: 'GLTR', name: 'Gold', status: 'active', tradable: true, fractionable: true}, // GOLD
     {symbol: 'B', name: 'BARRICK MINING CORPORATION - GOLD', status: 'active', tradable: true, fractionable: true}, // GOLD

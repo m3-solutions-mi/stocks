@@ -1,7 +1,7 @@
 {
     "name": "M3",
     "short_name": "M3-Trader",
-    "start_url": "./193750.html",
+    "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#2196F3",
     "description": "",

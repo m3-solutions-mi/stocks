@@ -16,10 +16,11 @@ const config_stocks = new Config(
         // ...('ADBE,AMPL,ASTI,BBGI,CONL,DASH,FIVE,GEMI,HELE,ICHR,JBHT,KLIC,KRYS,LAES,MLTX,MNDY,MRNA,PSIX,PTEN,RUM,RZLT,SMCX,TXN,VELO,VIVS').split(','),//! < 100
 
         // @ PROD
+        //* 'AMD,APH,APP,AVGO,CIFR,COIN,CRDO,GEV,GOOGL,HOOD,HUT,INDV,IREN,KOPN,LEU,OKLO,OPEN,PLTR,PSIX,QUBT,RING,RKLB,SHOP,SMCI,SNDK,SOFI,TMC,TSEM,TTMI,UUUU'
         // ...('AMD,APH,APP,AVGO,CIFR,COIN,CRDO,GEV,GOOGL,HOOD,HUT,INDV,IREN,KOPN,LEU,OKLO').split(','),
         // ...('OPEN,PLTR,PSIX,QUBT,RING,RKLB,SHOP,SMCI,SNDK,SOFI,TMC,TSEM,TTMI,UUUU').split(','),
 
-        //@ STEADY PICKS
+        //@ STEADY PICKS | HAND PICKED
         // ...('AEIS,ALNT,AMKR,APYX,ARWR,ATRO,AVDL,AVGO,AVTX,BBIO,BELFB,BIB,BTSG,CECO,CENX,CHRW,CLLS,CMPR,CMPX,CRDO,CRVS,CTRN,DHC,ERAS,ESPR,EXPE,EYPT').split(','),
         // ...('FDMT,FIVE,FROG,FSLR,GCT,GEV,GLUE,GOOGL,GSAT,IDYA,IESC,INDV,INSM,IONS,IRMD,IRON,KALU,KLAC,KNSA,KOD').split(','),
         // ...('LASR,LAUR,LGND,LITE,LMND,LRCX,MAMA,MDB,MGIC,MKSI,MU,MVBF,MYRG,NEM,NESR,ORKA,PHAT,PPTA,PSMT,PTGX,REAL,RING,RLAY,ROIV,RPTX').split(','),
@@ -36,7 +37,6 @@ const config_stocks = new Config(
 
         //@ LARGE SET / PICKS
         // ...('AAOI,ABVX,AEIS,AENT,AIP,ALNT,AMKR,ANAB,ANNX,ARWR,ATEC,ATRO,AUPH,AVDL,AUPH,AXTI,B,BBIO,BELFB,BIOA,BLTE,BTSG,CECO,CELC,CENX,CG,CMPX,CMTL,COPX,CTMX,DHC,DNTH,DOOO,DSGN,DYN,ENTA,ERAS,ESPR,EYPT,FBIO,FIVE,FLEX,FLNC,FORM,FSLR,FTRE,FULC,GCT,GDX,GH,GLTR,GLUE,GNOM,GOOG,GOOGL,GRAL,GSAT,GTX,HOOD,IDYA,IESC,IHRT,IMNM,INDV,INSM,IONS,JBIO,JOYY,KNSA,KOD,LASR,LGND,LITE,LMND,LQDA,LRCX,LYEL,MKSI,MU,NAUT,NEM,NESR,NXT,ORKA,PALL,PBYI,PHAT,PL,PLTR,POWL,PRAX,PRLD,PTGX,RAPP,RAPT,REAL,REMX,RLAY,ROIV,RVMD,SEPN,SETM,SHLS,SLV,SMTC,SNDK,STRO,SVRA,TBPH,TCMD,TER,TLN,TNGX,TORO,TRVI,TSEM,TTMI,TYRA,UPB,VICR,VRDN,WBD,WDC,WLDN,XMTR,XPEL,ZBIO,ZEUS,ZYME').split(','),
-
 
         //@ STEADY PICKS - TOP 30
         // ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC,CLLS,CRDO,APYX,VSAT,INDV,EYPT,RLAY,ESPR,FDMT,CMPX,ERAS,ORKA,AVTX,TTMI,TSEM,GSAT,GCT,LMND,AVDL,REAL').split(','),
@@ -102,6 +102,7 @@ let chart_top_1 = new Treemap('#top-chart-1');
 let chart_top_2 = new Treemap('#top-chart-2');
 let chart_top_3 = new Treemap('#top-chart-3');
 let chart_top_4 = new Treemap('#top-chart-4');
+let chart_top_5 = new Treemap('#top-chart-5');
 
 
 //#-------------------------------------------
@@ -499,6 +500,7 @@ class Stocks {
 let PROCESSED_DATA = null;
 let POSITIONS = null;
 let ORDERS = null;
+let PORTFOLIO_HISTORY = null;
 
 //* UPDATE DATA */
 async function update(instance) {
@@ -626,7 +628,7 @@ async function update(instance) {
 
 
         //* SYMBOLS LIST */
-        const template = `<span class="w3-tag w3-round w3-padding w3-{c}" style="cursor:pointer;min-width:108px;margin-bottom:5px;color:{fc}!important;" onclick="{f}('{s}')">{0}<br/>{1}</span>`
+        const template = `<span id="{id}" class="w3-tag w3-round w3-padding w3-{c}" style="cursor:pointer;min-width:108px;margin-bottom:5px;color:{fc}!important;" onclick="{f}('{s}')">{0}<br/>{1}</span>`
         let html = '';
         POSITIONS.forEach((s) => {
             const g = +(s.unrealized_pl);
@@ -663,7 +665,7 @@ async function update(instance) {
         html = '';
 
         'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,▶,⏸,⏺'.split(',').forEach((letter) => {
-            html += template.replace('{c}', 'white').replace('{0}', letter).replace('{1}', '').replace('{s}', letter).replace('{f}', 'click_letter') + '\n';
+            html += template.replace('{id}', letter).replace('{c}', 'white').replace('{0}', letter).replace('{1}', '').replace('{s}', letter).replace('{f}', 'click_letter') + '\n';
         });
         document.getElementById('letters').innerHTML = html;
     });
@@ -672,6 +674,38 @@ async function update(instance) {
     config_stocks.alpaca.get_orders().then((result) => {
         ORDERS = result;
         console.log('ORDERS', ORDERS.slice(0, 25));
+    });
+
+    //*@ PORTFOLIO HISTORY */
+    config_stocks.alpaca.get_portfolio_history().then((result) => {
+        PORTFOLIO_HISTORY = result;
+        console.log('PORTFOLIO_HISTORY', PORTFOLIO_HISTORY);
+
+        //* GENERATE CHART */
+        series = { name: 'Close', type: 'area', data: [] };
+        chart_top_5.options.chart.type = 'area';
+        chart_top_5.options.chart.height = 400;
+        chart_top_5.options.chart.sparkline = { enabled: true };
+        chart_top_5.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
+        chart_top_5.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
+        chart_top_5.options.dataLabels.enabled = false;
+        chart_top_5.options.fill = { type: 'solid' };
+        chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v)=>v.thm === 2000).map((v)=>{
+            return { x: v.e, y: v.equity, marker: { size: 4.5, fillColor: colors.black } };
+        })
+        const last = PORTFOLIO_HISTORY[PORTFOLIO_HISTORY.length - 1];
+        chart_top_5.options.annotations.points.push({ x: last.e, y: last.equity, marker: { size: 6.5, fillColor: colors.deeppink } });
+        // chart_top_5.options.annotations = { points: [...combined.annotations_x, ...combined.annotations] };
+        // add_points('week_');
+        // add_points('month_');
+        // add_points('quarter_');
+        data = PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
+        update_ui(chart_top_5);
+        total = round2(data[data.length - 1].y);
+        const elem = document.getElementById('top-portfolio-total');
+        total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+        elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
+        // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
     });
 }
 
@@ -686,8 +720,8 @@ async function click_symbol(s, elem, check_score = false) {
         elem.classList.replace('w3-white', 'w3-green');
     }
 
-    const tz = new Date(`2025-01-01T12:00:00`).getTimezoneOffset() / 60;
-    const start = new Date(`2024-12-31T00:00:00-0${tz}:00`);
+    const tz = new Date(`2025-04-01T12:00:00`).getTimezoneOffset() / 60;
+    const start = new Date(`2025-04-01T00:00:00-0${tz}:00`);
     const end = new Date(`${getYMD(new Date())}T23:59:59-0${tz}:00`);
 
 
@@ -748,7 +782,7 @@ async function click_symbol(s, elem, check_score = false) {
     })
     const max = Math.max(...series[0].data.map((v) => v.y));
     treemap_symbol_days.options.annotations.points.push({ x: series[0].data[series[0].data.length - 1].x, y: series[0].data[series[0].data.length - 1].y, marker: { size: 6, fillColor: colors.black } });
-    treemap_symbol_days.options.annotations.yaxis.push({ y: max, borderColor: colors.black, fillColor: colors.black, opacity: 1 });
+    treemap_symbol_days.options.annotations.yaxis.push({ y: max, borderColor: colors.black, fillColor: colors.black, _opacity: 0 });
 
     data = series;
     update_ui(treemap_symbol_days);

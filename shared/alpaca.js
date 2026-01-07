@@ -1055,4 +1055,47 @@ class AlpacaData {
                 .catch(err => console.error('error in orders()', err));
         });
     }
+    get_portfolio_history(period = '1W', timeframe = '1H', reporting = 'extended_hours', pnl_reset = 'per_day', start = null, end = null) {
+        return new Promise((resolve, reject) => {
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    'APCA-API-KEY-ID': this.ALPACA_KEY,
+                    'APCA-API-SECRET-KEY': this.ALPACA_SECRET,
+                }
+            };
+
+            // let url = `${this.buy_sell_root_url}/v2/account/portfolio/history?period=${period}&timeframe=${timeframe}&intraday_reporting=${reporting}&pnl_reset=${pnl_reset}`
+            let url = `${this.buy_sell_root_url}/v2/account/portfolio/history?`;
+            url += period ? `period=${period}` : '';
+            url += start ? `&start=${start}` : '';
+            url += end ? `&end=${end}` : '';
+            url += `&timeframe=${timeframe}`;
+            url += `&intraday_reporting=${reporting}`;
+            url += `&pnl_reset=${pnl_reset}`
+            fetch(url, options)
+            // fetch('https://paper-api.alpaca.markets/v2/account/portfolio/history?timeframe=1D&intraday_reporting=extended_hours&start=2025-10-01&pnl_reset=per_day', options)
+            // fetch(`${this.buy_sell_root_url}/v2/account/portfolio/history?start=2025-08-01&end=2025-12-31&timeframe=1D&intraday_reporting=${reporting}&pnl_reset=${pnl_reset}`, options)
+                .then(res => res.json())
+                .then(res => {
+                    const data = [];
+                    res.timestamp.forEach((e, i) => {
+                        const d = new Date(e * 1000);
+                        data.push({
+                            ymd: getYMD(d),
+                            thm: getHMM(d),
+                            equity: res.equity[i],
+                            profit_loss: res.profit_loss[i],
+                            tl: d.toLocaleString(),
+                            t: d.toISOString(),
+                            e: e * 1000,
+                            // xy: { x: e * 1000, y: res.equity[i] },
+                        })
+                    })
+                    resolve(data);
+                })
+                .catch(err => console.error(err));
+        });
+    }
 }
