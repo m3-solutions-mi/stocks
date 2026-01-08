@@ -507,11 +507,9 @@ async function update(instance) {
     const s = Date.now();
 
     //*@ GET PROCESSED DATA */
-    // config_stocks.alpaca.bars_simplified(config_stocks.symbols, config_stocks.start_at).then((results) => {
-    // config_stocks.alpaca.bars_simplified(config_stocks.symbols, '2025-04-21').then((results) => {
-    // config_stocks.alpaca.bars_simplified(config_stocks.symbols.slice(14,15), '2025-04-01').then((result) => {
-    // config_stocks.alpaca.bars_simplified(config_stocks.symbols, '2025-12-29').then((result) => {
-    config_stocks.alpaca.bars_simplified(config_stocks.symbols, '2025-04-01').then((result) => {
+    let start_date = '2025-04-01';
+    // start_date = '2026-01-01';
+    config_stocks.alpaca.bars_simplified(config_stocks.symbols, start_date).then((result) => {
         // instance.get_symbols().then((result) => {
         PROCESSED_DATA = result;
         console.log(`DATA | ${instance?.NAME || 'CONFIG'}`, PROCESSED_DATA)
@@ -677,7 +675,8 @@ async function update(instance) {
     });
 
     //*@ PORTFOLIO HISTORY */
-    config_stocks.alpaca.get_portfolio_history().then((result) => {
+    start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
+    config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
         PORTFOLIO_HISTORY = result;
         console.log('PORTFOLIO_HISTORY', PORTFOLIO_HISTORY);
 
@@ -690,15 +689,16 @@ async function update(instance) {
         chart_top_5.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
         chart_top_5.options.dataLabels.enabled = false;
         chart_top_5.options.fill = { type: 'solid' };
-        chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v)=>v.thm === 2000).map((v)=>{
-            return { x: v.e, y: v.equity, marker: { size: 4.5, fillColor: colors.black } };
+        
+        chart_top_5.options.annotations = { xaxis: [], yaxis: [], points: [], };
+        chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v) => v.thm === 2000).map((v) => {
+            return add_annotation_point(v.e, v.equity);
         })
         const last = PORTFOLIO_HISTORY[PORTFOLIO_HISTORY.length - 1];
-        chart_top_5.options.annotations.points.push({ x: last.e, y: last.equity, marker: { size: 6.5, fillColor: colors.deeppink } });
-        // chart_top_5.options.annotations = { points: [...combined.annotations_x, ...combined.annotations] };
-        // add_points('week_');
-        // add_points('month_');
-        // add_points('quarter_');
+        chart_top_5.options.annotations.points.push(add_annotation_point(last.e, last.equity, 6.5, colors.deeppink));
+        chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-02T16:00:00').getTime()));
+        chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
+
         data = PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
         update_ui(chart_top_5);
         total = round2(data[data.length - 1].y);

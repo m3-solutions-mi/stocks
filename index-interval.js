@@ -10,8 +10,8 @@ update_data = (config) => {
 }
 setInterval(async () => {
     const d = new Date()
-    document.getElementById('mobile-clock').innerHTML = d.toLocaleTimeString();
-    document.getElementById('clock').innerHTML = d.toLocaleTimeString();//.split(' ')[0];
+    document.getElementById('mobile-clock').innerHTML = d.toLocaleTimeString().split(' ')[0];
+    document.getElementById('clock').innerHTML = d.toLocaleTimeString().split(' ')[0];
     document.getElementById('date').innerHTML = getYMD(d);
     if (!init || (d.getSeconds() === 1 && refresh)) {
         init = true;

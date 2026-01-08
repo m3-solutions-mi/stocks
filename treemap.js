@@ -22,6 +22,11 @@ class Treemap {
             },
             sparkline: {
                 enabled: true,
+            },
+            events: {
+                dataPointSelection: function (event, chartContext, opts) {
+                    console.log('data point selected', event);
+                }
             }
         },
         annotations: {

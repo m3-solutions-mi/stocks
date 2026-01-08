@@ -496,3 +496,9 @@ const get_symbol_logo = (symbol) => {
     //https://assets.parqet.com/logos/symbol/AEIS?format=png
     fetch(`https://assets.parqet.com/logos/symbol/${symbol}?format=png`).then((v) => { return v; })
 }
+const add_annotation_x = (x) => {
+    return { x, borderColor: colors.black, fillColor: colors.black, opacity: 1 };
+}
+const add_annotation_point = (x, y, size = 4.5, color = colors.black) => {
+    return { x, y, marker: { size, fillColor: color } };
+}
