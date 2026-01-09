@@ -67,23 +67,24 @@ document.addEventListener('click', function (event) {
 document.addEventListener('keydown', function (event) {
     // Check if the Ctrl key is pressed (event.ctrlKey is true)
     // and if the pressed key is the plus sign (event.key is '+')
-    if (event.ctrlKey && event.key === '+') {
+    if (/*event.ctrlKey &&*/ event.key === '+') {
         // Prevent the default browser action (usually zooming in)
         event.preventDefault();
         // console.log('Ctrl + + was pressed!');
         click_letter('⏺');
 
         document.getElementById(selected_symbol).classList.add('w3-border');
-        document.getElementById(selected_symbol).classList.add('w3-border-blue');
+        document.getElementById(selected_symbol).classList.add('w3-border-black');
 
         const elem = document.getElementById('likes');
-        let value = elem.value;
-        value += `,${selected_symbol}`;
+        let value = localStorage.getItem('m3-stocks-likes');
+        value += value === '' ? `${selected_symbol}` : `,${selected_symbol}`;
         value = value.split(',').filter((v, i, a) => i === a.indexOf(v)).sort().join(',');
         elem.value = value;
+        localStorage.setItem('m3-stocks-likes', value);
         update_settings(false);
     }
-    if (event.ctrlKey && event.key === '-') {
+    if (/*event.ctrlKey &&*/ event.key === '-') {
         // Prevent the default browser action (usually zooming in)
         event.preventDefault();
 
@@ -92,10 +93,11 @@ document.addEventListener('keydown', function (event) {
         document.getElementById(selected_symbol).style.border = '';
 
         const elem = document.getElementById('likes');
-        let value = elem.value;
-        value = value.replace(`,${selected_symbol}`, '');
+        let value = localStorage.getItem('m3-stocks-likes');
+        value = value.replace(`${selected_symbol}`, '').replace(`,,`, ',');
         value = value.split(',').filter((v, i, a) => i === a.indexOf(v)).sort().join(',');
         elem.value = value;
+        localStorage.setItem('m3-stocks-likes', value);
         update_settings(false);
     }
 });
@@ -150,7 +152,7 @@ async function click_letter(letter) {
                 .replace('{s}', s)
                 .replace('{fc}', fc)
                 .replace('{b}',
-                    likes.indexOf(s) >= 0 ? '3px solid blue' : picks.indexOf(s) > 0 ? '3px solid black' : '') + '\n';
+                    picks.indexOf(s) >= 0 ? '3px solid blue' : likes.indexOf(s) > 0 ? '3px solid black' : '') + '\n';
         });
         document.getElementById('symbols-for-letter').innerHTML = html;
     }
@@ -257,12 +259,19 @@ function update_settings(all = true) {
         localStorage.setItem('m3-stocks-secret', document.getElementById('secret').value);
         localStorage.setItem('m3-stocks-token', document.getElementById('token').value);
     }
-    localStorage.setItem('m3-stocks-picks', document.getElementById('symbol_picks').value);
-    picks = document.getElementById('symbol_picks').value;
-    localStorage.setItem('m3-stocks-likes', document.getElementById('likes').value);
-    likes = document.getElementById('likes').value;
-    localStorage.setItem('m3-stocks-steady', document.getElementById('steady_picks').value);
-    steady = document.getElementById('steady_picks').value;
+    let v = document.getElementById('symbol_picks').value || localStorage.getItem('m3-stocks-picks');
+    localStorage.setItem('m3-stocks-picks', v);
+    picks = v;
+    
+    v = document.getElementById('likes').value || localStorage.getItem('m3-stocks-likes');
+    localStorage.setItem('m3-stocks-steady', v);
+    likes = v;
+
+    v = document.getElementById('steady_picks').value || localStorage.getItem('m3-stocks-steady');
+    localStorage.setItem('m3-stocks-steady', v);
+    steady = v;
+
+    // steady = document.getElementById('steady_picks').value;
     console.yellow('settings updated');
     // document.getElementById('settings').classList.toggle('w3-hide');
 }

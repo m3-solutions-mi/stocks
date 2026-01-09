@@ -31,6 +31,7 @@ const config_stocks = new Config(
 
         //@ STEADY PICKS - TOP 25 [32]
         // ,FDMT,CRDO
+        //@ full sorted list: APYX,ARWR,AVTX,CLLS,CMPX,COPX,ERAS,ESPR,EYPT,GLTR,GLUE,INDV,KOD,LASR,LITE,MU,ORKA,PALL,PHAT,REMX,RLAY,SEPN,SLV,SNDK,TSEM,TTMI,UPB,VSAT,WDC,ZBIO
         ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC,CLLS,APYX,VSAT,INDV,EYPT,RLAY,ESPR,CMPX,ERAS,ORKA,AVTX,TTMI,TSEM').split(','),
         ...('GLTR,PALL,SLV,COPX,REMX').split(','),
         ...('MU,SNDK').split(','),
@@ -508,7 +509,7 @@ async function update(instance) {
 
     //*@ GET PROCESSED DATA */
     let start_date = '2025-04-01';
-    // start_date = '2026-01-01';
+    // start_date = '2026-01-05';
     config_stocks.alpaca.bars_simplified(config_stocks.symbols, start_date).then((result) => {
         // instance.get_symbols().then((result) => {
         PROCESSED_DATA = result;
