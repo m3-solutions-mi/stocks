@@ -603,7 +603,7 @@ async function update(instance) {
         //* CHART /*
         data = POSITIONS.map((v) => { return { x: v.symbol, y: round(v.unrealized_pl) } });
         data = data.sort((a, b) => a.y < b.y ? 1 : -1);
-        chart_top_4.options.chart.height = 365;
+        chart_top_4.options.chart.height = 415;
         chart_top_4.options.dataLabels.formatter = function (text, op) {
             return [text, op.value]
         };
