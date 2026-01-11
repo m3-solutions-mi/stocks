@@ -124,7 +124,7 @@ async function click_letter(letter) {
                     await sleep(1000);
                 }
                 click_symbol(s.symbol, document.getElementById(s.symbol), true);
-                await sleep(0.5 * 1000);
+                await sleep(2 * 1000);
             }
             console.log(symbols_list);
         }
@@ -152,7 +152,7 @@ async function click_letter(letter) {
                 .replace('{s}', s)
                 .replace('{fc}', fc)
                 .replace('{b}',
-                    picks.indexOf(s) >= 0 ? '3px solid blue' : likes.indexOf(s) > 0 ? '3px solid black' : '') + '\n';
+                    picks.indexOf(s) >= 0 ? '3px solid blue' : likes.indexOf(s) >= 0 ? '3px solid black' : '') + '\n';
         });
         document.getElementById('symbols-for-letter').innerHTML = html;
     }
@@ -251,7 +251,7 @@ function toggle_settings() {
 }
 
 //#----------------------------
-//# click symbol
+//# update settings
 //#----------------------------
 function update_settings(all = true) {
     if (all) {

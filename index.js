@@ -799,10 +799,11 @@ async function click_symbol(s, elem, check_score = false) {
     const g = round((series[0].data[series[0].data.length - 1].y - series[0].data[0].y));// * (1000 / series[0].data[0].y));
     const last = series[0].data[series[0].data.length - 1].y;
     const trend_delta = series[2].data[series[2].data.length - 1].y - series[2].data[0].y;
+    let color = g >= 0 ? 'w3-green' : 'w3-red';
     let html = '';
     html += `${get_indicator(g)} ${s}`;
     html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
-    html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${g.toLocaleString()}`;
+    html += `&nbsp;&nbsp;|&nbsp;&nbsp;<span class="_w3-right ${color} w3-padding">$${g.toLocaleString()}</span>`;
     // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(max - last).toLocaleString()}`;
     html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(trend_delta).toLocaleString()}`;
     document.getElementById('symbol-days-title').innerHTML = html;
