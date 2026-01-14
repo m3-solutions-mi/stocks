@@ -1055,7 +1055,7 @@ class AlpacaData {
                 .catch(err => console.error('error in orders()', err));
         });
     }
-    get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1H', reporting = 'extended_hours', pnl_reset = 'per_day') {
+    get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
         return new Promise((resolve, reject) => {
             const options = {
                 method: 'GET',
