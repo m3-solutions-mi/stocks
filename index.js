@@ -750,8 +750,19 @@ async function click_symbol(s, elem, check_score = false) {
     series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.o) } });
     // series[2].data = bars.map((b) => { return { x: b.e, y: round2((b.lb * num) * (config_stocks.alpaca.CONFIG.stop_pct)) } });
 
-    const tl = calculateTrendline(series[0].data.map((v) => v.y));
+    let tl = calculateTrendline(series[0].data.map((v) => v.y));
     series.push({ name: 'Trendline', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+ 
+    
+    // tl = calculateTarget(series[0].data.map((v) => v.y), 0.25, 1000);
+    // series.push({ name: 'Target 0.5%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+    
+    tl = calculateTarget(series[0].data.map((v) => v.y), 0.5, 1000);
+    series.push({ name: 'Target 0.5%', type: 'line', color: colors.deeppink, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+
+    
+    tl = calculateTarget(series[0].data.map((v) => v.y), 1, 1000);
+    series.push({ name: 'Target 1%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
     // }
 
     treemap_symbol_days.options.chart.type = 'area';
@@ -761,7 +772,7 @@ async function click_symbol(s, elem, check_score = false) {
     treemap_symbol_days.options.dataLabels.enabled = false;
     treemap_symbol_days.options.fill = { type: 'solid' };
     treemap_symbol_days.options.xaxis = { type: 'datetime' };
-    treemap_symbol_days.options.stroke = { width: [3, 4, 4, 4], };
+    treemap_symbol_days.options.stroke = { width: [3, 4, 4, 4, 4], };
     treemap_symbol_days.options.annotations = { xaxis: [], yaxis: [], points: [] };
     last_n = getMonthName(new Date(series[0].data[0].x));
     series[0].data.forEach((v, i) => {
