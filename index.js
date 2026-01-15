@@ -608,6 +608,18 @@ async function update(instance) {
         // console.yellow(day_pct);
         console.log(ACCOUNT);
         console.groupEnd();
+
+        //* DAY TOTAL */
+        total = day_gain;
+        let elem = document.getElementById('day-total');
+        elem.innerHTML = `${get_indicator(total)} ${Math.abs(round(total)).toLocaleString()}&nbsp;`;
+        total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+
+        //* DAY PERCENT */
+        const percent = day_pct;
+        elem = document.getElementById('day-pct');
+        elem.innerHTML = `${percent.toLocaleString()}%`;
+        total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
     });
 
     //*@ POSITIONS */
