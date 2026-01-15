@@ -600,9 +600,12 @@ async function update(instance) {
     config_stocks.alpaca.get_account().then((result) => {
         ACCOUNT = result;
         console.group('ACCOUNT');
-        console.yellow(round2(+(ACCOUNT.equity)).toLocaleString());
-        console.yellow(round2(+(ACCOUNT.equity) - +(ACCOUNT.last_equity)).toLocaleString());
-        console.yellow(round2((+(ACCOUNT.equity) - +(ACCOUNT.last_equity)) / 25000 * 100).toLocaleString());
+        const equity = round2(+(ACCOUNT.equity)).toLocaleString();
+        const day_gain = round2(+(ACCOUNT.equity) - +(ACCOUNT.last_equity)).toLocaleString();
+        const day_pct = round2((+(ACCOUNT.equity) - +(ACCOUNT.last_equity)) / 25000 * 100).toLocaleString();
+        console.yellow(`$${equity} | $${day_gain} | ${day_pct}%`);
+        // console.yellow(day_gain);
+        // console.yellow(day_pct);
         console.log(ACCOUNT);
         console.groupEnd();
     });
@@ -702,7 +705,7 @@ async function update(instance) {
         chart_top_5.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
         chart_top_5.options.dataLabels.enabled = false;
         chart_top_5.options.fill = { type: 'solid' };
-        
+
         chart_top_5.options.annotations = { xaxis: [], yaxis: [], points: [], };
         chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v) => v.thm === 2000).map((v) => {
             return add_annotation_point(v.e, v.equity);
@@ -764,15 +767,15 @@ async function click_symbol(s, elem, check_score = false) {
 
     let tl = calculateTrendline(series[0].data.map((v) => v.y));
     series.push({ name: 'Trendline', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
- 
-    
+
+
     // tl = calculateTarget(series[0].data.map((v) => v.y), 0.25, 1000);
     // series.push({ name: 'Target 0.5%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
-    
+
     tl = calculateTarget(series[0].data.map((v) => v.y), 0.5, 1000);
     series.push({ name: 'Target 0.5%', type: 'line', color: colors.deeppink, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
 
-    
+
     tl = calculateTarget(series[0].data.map((v) => v.y), 1, 1000);
     series.push({ name: 'Target 1%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
     // }
