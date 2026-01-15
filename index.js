@@ -502,6 +502,7 @@ let PROCESSED_DATA = null;
 let POSITIONS = null;
 let ORDERS = null;
 let PORTFOLIO_HISTORY = null;
+let ACCOUNT = null;
 
 //* UPDATE DATA */
 async function update(instance) {
@@ -593,6 +594,17 @@ async function update(instance) {
         render_breakdown();
         render_months();
         render_combined();
+    });
+
+    //*@ ACCOUNT */
+    config_stocks.alpaca.get_account().then((result) => {
+        ACCOUNT = result;
+        console.group('ACCOUNT');
+        console.yellow(round2(+(ACCOUNT.equity)).toLocaleString());
+        console.yellow(round2(+(ACCOUNT.equity) - +(ACCOUNT.last_equity)).toLocaleString());
+        console.yellow(round2((+(ACCOUNT.equity) - +(ACCOUNT.last_equity)) / 25000 * 100).toLocaleString());
+        console.log(ACCOUNT);
+        console.groupEnd();
     });
 
     //*@ POSITIONS */
