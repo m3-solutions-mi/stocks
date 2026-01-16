@@ -602,7 +602,7 @@ async function update(instance) {
         console.group('ACCOUNT');
         const equity = round2(+(ACCOUNT.equity)).toLocaleString();
         const day_gain = round2(+(ACCOUNT.equity) - +(ACCOUNT.last_equity)).toLocaleString();
-        const day_pct = round2((+(ACCOUNT.equity) - +(ACCOUNT.last_equity)) / 25000 * 100).toLocaleString();
+        const day_pct = round2(((+(ACCOUNT.equity) / +(ACCOUNT.last_equity)) * 100) - 100).toLocaleString();
         console.yellow(`$${equity} | $${day_gain} | ${day_pct}%`);
         // console.yellow(day_gain);
         // console.yellow(day_pct);
@@ -720,7 +720,7 @@ async function update(instance) {
 
         chart_top_5.options.annotations = { xaxis: [], yaxis: [], points: [], };
         chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v) => v.thm === 2000).map((v) => {
-            return add_annotation_point(v.e, v.equity);
+            return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
         })
         const last = PORTFOLIO_HISTORY[PORTFOLIO_HISTORY.length - 1];
         chart_top_5.options.annotations.points.push(add_annotation_point(last.e, last.equity, 6.5, colors.deeppink));
@@ -728,6 +728,7 @@ async function update(instance) {
         chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
 
         data = PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
+        data.push({x: Date.now(), y: +(ACCOUNT.equity)});
         update_ui(chart_top_5);
         total = round2(data[data.length - 1].y);
         const elem = document.getElementById('top-portfolio-total');
