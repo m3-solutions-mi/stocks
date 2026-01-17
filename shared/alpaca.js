@@ -712,6 +712,8 @@ class AlpacaData {
                     }
                     obj.push({
                         symbol: res.symbol,
+                        threshold_half_pct: (1000 * 0.005) * (res.bars.length - 1),
+                        threshold_one_pct: (1000 * 0.01) * (res.bars.length - 1),
                         days,
                         days_total: round2(days.map((v) => v.d).reduce((p, c) => p + c)),
                         days_last: round2(days[days.length - 1].d),

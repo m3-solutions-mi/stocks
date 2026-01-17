@@ -113,7 +113,10 @@ async function click_letter(letter) {
         let last = null;
 
         if (letter === '▶') {
-            for await (const s of stock_symbols_detail.filter((v) => v.symbol.startsWith(selected_letter))) {
+            for await (const s of stock_symbols_detail
+                .filter((v) => v.symbol.startsWith(selected_letter))
+                .filter((v) => (Array.isArray(likes) ? likes : likes.split(',')).indexOf(v.symbol) >= 0)
+            ) {
                 while (pause) {
                     await sleep(1000);
                 }
@@ -138,7 +141,10 @@ async function click_letter(letter) {
     } else {
         selected_letter = letter;
         //* alpaca symbols list */
-        const filtered = stock_symbols_detail.filter((v) => v.symbol.startsWith(letter));
+        let filtered = stock_symbols_detail
+            .filter((v) => v.symbol.startsWith(letter))
+            .filter((v) => (Array.isArray(likes) ? likes : likes.split(',')).indexOf(v.symbol) >= 0)
+            ;
         //* nasdaq symbols list */
         // const filtered = nasdaq_symbols().filter((v) => v.symbol.startsWith(letter));
         const template = `<span id="{id}" class="symbol w3-tag w3-round w3-padding w3-white" style="color:{fc} !important;border:{b};cursor:pointer;min-width:85px;margin-bottom:5px;" onclick="click_symbol('{s}', this)">{0}</span>`
@@ -262,9 +268,9 @@ function update_settings(all = true) {
     let v = document.getElementById('symbol_picks').value || localStorage.getItem('m3-stocks-picks');
     localStorage.setItem('m3-stocks-picks', v);
     picks = v;
-    
+
     v = document.getElementById('likes').value || localStorage.getItem('m3-stocks-likes');
-    localStorage.setItem('m3-stocks-steady', v);
+    localStorage.setItem('m3-stocks-likes', v);
     likes = v;
 
     v = document.getElementById('steady_picks').value || localStorage.getItem('m3-stocks-steady');

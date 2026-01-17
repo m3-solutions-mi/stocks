@@ -535,26 +535,26 @@ async function update(instance) {
 
         //* MONTHS */
         const render_months = () => {
-            data = Object.entries(PROCESSED_DATA.months).map((v) => { return { x: v[0].slice(5), y: round2(v[1]) } });
-            // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
-            // chart_top_2.options.chart.height = 400;
-            // chart_top_2.options.dataLabels.enabled = false;
-            chart_top_2.options.chart.type = 'bar';
-            chart_top_2.options.dataLabels.offsetY = -32;
-            chart_top_2.options.dataLabels.style = { fontSize: '20px', colors: [colors.black] };
-            chart_top_2.options.dataLabels.formatter = (val, opts) => {
-                return round1(val / 1000)
-            };
-            chart_top_2.options.annotations.yaxis = [
-                { y: PROCESSED_DATA.months_avg, label: { _text: PROCESSED_DATA.months_avg / 1000 }, fillColor: colors.black, borderColor: colors.black },
-                { y: 0, label: { _text: '0' }, fillColor: colors.black, borderColor: colors.black }
-            ];
-            update_ui(chart_top_2);
-            total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.months_avg)).reduce((p, c) => p + c));
-            const elem = document.getElementById('top-months-total');
-            total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-            elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
-            // document.getElementById('top-months-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+            // data = Object.entries(PROCESSED_DATA.months).map((v) => { return { x: v[0].slice(5), y: round2(v[1]) } });
+            // // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
+            // // chart_top_2.options.chart.height = 400;
+            // // chart_top_2.options.dataLabels.enabled = false;
+            // chart_top_2.options.chart.type = 'bar';
+            // chart_top_2.options.dataLabels.offsetY = -32;
+            // chart_top_2.options.dataLabels.style = { fontSize: '20px', colors: [colors.black] };
+            // chart_top_2.options.dataLabels.formatter = (val, opts) => {
+            //     return round1(val / 1000)
+            // };
+            // chart_top_2.options.annotations.yaxis = [
+            //     { y: PROCESSED_DATA.months_avg, label: { _text: PROCESSED_DATA.months_avg / 1000 }, fillColor: colors.black, borderColor: colors.black },
+            //     { y: 0, label: { _text: '0' }, fillColor: colors.black, borderColor: colors.black }
+            // ];
+            // update_ui(chart_top_2);
+            // total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.months_avg)).reduce((p, c) => p + c));
+            // const elem = document.getElementById('top-months-total');
+            // total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+            // elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
+            // // document.getElementById('top-months-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
         }
 
         //* COMBINED / CUMULATIVE */
