@@ -32,9 +32,9 @@ const config_stocks = new Config(
         //@ STEADY PICKS - TOP 25 [32]
         // ,FDMT,CRDO
         //@ full sorted list: APYX,ARWR,AVTX,CLLS,CMPX,COPX,ERAS,ESPR,EYPT,GLTR,GLUE,INDV,KOD,LASR,LITE,MU,ORKA,PALL,PHAT,REMX,RLAY,SEPN,SLV,SNDK,TSEM,TTMI,UPB,VSAT,WDC,ZBIO
-        ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC,CLLS,APYX,VSAT,INDV,EYPT,RLAY,ESPR,CMPX,ERAS,ORKA,AVTX,TTMI,TSEM').split(','),
-        ...('GLTR,PALL,SLV,COPX,REMX').split(','),
-        ...('MU,SNDK').split(','),
+        // ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC,CLLS,APYX,VSAT,INDV,EYPT,RLAY,ESPR,CMPX,ERAS,ORKA,AVTX,TTMI,TSEM').split(','),
+        // ...('GLTR,PALL,SLV,COPX,REMX').split(','),
+        // ...('MU,SNDK').split(','),
 
         //@ LARGE SET / PICKS
         // ...('AAOI,ABVX,AEIS,AENT,AIP,ALNT,AMKR,ANAB,ANNX,ARWR,ATEC,ATRO,AUPH,AVDL,AUPH,AXTI,B,BBIO,BELFB,BIOA,BLTE,BTSG,CECO,CELC,CENX,CG,CMPX,CMTL,COPX,CTMX,DHC,DNTH,DOOO,DSGN,DYN,ENTA,ERAS,ESPR,EYPT,FBIO,FIVE,FLEX,FLNC,FORM,FSLR,FTRE,FULC,GCT,GDX,GH,GLTR,GLUE,GNOM,GOOG,GOOGL,GRAL,GSAT,GTX,HOOD,IDYA,IESC,IHRT,IMNM,INDV,INSM,IONS,JBIO,JOYY,KNSA,KOD,LASR,LGND,LITE,LMND,LQDA,LRCX,LYEL,MKSI,MU,NAUT,NEM,NESR,NXT,ORKA,PALL,PBYI,PHAT,PL,PLTR,POWL,PRAX,PRLD,PTGX,RAPP,RAPT,REAL,REMX,RLAY,ROIV,RVMD,SEPN,SETM,SHLS,SLV,SMTC,SNDK,STRO,SVRA,TBPH,TCMD,TER,TLN,TNGX,TORO,TRVI,TSEM,TTMI,TYRA,UPB,VICR,VRDN,WBD,WDC,WLDN,XMTR,XPEL,ZBIO,ZEUS,ZYME').split(','),
@@ -47,6 +47,9 @@ const config_stocks = new Config(
 
         //* TOP 15 - LAST 3 WEEKS
         // ...('TMC,TSEM,RKLB,APP,GEV,HUT,TTMI,PSIX,CIFR,KOPN,SNDK,OKLO,QUBT,CRDO,HOOD').split(','),
+
+        //@ CURRENT
+        ...('AEIS,ALNT,APYX,B,CENX,COPX,GDX,GE,GLTR,KALU,KLAC,KOD,KOPN,LASR,MU,PALL,REMX,SLV,SMH,SNDK,TBPH,TER,TSEM,VSAT,WDC').split(','),
     ].filter((v, i, a) => i === a.indexOf(v)).sort(),
     1000,
     // '2025-03-15T00:00:00Z', // start
@@ -800,7 +803,7 @@ async function click_symbol(s, elem, check_score = false) {
     treemap_symbol_days.options.dataLabels.enabled = false;
     treemap_symbol_days.options.fill = { type: 'solid' };
     treemap_symbol_days.options.xaxis = { type: 'datetime' };
-    treemap_symbol_days.options.stroke = { width: [3, 4, 4, 4, 4], };
+    treemap_symbol_days.options.stroke = { width: [3, 3, 3, 4, 4], };
     treemap_symbol_days.options.annotations = { xaxis: [], yaxis: [], points: [] };
     last_n = getMonthName(new Date(series[0].data[0].x));
     series[0].data.forEach((v, i) => {
