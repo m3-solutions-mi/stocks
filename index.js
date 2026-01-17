@@ -782,7 +782,7 @@ async function click_symbol(s, elem, check_score = false) {
     // series[2].data = bars.map((b) => { return { x: b.e, y: round2((b.lb * num) * (config_stocks.alpaca.CONFIG.stop_pct)) } });
 
     let tl = calculateTrendline(series[0].data.map((v) => v.y));
-    series.push({ name: 'Trendline', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+    series.push({ name: 'Trendline', type: 'line', color: colors.yellow, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
 
 
     // tl = calculateTarget(series[0].data.map((v) => v.y), 0.25, 1000);
