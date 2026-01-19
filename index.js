@@ -48,12 +48,21 @@ const config_stocks = new Config(
         //* TOP 15 - LAST 3 WEEKS
         // ...('TMC,TSEM,RKLB,APP,GEV,HUT,TTMI,PSIX,CIFR,KOPN,SNDK,OKLO,QUBT,CRDO,HOOD').split(','),
 
-        //@ CURRENT
+        //*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        //*-----------------------------------------------------------------------------------------------------------------------------------------------------
+        //@ CURRENT POSITIONS
         ...('AEIS,ALNT,APYX,B,CENX,COPX,GDX,GE,GLTR,KALU,KLAC,KOD,KOPN,LASR,MU,PALL,REMX,SLV,SMH,SNDK,TBPH,TER,TSEM,VSAT,WDC').split(','),
+
+        //@ LIKES
+        // ...('A,AA,AAOI,ABVX,ACMR,AEIS,AENT,AEVA,AIP,ALAB,ALMS,AM,AMD,AMDL,AMKR,ANAB,ANGH,AP,APLD,APP,AR,ARWR,ASML,ASPS,ASTI,ASTS,ATAI,ATRO,ATXS,AVAV,AVDL,AX,B,BAER,BAI,BBIO,BDSX,BH,BIOA,BLTE,BTSG,C,CAMT,CECO,CELC,CENX,CIFR,CLLS,CM,CMPS,CMPX,CMTL,COPX,COR,CR,CRDO,CRML,CSTL,CTEC,CTMX,CTRN,D,DAPP,DMAC,DOOO,DPRO,DRIO,DRTS,DSGN,E,EDAP,EE,EGAN,ENGN,ENTA,ERAS,ESPR,EU,EVLV,EYE,EYPT,FBIO,FDMT,FIVE,FL,FLGC,FLNC,FMST,FORM,FTRE,FULC,GCT,GDX,GEOS,GEV,GH,GILT,GLUE,GOOG,GOOGL,GPRO,GRAL,GSAT,GSIT,GTX,HIVE,HL,HOOD,HUT,IBG,IDYA,IESC,IHRT,IMAB,IMNM,IMOS,IMTX,INBX,INDI,INDP,INDV,INSM,INTC,IPX,IR,IREN,IVA,JBIO,KALU,KLAC,KOD,KOPN,KTOS,KYMR,L,LASR,LCID,LMND,LQDA,LRCX,LUNR,LVLU,LWLG,LYEL,MAMA,MBX,MDB,MDXH,MEDP,METC,MFH,MGIC,MIRM,MKSI,MLYS,MNMD,MRCY,MTSI,MU,MYRG,NAUT,NBIS,NBTX,NEM,NERV,NESR,NVMI,NVTS,O,OKLO,OLMA,ONDS,OPEN,ORIC,ORKA,OSS,OUST,PAYS,PBYI,PGY,PHAT,PL,PLTR,POET,PONY,POWL,PPTA,PRAX,PRLD,PRME,PSIX,PSNL,QCLS,QTTB,QURE,R,RAPP,RAPT,RCAT,RDNW,REMX,RGNX,RGTI,RIGL,RILY,RING,RIOT,RKLB,RL,RLAY,RLMD,RMBS,ROIV,RPTX,RUN,RYTM,SANA,SANM,SATS,SEDG,SEPN,SERV,SETM,SHLS,SIMO,SITM,SKYT,SLDP,SLNH,SLV,SMTC,SNDK,SOFI,SRTA,SSRM,STOK,STRL,STRO,STX,SYM,SYRE,TBPH,TCMD,TE,TENX,TER,TERN,TLRY,TLS,TMC,TMDX,TNGX,TORO,TOYO,TSEM,TTMI,TXG,TXMD,TYRA,UCTT,UFO,UPB,URNJ,UROY,VELO,VERA,VERU,VICR,VRDN,WLDN,WULF,XMTR,ZBIO,ZNTL,ZYME').split(','),
+
+        //@ STEADY PICKS - TOP 10
+        // ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC').split(','),
     ].filter((v, i, a) => i === a.indexOf(v)).sort(),
     1000,
     // '2025-03-15T00:00:00Z', // start
-    '2025-04-01T00:00:00Z', // start
+    // '2025-04-01T00:00:00Z', // start
+    '2026-01-05T00:00:00Z', // start
     // '2025-12-07T00:00:00Z' // end
     // '2025-12-14T00:00:00Z' // end
 );
@@ -96,6 +105,7 @@ let line_combined_current = new Treemap('#chart9');
 let data = null;
 let num_symbol_days = -15;
 let use_raw = false;
+let use_filter = true;
 let picks = (localStorage.getItem('m3-stocks-picks') || '').split(',');
 let likes = (localStorage.getItem('m3-stocks-likes') || '').split(',');
 let steady = (localStorage.getItem('m3-stocks-steady') || '').split(',');
@@ -465,7 +475,8 @@ class Stocks {
     TOKEN = null;
     SYMBOLS = null;
     ALPACA = null;
-    START_AT = '2025-04-01';
+    // START_AT = '2025-04-01';
+    START_AT = '2026-01-05';
 
     constructor(name, token, symbols = []) {
         this.NAME = name;
@@ -525,6 +536,7 @@ async function update(instance) {
             data = PROCESSED_DATA.symbols.map((v) => { return { x: v.symbol, y: round2(v.months_total) } });
             data = data.sort((a, b) => a.y < b.y ? 1 : -1);
             chart_top_1.options.chart.height = 415;
+            // chart_top_1.options.chart.type = 'bar';
             update_ui(chart_top_1);
             let total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.months_total)).reduce((p, c) => p + c));
             const elem = document.getElementById('top-symbols-total');
@@ -686,16 +698,17 @@ async function update(instance) {
         //     .replace('{fc}', colors.black)
         //     .replace('{fc}', colors.black)
         //     + '\n';
-        document.getElementById('symbol-boxes-stocks').innerHTML = html;
+        document.getElementById('symbol-boxes-positions').innerHTML = html;
         // document.getElementById('symbol-names-input').style.display = 'none';
         document.getElementById('symbol-names').value = config_stocks.symbols.join(',');
 
         //* ALL SYMBOLS BY LETTER */
         html = '';
 
-        'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,▶,⏸,⏺'.split(',').forEach((letter) => {
+        'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,▶,⏸,⏺,🔎︎'.split(',').forEach((letter) => {
             html += template.replace('{id}', letter).replace('{c}', 'white').replace('{0}', letter).replace('{1}', '').replace('{s}', letter).replace('{f}', 'click_letter') + '\n';
         });
+        // html += `<i class="fa fa-filter w3-right w3-margin-right w3-xlarge w3-text-blue" aria-hidden="true"></i>`;
         document.getElementById('letters').innerHTML = html;
     });
 
@@ -706,7 +719,8 @@ async function update(instance) {
     });
 
     //*@ PORTFOLIO HISTORY */
-    start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
+    // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
+    start_date = '2026-01-05';
     config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
         PORTFOLIO_HISTORY = result;
         console.log('PORTFOLIO_HISTORY', PORTFOLIO_HISTORY);
@@ -731,7 +745,7 @@ async function update(instance) {
         chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
 
         data = PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
-        data.push({x: Date.now(), y: +(ACCOUNT.equity)});
+        data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
         update_ui(chart_top_5);
         total = round2(data[data.length - 1].y);
         const elem = document.getElementById('top-portfolio-total');
@@ -751,6 +765,8 @@ async function click_symbol(s, elem, check_score = false) {
         Array.from(document.getElementsByClassName('symbol')).forEach((v) => v.classList.replace('w3-green', 'w3-white'));
         elem.classList.replace('w3-white', 'w3-green');
     }
+    document.getElementById('symbol-buy').classList.remove('w3-hide');
+    document.getElementById('symbol-sell').classList.remove('w3-hide');
 
     const tz = new Date(`2025-04-01T12:00:00`).getTimezoneOffset() / 60;
     const start = new Date(`2025-04-01T00:00:00-0${tz}:00`);
@@ -788,13 +804,14 @@ async function click_symbol(s, elem, check_score = false) {
     // tl = calculateTarget(series[0].data.map((v) => v.y), 0.25, 1000);
     // series.push({ name: 'Target 0.5%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
 
-    tl = calculateTarget(series[0].data.map((v) => v.y), 0.5, 1000);
-    series.push({ name: 'Target 0.5%', type: 'line', color: colors.deeppink, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+    if (use_raw === false) {
+        tl = calculateTarget(series[0].data.map((v) => v.y), 0.5, 1000);
+        series.push({ name: 'Target 0.5%', type: 'line', color: colors.deeppink, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
 
 
-    tl = calculateTarget(series[0].data.map((v) => v.y), 1, 1000);
-    series.push({ name: 'Target 1%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
-    // }
+        tl = calculateTarget(series[0].data.map((v) => v.y), 1, 1000);
+        series.push({ name: 'Target 1%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+    }
 
     treemap_symbol_days.options.chart.type = 'area';
     treemap_symbol_days.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
@@ -808,7 +825,7 @@ async function click_symbol(s, elem, check_score = false) {
     last_n = getMonthName(new Date(series[0].data[0].x));
     series[0].data.forEach((v, i) => {
         const n = getMonthName(new Date(v.x));
-        if (n !== last_n || i === series[0].data.length - 1 || i === series[0].data.length - 2) {
+        if (n !== last_n || i === series[0].data.length - 1 || i === (series[0].data.length - (new Date().getDay() - 2))) {
             treemap_symbol_days.options.annotations.xaxis.push({ x: v.x, borderColor: colors.black, fillColor: colors.black, opacity: 1 });
             // line_combtreemap_symbol_daysined_last_n.options.annotations.points.push({ x: v.x, y: v.y, marker: { radius: 5, fillColor: '#7fff00' } });
         }
@@ -827,6 +844,37 @@ async function click_symbol(s, elem, check_score = false) {
     treemap_symbol_days.options.annotations.points.push({ x: series[0].data[series[0].data.length - 1].x, y: series[0].data[series[0].data.length - 1].y, marker: { size: 6, fillColor: colors.black } });
     treemap_symbol_days.options.annotations.yaxis.push({ y: max, borderColor: colors.black, fillColor: colors.black, _opacity: 0 });
 
+    //* ADD BUY DATE LINE TO CHART */
+    const order = ORDERS
+        // .filter((v) => v.side === 'buy')
+        .filter((v) => v.symbol === s)
+        ;
+    if (order[0] && order[0].side === 'buy') {
+        const filled_at = new Date(order[0].filled_at);
+        const g = +(POSITIONS.find((v) => v.symbol === s).unrealized_pl);
+        treemap_symbol_days.options.annotations.xaxis.push({
+            x: filled_at.getTime(),
+            x2: Date.now(),
+            borderColor: colors.black,
+            fillColor: colors.gray,
+            opacity: 0.15,
+            label: {
+                text: `${g >= 0 ? '▲' : '▼'} ${round(g)} `,
+                borderColor: g >= 0 ? colors.green : colors.red,
+                borderWidth: 2,
+                orientation: 'horizontal',
+                offsetX: -30,
+                offsetY: 20,
+                style: {
+                    fontSize: '22px',
+                    // background: g >= 0 ? colors.green : colors.red,
+                },
+            },
+        });
+        console.log(filled_at);
+    }
+
+    //* RENNDER CHART */
     data = series;
     update_ui(treemap_symbol_days);
     // data = data.map((d) => d.data.slice(-15));
@@ -837,6 +885,7 @@ async function click_symbol(s, elem, check_score = false) {
     })
     update_ui(treemap_symbol_days_recent);
 
+    //* CHART TITLE */
     const detail = stock_symbols_detail.find((v) => v.symbol === s);
     const g = round((series[0].data[series[0].data.length - 1].y - series[0].data[0].y));// * (1000 / series[0].data[0].y));
     const last = series[0].data[series[0].data.length - 1].y;

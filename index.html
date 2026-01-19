@@ -59,7 +59,7 @@
             <!--@ End | Mobile Header -->
 
             <span class="">
-                
+
                 <!--@ Tablet / Desktop Header -->
                 <div class="w3-col s12 w3-hide-small" style="margin-bottom:20px;">
                     <div class="_w3-col s12" style="margin-top:5px;">
@@ -255,16 +255,20 @@
                             <!--* Configuration Selections -->
                             <div class="w3-right" style="display:inline-flex;align-content: center;">
                                 <input class="w3-radio" style="cursor:pointer;" type="radio" name="config"
-                                    value="stocks" onclick="click_config(this.value)" checked>
-                                <label style="margin:-2px 20px 0px 10px;">Stocks</label>
+                                    value="positions" onclick="click_config(this.value)" checked>
+                                <label style="margin:-2px 20px 0px 10px;">Positions</label>
 
-                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config" value="trend"
-                                    onclick="click_config(this.value)">
-                                <label style="margin:-2px 20px 0px 10px;" l>Trending</label>
+                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config" value="filtered"
+                                    onclick="click_config(this.value)" disabled>
+                                <label style="margin:-2px 20px 0px 10px;">Filtered</label>
 
                                 <input class="w3-radio" style="cursor:pointer;" type="radio" name="config"
                                     value="symbols" onclick="click_config(this.value)">
-                                <label style="margin:-2px 20px 0px 10px;" l>Symbols</label>
+                                <label style="margin:-2px 20px 0px 10px;">Symbols</label>
+
+                                <input class="w3-radio" style="cursor:pointer;" type="checkbox"
+                                    onclick="set_use_filter(this.checked)" checked>
+                                <label style="margin:-2px 20px 0px 10px;">Filter</label>
 
                                 <input class="w3-radio" style="cursor:pointer;" type="checkbox"
                                     onclick="set_use_raw(this.checked)">
@@ -277,7 +281,18 @@
 
                             <!--* Symbol Chart -->
                             <div id="symbol-day-chart" class="w3-hide w3-container w3-center w3-xlarge">
-                                <p id="symbol-days-title">Symbol OHLC Day Chart</p>
+                                <div id="symbol-buy" class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                    style="cursor:pointer;" onclick="sell_symbol()">Sell</div>
+                                <div id="symbol-sell" class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                    style="cursor:pointer;" onclick="buy_symbol()">Buy</div>
+                                <p id="symbol-days-title">Symbol OHLC Day Chart
+                                </p>
+                                <!-- <div class="w3-right _w3-margin-top" style="letter-spacing: 4px;"> -->
+                                    <!-- <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                        style="cursor:pointer;" onclick="buy_all()">Buy All</div>
+                                    <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                        style="cursor:pointer;" onclick="liquidate()">Liquidate</div> -->
+                                <!-- </div> -->
                                 <div id="chart8" class='w3-col s9 w3-padding' _style="border:1px solid lightgray;">
                                 </div>
                                 <div id="chart10" class='w3-col s3 w3-padding' _style="border:1px solid lightgray;">
@@ -293,10 +308,10 @@
                                 placeholder="Enter key"></textarea>
                         </div>
 
-                        <div id="symbol-boxes-stocks" class="w3-center" style="display:block;"></div>
-                        <div id="symbol-boxes-trend" class="w3-center w3-xlarge w3-text-grey" style="display:none;">
+                        <div id="symbol-boxes-positions" class="w3-center" style="display:block;"></div>
+                        <div id="symbol-boxes-filtered" class="w3-center w3-xlarge w3-text-grey" style="display:none;">
                             Trending
-                            <div id="symbols-trending"></div>
+                            <div id="symbols-filtered"></div>
                         </div>
                         <div id="symbol-boxes-symbols" style="display:none;">
                             <div id="symbols-for-letter" class="w3-center"></div>

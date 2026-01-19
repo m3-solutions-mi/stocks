@@ -7,7 +7,7 @@
 //#----------------------------
 function click_config(name) {
     console.log(name);
-    ['stocks', 'trend', 'symbols'].forEach((v) => {
+    ['positions', 'filtered', 'symbols'].forEach((v) => {
         document.getElementById(`symbol-boxes-${v}`).style.display = 'none'
     });
     document.getElementById(`symbol-boxes-${name}`).style.display = 'block'
@@ -26,6 +26,13 @@ function set_num_days(checked) {
 //#----------------------------
 function set_use_raw(checked) {
     use_raw = checked ? true : false;
+}
+
+//#----------------------------
+//# set use filter
+//#----------------------------
+function set_use_filter(checked) {
+    use_filter = checked ? true : false;
 }
 
 //#----------------------------
@@ -113,10 +120,11 @@ async function click_letter(letter) {
         let last = null;
 
         if (letter === '▶') {
-            for await (const s of stock_symbols_detail
-                .filter((v) => v.symbol.startsWith(selected_letter))
-                .filter((v) => (Array.isArray(likes) ? likes : likes.split(',')).indexOf(v.symbol) >= 0)
-            ) {
+            let filtered = stock_symbols_detail.filter((v) => v.symbol.startsWith(selected_letter));
+            if (use_filter) {
+                filtered = filtered.filter((v) => (Array.isArray(likes) ? likes : likes.split(',')).indexOf(v.symbol) >= 0)
+            }
+            for await (const s of filtered) {
                 while (pause) {
                     await sleep(1000);
                 }
@@ -141,10 +149,10 @@ async function click_letter(letter) {
     } else {
         selected_letter = letter;
         //* alpaca symbols list */
-        let filtered = stock_symbols_detail
-            .filter((v) => v.symbol.startsWith(letter))
-            .filter((v) => (Array.isArray(likes) ? likes : likes.split(',')).indexOf(v.symbol) >= 0)
-            ;
+        let filtered = stock_symbols_detail.filter((v) => v.symbol.startsWith(letter));
+        if (use_filter) {
+            filtered = filtered.filter((v) => (Array.isArray(likes) ? likes : likes.split(',')).indexOf(v.symbol) >= 0)
+        }
         //* nasdaq symbols list */
         // const filtered = nasdaq_symbols().filter((v) => v.symbol.startsWith(letter));
         const template = `<span id="{id}" class="symbol w3-tag w3-round w3-padding w3-white" style="color:{fc} !important;border:{b};cursor:pointer;min-width:85px;margin-bottom:5px;" onclick="click_symbol('{s}', this)">{0}</span>`
@@ -318,6 +326,19 @@ function toggleSymbolDayChart() {
 }
 
 //#----------------------------
+//# buy symbol
+//#----------------------------
+function buy_symbol() {
+    const confirmed = confirm('are you sure you want to BUY symbol?');
+    if (confirmed) {
+        const seed = 1000; //1000;
+        config_stocks.alpaca.buy(selected_symbol, seed).then((res) => {
+            console.log(res);
+        });
+    }
+}
+
+//#----------------------------
 //# buy all
 //#----------------------------
 function buy_all() {
@@ -337,6 +358,17 @@ function liquidate() {
     const confirmed = confirm('are you sure you want to LIQUIDATE all positions?');
     if (confirmed) {
         config_stocks.alpaca.liquidate().then((res) => {
+            console.log(res);
+        });
+    }
+}
+//#----------------------------
+//# sell symbol
+//#----------------------------
+function sell_symbol() {
+    const confirmed = confirm('are you sure you want to SELL position?');
+    if (confirmed) {
+        config_stocks.alpaca.sell(selected_symbol).then((res) => {
             console.log(res);
         });
     }
