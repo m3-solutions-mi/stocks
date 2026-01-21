@@ -674,6 +674,7 @@ async function update(instance) {
             <tr onclick="click_symbol('{s}')">
                 <td style="color:{c}"><b>{symbol}</b></td>
                 <td>{name}</td>
+                <!--<td>{date}</td>-->
                 <td style="color:{c2}">{day}</td>
                 <td style="color:{c}">{gain}</td>
             </tr>`
@@ -685,6 +686,7 @@ async function update(instance) {
             const color = g >= 0 ? 'green' : 'red';
             const color_day = day >= 0 ? 'green' : 'red';
             const font_color = g >= 0 ? 'black' : 'white';
+            // const date = ORDERS.find((v)=>v.symbol === s.symbol).filled_at.split('T')[0];
 
             // const own = config_stocks.data.find((v) => v.symbol === s).own;
             // const indicator = own < 0 ? get_indicator(own, own >= 0, colors.aqua) : '';
@@ -697,6 +699,7 @@ async function update(instance) {
                 .replace('{f}', 'click_symbol')
                 .replace('{fc}', font_color)
                 .replace('{fc}', font_color)
+                // .replace('{date}', date)
                 + '\n';
             
                 html_table += template_row
@@ -759,11 +762,18 @@ async function update(instance) {
         data = PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
         data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
         update_ui(chart_top_5);
-        total = round2(data[data.length - 1].y);
-        const elem = document.getElementById('top-portfolio-total');
+        
+        total = round(data[data.length - 1].y);
+        const gain = round(round2(round(data[data.length - 1].y - data[0].y)));
+        //* PORTFOLIO BALANCE */
+        let elem = document.getElementById('top-portfolio-total');
         total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-        elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
+        elem.innerHTML = `${get_indicator(gain)} ${gain.toLocaleString()}`;
         // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+        
+        //* MONTH GAIN */
+        elem = document.getElementById('gain-month');
+        elem.innerHTML = `$${total.toLocaleString()}`;
     });
 }
 
