@@ -96076,6 +96076,7 @@ const stock_symbols_detail = [
     {symbol: 'COPX', name: 'Global X Copper Miners ETF', status: 'active', tradable: true, fractionable: true}, // COPPER
     {symbol: 'REMX', name: 'VanEck Rare Earth and Strategic Metals ETF', status: 'active', tradable: true, fractionable: true}, // 
     {symbol: 'SETM', name: 'Sprott Critical Materials ETF', status: 'active', tradable: true, fractionable: true}, // 
+    {symbol: 'ALB', name: 'ALBEMARLE CORPORATION - Lithium', status: 'active', tradable: true, fractionable: true}, // 
     {symbol: 'VIXY', name: '-', status: 'active', tradable: true, fractionable: true},
 ]
 .filter((v)=>v.status === 'active')
