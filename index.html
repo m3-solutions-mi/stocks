@@ -239,12 +239,14 @@
                     </div>
                     <!--@ End | MAIN -->
 
-                </div>
-                <!--@ End | TOP NEW -->
+                    <!-- </div> -->
+                    <!--@ End | TOP NEW -->
 
-                <!--@ Bottom -->
-                <div class="w3-col s12" style="margin-top:5px;">
-                    <div class="w3-large w3-container w3-card w3-white">
+                    <hr />
+
+                    <!--@ Bottom -->
+                    <!-- <div class="w3-col s12" style="margin-top:5px;"> -->
+                    <div class="w3-large w3-container _w3-card w3-white">
 
                         <!--* Bottom Panel -->
                         <h2 class="w3-text-grey w3-padding-16"><i
@@ -258,8 +260,8 @@
                                     value="positions" onclick="click_config(this.value)" checked>
                                 <label style="margin:-2px 20px 0px 10px;">Positions</label>
 
-                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config" value="filtered"
-                                    onclick="click_config(this.value)" disabled>
+                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config"
+                                    value="filtered" onclick="click_config(this.value)" disabled>
                                 <label style="margin:-2px 20px 0px 10px;">Filtered</label>
 
                                 <input class="w3-radio" style="cursor:pointer;" type="radio" name="config"
@@ -281,14 +283,16 @@
 
                             <!--* Symbol Chart -->
                             <div id="symbol-day-chart" class="w3-hide w3-container w3-center w3-xlarge">
-                                <div id="symbol-buy" class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                <div id="symbol-buy"
+                                    class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
                                     style="cursor:pointer;" onclick="sell_symbol()">Sell</div>
-                                <div id="symbol-sell" class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                <div id="symbol-sell"
+                                    class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
                                     style="cursor:pointer;" onclick="buy_symbol()">Buy</div>
                                 <p id="symbol-days-title">Symbol OHLC Day Chart
                                 </p>
                                 <!-- <div class="w3-right _w3-margin-top" style="letter-spacing: 4px;"> -->
-                                    <!-- <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                                <!-- <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
                                         style="cursor:pointer;" onclick="buy_all()">Buy All</div>
                                     <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
                                         style="cursor:pointer;" onclick="liquidate()">Liquidate</div> -->
@@ -321,14 +325,36 @@
                         <br />
                         &nbsp;
                     </div>
+
+                    <div id="symbols-table" class="w3-large w3-container _w3-card w3-white">
+                        <table class="w3-table-all w3-xlarge">
+                            <thead>
+                                <tr class="w3-light-grey">
+                                    <th>Symbol</th>
+                                    <th>Name</th>
+                                    <th>Day</th>
+                                    <th>Gain</th>
+                                </tr>
+                            </thead>
+                            <tbody id="symbol-table-body">
+                                <!-- <tr>
+                                    <td>▲ AEIS</td>
+                                    <td>Advanced Energy Industries, Inc. Common Stoc</td>
+                                    <td>$ 72</td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <br />
                 </div>
-                <!--@ End | Bottom -->
-
-            </span>
         </div>
+        <!--@ End | Bottom -->
 
-        <!--@ Pricing Tables -->
-        <!-- <div class="w3-hide w3-col s12" style="margin-top:25px;margin-bottom:45px;">
+        </span>
+    </div>
+
+    <!--@ Pricing Tables -->
+    <!-- <div class="w3-hide w3-col s12" style="margin-top:25px;margin-bottom:45px;">
             <div class="w3-large w3-container w3-card w3-white w3-padding" style="padding-top:20px !important;">
                 <div class="w3-third w3-margin-bottom">
                     <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
@@ -394,7 +420,7 @@
                 </div>
             </div>
         </div> -->
-        <!--@ End Pricing Tables -->
+    <!--@ End Pricing Tables -->
 
     </div>
     <!--@ End PAGE CONTENT -->

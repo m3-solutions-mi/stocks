@@ -96067,12 +96067,12 @@ const stock_symbols_detail = [
     {symbol: 'NEM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'AVDE', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'BTC', name: 'Bitcoin ETF', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'SLV', name: 'Silver', status: 'active', tradable: true, fractionable: true}, // SILVER
-    {symbol: 'GLTR', name: 'Gold', status: 'active', tradable: true, fractionable: true}, // GOLD
+    {symbol: 'SLV', name: 'iShares Silver Trust', status: 'active', tradable: true, fractionable: true}, // SILVER
+    {symbol: 'GLTR', name: 'abrdn Physical Precious Metals Basket Shares ETF', status: 'active', tradable: true, fractionable: true}, // GOLD
     {symbol: 'B', name: 'BARRICK MINING CORPORATION - GOLD', status: 'active', tradable: true, fractionable: true}, // GOLD
     {symbol: 'GDX', name: 'VanEck Gold Miners ETF', status: 'active', tradable: true, fractionable: true}, // GOLD
     // {symbol: 'XAU', name: 'Gold', status: 'active', tradable: true, fractionable: true}, // GOLD
-    {symbol: 'PALL', name: 'Palladium', status: 'active', tradable: true, fractionable: true}, // PALLADIUM
+    {symbol: 'PALL', name: 'abrdn Physical Palladium Shares ETF', status: 'active', tradable: true, fractionable: true}, // PALLADIUM
     {symbol: 'COPX', name: 'Global X Copper Miners ETF', status: 'active', tradable: true, fractionable: true}, // COPPER
     {symbol: 'REMX', name: 'VanEck Rare Earth and Strategic Metals ETF', status: 'active', tradable: true, fractionable: true}, // 
     {symbol: 'SETM', name: 'Sprott Critical Materials ETF', status: 'active', tradable: true, fractionable: true}, // 

@@ -670,10 +670,20 @@ async function update(instance) {
 
         //* SYMBOLS LIST */
         const template = `<span id="{id}" class="w3-tag w3-round w3-padding w3-{c}" style="cursor:pointer;min-width:108px;margin-bottom:5px;color:{fc}!important;" onclick="{f}('{s}')">{0}<br/>{1}</span>`
+        const template_row = `
+            <tr onclick="click_symbol('{s}')">
+                <td style="color:{c}"><b>{symbol}</b></td>
+                <td>{name}</td>
+                <td style="color:{c2}">{day}</td>
+                <td style="color:{c}">{gain}</td>
+            </tr>`
         let html = '';
+        let html_table = '';
         POSITIONS.forEach((s) => {
             const g = +(s.unrealized_pl);
+            const day = +(s.unrealized_intraday_pl);
             const color = g >= 0 ? 'green' : 'red';
+            const color_day = day >= 0 ? 'green' : 'red';
             const font_color = g >= 0 ? 'black' : 'white';
 
             // const own = config_stocks.data.find((v) => v.symbol === s).own;
@@ -688,24 +698,26 @@ async function update(instance) {
                 .replace('{fc}', font_color)
                 .replace('{fc}', font_color)
                 + '\n';
+            
+                html_table += template_row
+                    .replace('{s}', s.symbol)
+                    .replace('{symbol}', `${indicator} ${s.symbol}`)
+                    .replace('{c}', color)
+                    .replace('{c}', color)
+                    .replace('{name}', stock_symbols_detail.find((v)=>v.symbol === s.symbol).name)
+                    .replace('{gain}', `$ ${round2(g)}`)
+                    .replace('{day}', `$ ${round2(day)}`)
+                    .replace('{c2}', color_day)
         });
-        // html += template
-        //     .replace('{c}', 'grey')
-        //     .replace('{0}', `Combined`)
-        //     .replace('{1}', '-')
-        //     .replace('{s}', `Combined`)
-        //     .replace('{f}', 'click_symbol')
-        //     .replace('{fc}', colors.black)
-        //     .replace('{fc}', colors.black)
-        //     + '\n';
         document.getElementById('symbol-boxes-positions').innerHTML = html;
-        // document.getElementById('symbol-names-input').style.display = 'none';
         document.getElementById('symbol-names').value = config_stocks.symbols.join(',');
+        document.getElementById('symbol-table-body').innerHTML = html_table;
 
         //* ALL SYMBOLS BY LETTER */
         html = '';
 
-        'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,▶,⏸,⏺,🔎︎'.split(',').forEach((letter) => {
+        // ,⏺,🔎︎
+        'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,▶,⏸'.split(',').forEach((letter) => {
             html += template.replace('{id}', letter).replace('{c}', 'white').replace('{0}', letter).replace('{1}', '').replace('{s}', letter).replace('{f}', 'click_letter') + '\n';
         });
         // html += `<i class="fa fa-filter w3-right w3-margin-right w3-xlarge w3-text-blue" aria-hidden="true"></i>`;
@@ -899,7 +911,7 @@ async function click_symbol(s, elem, check_score = false) {
     html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(trend_delta).toLocaleString()}`;
     document.getElementById('symbol-days-title').innerHTML = html;
 
-    window.scrollTo(0, document.body.scrollHeight);
+    // window.scrollTo(0, document.body.scrollHeight);
 
     //* ADD IF SCORE IS HIGH
     if (trend_delta > 1000 && check_score) {
