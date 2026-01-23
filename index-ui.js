@@ -148,14 +148,21 @@ async function click_letter(letter) {
         }
     } else {
         selected_letter = letter;
+        
         //* alpaca symbols list */
         let filtered = stock_symbols_detail.filter((v) => v.symbol.startsWith(letter));
         if (use_filter) {
             filtered = filtered.filter((v) => (Array.isArray(likes) ? likes : likes.split(',')).indexOf(v.symbol) >= 0)
         }
+
         //* nasdaq symbols list */
         // const filtered = nasdaq_symbols().filter((v) => v.symbol.startsWith(letter));
-        const template = `<span id="{id}" class="symbol w3-tag w3-round w3-padding w3-white" style="color:{fc} !important;border:{b};cursor:pointer;min-width:85px;margin-bottom:5px;" onclick="click_symbol('{s}', this)">{0}</span>`
+        const template = `<span id="{id}" 
+            class="symbol w3-tag w3-round w3-padding w3-white" 
+            style="color:{fc} !important;border:{b};cursor:pointer;min-width:85px;margin-bottom:5px;" 
+            onclick="click_symbol('{s}', this)">
+            {0}
+        </span>`
         let html = '';
         filtered.map((v) => v.symbol).sort().forEach((s) => {
             const fc = s.endsWith('/USD') ? 'blue' : 'black'

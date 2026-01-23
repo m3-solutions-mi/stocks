@@ -51,7 +51,9 @@ const config_stocks = new Config(
         //*-----------------------------------------------------------------------------------------------------------------------------------------------------
         //*-----------------------------------------------------------------------------------------------------------------------------------------------------
         //@ CURRENT POSITIONS
-        ...('AEIS,ALNT,APYX,B,CENX,COPX,GDX,GE,GLTR,KALU,KLAC,KOD,KOPN,LASR,MU,PALL,REMX,SLV,SMH,SNDK,TBPH,TER,TSEM,VSAT,WDC').split(','),
+        // ...('AEIS,ALNT,APYX,B,CENX,COPX,GDX,GE,GLTR,KALU,KLAC,KOD,KOPN,LASR,MU,PALL,REMX,SLV,SMH,SNDK,TBPH,TER,TSEM,VSAT,WDC').split(','),
+        ...('AEIS,ALB,ALNT,CECO,CENX,COPX,GDX,GLTR,GOOGL,IREN,KALU,KLAC,KOPN,LASR,MU,PALL,PSIX,REMX,RING,SLV,SNDK,TER,TSEM,VICR,WDC').split(','),
+        ...('MTSI,MKSI,MRNA,INTC,METC,AMD,AMKR,DOOO,FIVE,POWL').split(','),
 
         //@ LIKES
         // ...('A,AA,AAOI,ABVX,ACMR,AEIS,AENT,AEVA,AIP,ALAB,ALMS,AM,AMD,AMDL,AMKR,ANAB,ANGH,AP,APLD,APP,AR,ARWR,ASML,ASPS,ASTI,ASTS,ATAI,ATRO,ATXS,AVAV,AVDL,AX,B,BAER,BAI,BBIO,BDSX,BH,BIOA,BLTE,BTSG,C,CAMT,CECO,CELC,CENX,CIFR,CLLS,CM,CMPS,CMPX,CMTL,COPX,COR,CR,CRDO,CRML,CSTL,CTEC,CTMX,CTRN,D,DAPP,DMAC,DOOO,DPRO,DRIO,DRTS,DSGN,E,EDAP,EE,EGAN,ENGN,ENTA,ERAS,ESPR,EU,EVLV,EYE,EYPT,FBIO,FDMT,FIVE,FL,FLGC,FLNC,FMST,FORM,FTRE,FULC,GCT,GDX,GEOS,GEV,GH,GILT,GLUE,GOOG,GOOGL,GPRO,GRAL,GSAT,GSIT,GTX,HIVE,HL,HOOD,HUT,IBG,IDYA,IESC,IHRT,IMAB,IMNM,IMOS,IMTX,INBX,INDI,INDP,INDV,INSM,INTC,IPX,IR,IREN,IVA,JBIO,KALU,KLAC,KOD,KOPN,KTOS,KYMR,L,LASR,LCID,LMND,LQDA,LRCX,LUNR,LVLU,LWLG,LYEL,MAMA,MBX,MDB,MDXH,MEDP,METC,MFH,MGIC,MIRM,MKSI,MLYS,MNMD,MRCY,MTSI,MU,MYRG,NAUT,NBIS,NBTX,NEM,NERV,NESR,NVMI,NVTS,O,OKLO,OLMA,ONDS,OPEN,ORIC,ORKA,OSS,OUST,PAYS,PBYI,PGY,PHAT,PL,PLTR,POET,PONY,POWL,PPTA,PRAX,PRLD,PRME,PSIX,PSNL,QCLS,QTTB,QURE,R,RAPP,RAPT,RCAT,RDNW,REMX,RGNX,RGTI,RIGL,RILY,RING,RIOT,RKLB,RL,RLAY,RLMD,RMBS,ROIV,RPTX,RUN,RYTM,SANA,SANM,SATS,SEDG,SEPN,SERV,SETM,SHLS,SIMO,SITM,SKYT,SLDP,SLNH,SLV,SMTC,SNDK,SOFI,SRTA,SSRM,STOK,STRL,STRO,STX,SYM,SYRE,TBPH,TCMD,TE,TENX,TER,TERN,TLRY,TLS,TMC,TMDX,TNGX,TORO,TOYO,TSEM,TTMI,TXG,TXMD,TYRA,UCTT,UFO,UPB,URNJ,UROY,VELO,VERA,VERU,VICR,VRDN,WLDN,WULF,XMTR,ZBIO,ZNTL,ZYME').split(','),
@@ -534,7 +536,7 @@ async function update(instance) {
         //* BREAKDOWN */
         const render_breakdown = () => {
             data = PROCESSED_DATA.symbols.map((v) => { return { x: v.symbol, y: round2(v.months_total) } });
-            data = data.sort((a, b) => a.y < b.y ? 1 : -1);
+            // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
             chart_top_1.options.chart.height = 415;
             // chart_top_1.options.chart.type = 'bar';
             update_ui(chart_top_1);
@@ -596,7 +598,7 @@ async function update(instance) {
             // add_points('week_');
             // add_points('month_');
             // add_points('quarter_');
-            data = combined.data;//.slice(-90);
+            data = combined.data.slice(-30);
             update_ui(chart_top_3);
             total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.days_total)).reduce((p, c) => p + c));
             const elem = document.getElementById('top-combined-total');
@@ -644,7 +646,7 @@ async function update(instance) {
 
         //* CHART /*
         data = POSITIONS.map((v) => { return { x: v.symbol, y: round(v.unrealized_pl) } });
-        data = data.sort((a, b) => a.y < b.y ? 1 : -1);
+        // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
         chart_top_4.options.chart.height = 415;
         chart_top_4.options.dataLabels.formatter = function (text, op) {
             return [text, op.value]
@@ -668,8 +670,13 @@ async function update(instance) {
         elem.innerHTML = `[${round1(POSITIONS.length).toLocaleString()}K]`;
 
 
-        //* SYMBOLS LIST */
-        const template = `<span id="{id}" class="w3-tag w3-round w3-padding w3-{c}" style="cursor:pointer;min-width:108px;margin-bottom:5px;color:{fc}!important;" onclick="{f}('{s}')">{0}<br/>{1}</span>`
+        //* SYMBOLS BOXES & TABLE */
+        const template = `<span id="{id}" 
+            class="w3-tag w3-round w3-padding w3-{c}" 
+            style="cursor:pointer;min-width:144px;margin-bottom:5px;color:{fc}!important;" 
+            onclick="{f}('{s}')">
+                {0}<br/>{1}<!-- | <b>{2}</b>-->
+            </span>`
         const template_row = `
             <tr onclick="click_symbol('{s}')">
                 <td style="color:{c}"><b>{symbol}</b></td>
@@ -685,32 +692,34 @@ async function update(instance) {
             const day = +(s.unrealized_intraday_pl);
             const color = g >= 0 ? 'green' : 'red';
             const color_day = day >= 0 ? 'green' : 'red';
-            const font_color = g >= 0 ? 'black' : 'white';
+            const font_color = day >= 0 ? 'black' : 'white';
             // const date = ORDERS.find((v)=>v.symbol === s.symbol).filled_at.split('T')[0];
 
             // const own = config_stocks.data.find((v) => v.symbol === s).own;
             // const indicator = own < 0 ? get_indicator(own, own >= 0, colors.aqua) : '';
-            const indicator = get_indicator(g);
+            const indicator = get_indicator(day);
+            // const indicator = get_indicator(g);
             html += template
-                .replace('{c}', color)
+                .replace('{c}', color_day)
                 .replace('{0}', `${indicator} ${s.symbol}`)
-                .replace('{1}', round(g))
+                .replace('{1}', round(day))
+                // .replace('{2}', round(day))
                 .replace('{s}', s.symbol)
                 .replace('{f}', 'click_symbol')
                 .replace('{fc}', font_color)
                 .replace('{fc}', font_color)
                 // .replace('{date}', date)
                 + '\n';
-            
-                html_table += template_row
-                    .replace('{s}', s.symbol)
-                    .replace('{symbol}', `${indicator} ${s.symbol}`)
-                    .replace('{c}', color)
-                    .replace('{c}', color)
-                    .replace('{name}', stock_symbols_detail.find((v)=>v.symbol === s.symbol).name)
-                    .replace('{gain}', `$ ${round2(g)}`)
-                    .replace('{day}', `$ ${round2(day)}`)
-                    .replace('{c2}', color_day)
+
+            html_table += template_row
+                .replace('{s}', s.symbol)
+                .replace('{symbol}', `${indicator} ${s.symbol}`)
+                .replace('{c}', color)
+                .replace('{c}', color)
+                .replace('{name}', stock_symbols_detail.find((v) => v.symbol === s.symbol).name)
+                .replace('{gain}', `$ ${round2(g)}`)
+                .replace('{day}', `$ ${round2(day)}`)
+                .replace('{c2}', color_day)
         });
         document.getElementById('symbol-boxes-positions').innerHTML = html;
         document.getElementById('symbol-names').value = config_stocks.symbols.join(',');
@@ -751,18 +760,23 @@ async function update(instance) {
         chart_top_5.options.fill = { type: 'solid' };
 
         chart_top_5.options.annotations = { xaxis: [], yaxis: [], points: [], };
+        let last = 0;
         chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v) => v.thm === 2000).map((v) => {
-            return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
+            const value = round((v.equity - last))
+            last = v.equity;
+            return add_annotation_point(v.e, v.equity, 4.5, colors.black, value);
+            // return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
         })
-        const last = PORTFOLIO_HISTORY[PORTFOLIO_HISTORY.length - 1];
+        last = PORTFOLIO_HISTORY[PORTFOLIO_HISTORY.length - 1];
         chart_top_5.options.annotations.points.push(add_annotation_point(last.e, last.equity, 6.5, colors.deeppink));
         chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-02T16:00:00').getTime()));
         chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
 
         data = PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
         data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
+        chart_top_5.options.yaxis = { max: data[data.length - 1].y + 1000 };
         update_ui(chart_top_5);
-        
+
         total = round(data[data.length - 1].y);
         const gain = round(round2(round(data[data.length - 1].y - data[0].y)));
         //* PORTFOLIO BALANCE */
@@ -770,7 +784,7 @@ async function update(instance) {
         total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
         elem.innerHTML = `${get_indicator(gain)} ${gain.toLocaleString()}`;
         // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
-        
+
         //* MONTH GAIN */
         elem = document.getElementById('gain-month');
         elem.innerHTML = `$${total.toLocaleString()}`;
