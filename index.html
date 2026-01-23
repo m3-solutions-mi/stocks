@@ -195,7 +195,7 @@
                                     style="letter-spacing:4px;">$-K</span>
                                 <div id="top-chart-5" class="w3-margin-top"></div>
                             </div>
-                            <div class="w3-xxlarge" style="margin-top:16px;">
+                            <div class="w3-hide-small w3-xxlarge" style="margin-top:16px;">
                                 <i class="fa fa-bookmark-o fa-fw w3-text-green"></i> Breakdown
                                 <!-- <span id="top-symbols-total-pct" class="w3-small"
                                         style="_font-size: 56px !important;">%</span> -->
@@ -226,7 +226,7 @@
                                     style="letter-spacing:4px;">$-K</span>
                                 <div id="top-chart-4" class="w3-margin-top"></div>
                             </div>
-                            <div class="w3-xxlarge" style="margin-top:32px;"><i
+                            <div class="w3-hide-small w3-xxlarge" style="margin-top:32px;"><i
                                     class="fa fa-line-chart fa-fw w3-margin-right w3-text-green"></i>Cumulative
                                 |
                                 <span id="top-combined-total-pct" class="w3-large"
@@ -254,29 +254,29 @@
                         <h2 class="w3-text-grey w3-padding-16"><i
                                 class="fa fa-line-chart fa-fw w3-margin-right w3-xxlarge w3-text-green"
                                 style="cursor:pointer;" onclick="toggleSymbolDayChart()"></i>
-                            Stock Symbols Chart
+                            Stock Symbols
 
                             <!--* Configuration Selections -->
                             <div class="w3-right" style="display:inline-flex;align-content: center;">
-                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config"
+                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
                                     value="positions" onclick="click_config(this.value)" checked>
-                                <label style="margin:-2px 20px 0px 10px;">Positions</label>
+                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Positions</label>
 
-                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config"
+                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
                                     value="filtered" onclick="click_config(this.value)" disabled>
-                                <label style="margin:-2px 20px 0px 10px;">Filtered</label>
+                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Filtered</label>
 
-                                <input class="w3-radio" style="cursor:pointer;" type="radio" name="config"
+                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
                                     value="symbols" onclick="click_config(this.value)">
-                                <label style="margin:-2px 20px 0px 10px;">Symbols</label>
+                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Symbols</label>
 
-                                <input class="w3-radio" style="cursor:pointer;" type="checkbox"
+                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
                                     onclick="set_use_filter(this.checked)" checked>
-                                <label style="margin:-2px 20px 0px 10px;">Filter</label>
+                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Filter</label>
 
-                                <input class="w3-radio" style="cursor:pointer;" type="checkbox"
+                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
                                     onclick="set_use_raw(this.checked)">
-                                <label style="margin:-2px 20px 0px 10px;">Raw</label>
+                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Raw</label>
 
                                 <!-- <input class="w3-radio" style="cursor:pointer;" type="checkbox"
                                     onclick="set_num_days(this.checked)" checked>
@@ -299,9 +299,9 @@
                                     <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
                                         style="cursor:pointer;" onclick="liquidate()">Liquidate</div> -->
                                 <!-- </div> -->
-                                <div id="chart8" class='w3-col s9 w3-padding' _style="border:1px solid lightgray;">
+                                <div id="chart8" class='w3-hide-small w3-col s12 m9 w3-padding' _style="border:1px solid lightgray;">
                                 </div>
-                                <div id="chart10" class='w3-col s3 w3-padding' _style="border:1px solid lightgray;">
+                                <div id="chart10" class='w3-col s12 m3 w3-padding' _style="border:1px solid lightgray;">
                                 </div>
                             </div>
                         </h2>
@@ -333,7 +333,7 @@
                             <thead>
                                 <tr class="w3-light-grey">
                                     <th>Symbol</th>
-                                    <th>Name</th>
+                                    <th class="w3-hide-small">Name</th>
                                     <!-- <th>Date</th> -->
                                     <th>Day</th>
                                     <th>Gain</th>

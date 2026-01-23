@@ -52,8 +52,8 @@ const config_stocks = new Config(
         //*-----------------------------------------------------------------------------------------------------------------------------------------------------
         //@ CURRENT POSITIONS
         // ...('AEIS,ALNT,APYX,B,CENX,COPX,GDX,GE,GLTR,KALU,KLAC,KOD,KOPN,LASR,MU,PALL,REMX,SLV,SMH,SNDK,TBPH,TER,TSEM,VSAT,WDC').split(','),
-        ...('AEIS,ALB,ALNT,CECO,CENX,COPX,GDX,GLTR,GOOGL,IREN,KALU,KLAC,KOPN,LASR,MU,PALL,PSIX,REMX,RING,SLV,SNDK,TER,TSEM,VICR,WDC').split(','),
-        ...('MTSI,MKSI,MRNA,INTC,METC,AMD,AMKR,DOOO,FIVE,POWL').split(','),
+        ...('AEIS,ALB,ALNT,CECO,CENX,COPX,FLNC,GDX,GLTR,GOOGL,KALU,KLAC,KOPN,LASR,METC,MU,NEM,PALL,POWL,PSIX,REMX,RING,SLV,SNDK,TSEM,VICR,WDC').split(','),
+        // ...('MTSI,MKSI,MRNA,INTC,METC,AMD,AMKR,DOOO,FIVE,POWL').split(','),
 
         //@ LIKES
         // ...('A,AA,AAOI,ABVX,ACMR,AEIS,AENT,AEVA,AIP,ALAB,ALMS,AM,AMD,AMDL,AMKR,ANAB,ANGH,AP,APLD,APP,AR,ARWR,ASML,ASPS,ASTI,ASTS,ATAI,ATRO,ATXS,AVAV,AVDL,AX,B,BAER,BAI,BBIO,BDSX,BH,BIOA,BLTE,BTSG,C,CAMT,CECO,CELC,CENX,CIFR,CLLS,CM,CMPS,CMPX,CMTL,COPX,COR,CR,CRDO,CRML,CSTL,CTEC,CTMX,CTRN,D,DAPP,DMAC,DOOO,DPRO,DRIO,DRTS,DSGN,E,EDAP,EE,EGAN,ENGN,ENTA,ERAS,ESPR,EU,EVLV,EYE,EYPT,FBIO,FDMT,FIVE,FL,FLGC,FLNC,FMST,FORM,FTRE,FULC,GCT,GDX,GEOS,GEV,GH,GILT,GLUE,GOOG,GOOGL,GPRO,GRAL,GSAT,GSIT,GTX,HIVE,HL,HOOD,HUT,IBG,IDYA,IESC,IHRT,IMAB,IMNM,IMOS,IMTX,INBX,INDI,INDP,INDV,INSM,INTC,IPX,IR,IREN,IVA,JBIO,KALU,KLAC,KOD,KOPN,KTOS,KYMR,L,LASR,LCID,LMND,LQDA,LRCX,LUNR,LVLU,LWLG,LYEL,MAMA,MBX,MDB,MDXH,MEDP,METC,MFH,MGIC,MIRM,MKSI,MLYS,MNMD,MRCY,MTSI,MU,MYRG,NAUT,NBIS,NBTX,NEM,NERV,NESR,NVMI,NVTS,O,OKLO,OLMA,ONDS,OPEN,ORIC,ORKA,OSS,OUST,PAYS,PBYI,PGY,PHAT,PL,PLTR,POET,PONY,POWL,PPTA,PRAX,PRLD,PRME,PSIX,PSNL,QCLS,QTTB,QURE,R,RAPP,RAPT,RCAT,RDNW,REMX,RGNX,RGTI,RIGL,RILY,RING,RIOT,RKLB,RL,RLAY,RLMD,RMBS,ROIV,RPTX,RUN,RYTM,SANA,SANM,SATS,SEDG,SEPN,SERV,SETM,SHLS,SIMO,SITM,SKYT,SLDP,SLNH,SLV,SMTC,SNDK,SOFI,SRTA,SSRM,STOK,STRL,STRO,STX,SYM,SYRE,TBPH,TCMD,TE,TENX,TER,TERN,TLRY,TLS,TMC,TMDX,TNGX,TORO,TOYO,TSEM,TTMI,TXG,TXMD,TYRA,UCTT,UFO,UPB,URNJ,UROY,VELO,VERA,VERU,VICR,VRDN,WLDN,WULF,XMTR,ZBIO,ZNTL,ZYME').split(','),
@@ -680,7 +680,7 @@ async function update(instance) {
         const template_row = `
             <tr onclick="click_symbol('{s}')">
                 <td style="color:{c}"><b>{symbol}</b></td>
-                <td>{name}</td>
+                <td class="w3-hide-small">{name}</td>
                 <!--<td>{date}</td>-->
                 <td style="color:{c2}">{day}</td>
                 <td style="color:{c}">{gain}</td>
@@ -717,8 +717,8 @@ async function update(instance) {
                 .replace('{c}', color)
                 .replace('{c}', color)
                 .replace('{name}', stock_symbols_detail.find((v) => v.symbol === s.symbol).name)
-                .replace('{gain}', `$ ${round2(g)}`)
-                .replace('{day}', `$ ${round2(day)}`)
+                .replace('{gain}', `${round2(g)}`)
+                .replace('{day}', `${round2(day)}`)
                 .replace('{c2}', color_day)
         });
         document.getElementById('symbol-boxes-positions').innerHTML = html;
