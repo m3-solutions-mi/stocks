@@ -99,10 +99,10 @@
                                                     onclick="click_account(this.value)">
                                                 <label class="w3-margin-top" style="margin-right: 45px;" l>LIVE</label>
 
-                                                <!-- <input class="w3-radio w3-margin-right" style="cursor:pointer;"
+                                                <input class="w3-radio w3-margin-right" style="cursor:pointer;"
                                                     type="radio" name="accounts" value="crypto"
                                                     onclick="click_account(this.value)">
-                                                <label class="w3-margin-top" style="" l>CRYPTO</label> -->
+                                                <label class="w3-margin-top" style="margin-right: 45px;" l>CRYPTO</label>
                                             </div>
 
                                             <div _style="display:inline-flex;"><label>KEY</label><input id="key"
@@ -111,10 +111,14 @@
                                             <div style="margin-top:10px;"><label>SECRET</label><input id="secret"
                                                     class="w3-input w3-border" type="text" placeholder="Enter secret">
                                             </div>
-                                            <div style="margin-top:10px;"><label>TOKEN</label><input id="token"
+                                            <div style="display:none;margin-top:10px;width:50%;"><label>TOKEN</label><input id="token"
                                                     class="w3-input w3-border" type="text" placeholder="Enter token">
                                             </div>
-                                            <div style="margin-top:10px;"><label>SEED ( dollars / symbol )</label><input
+                                            <div class="w3-right" style="margin-top:10px;width:45%;"><label>START DATE</label><input
+                                                    id="start_date" class="w3-input w3-border" type="text" value="2026-01-05"
+                                                    placeholder="Enter seed dollars">
+                                            </div>
+                                            <div style="margin-top:10px;width:45%;"><label>SEED ( dollars / symbol )</label><input
                                                     id="seed" class="w3-input w3-border" type="number" value="1000"
                                                     placeholder="Enter seed dollars">
                                             </div>
@@ -357,7 +361,7 @@
     </div>
 
     <!--@ Pricing Tables -->
-    <div class="w3-hide w3-col s12" style="margin-top:25px;margin-bottom:45px;">
+    <div class="w3-container _w3-hide w3-col s12" style="margin-top:25px;margin-bottom:45px;">
             <div class="w3-large w3-container w3-card w3-white w3-padding" style="padding-top:20px !important;">
                 <div class="w3-third w3-margin-bottom">
                     <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
