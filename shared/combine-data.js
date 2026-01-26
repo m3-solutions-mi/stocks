@@ -29,12 +29,14 @@ const combine_data = (symbols, seed_per_symbol = 1000, add_per_month = 0 * 1000)
     });
     const annotations_x = [];
     let last = 0;
-    let m = getMonthName(new Date(result[0].x));
+    // let m = getMonthName(new Date(result[0].x));
+    let m = getYMD(new Date(result[0].x));
     result.forEach((v, i) => {
-        const cm = getMonthName(new Date(v.x));
+        // const cm = getMonthName(new Date(v.x));
+        const cm = getYMD(new Date(v.x));
 
         if (cm !== m /*|| i === combined.data.length - 1*/) {
-            const diff = round1((v.y - last) / 1000);
+            const diff = round1((v.y - last));
             last = v.y;
             annotations_x.push({ x: v.x, y: v.y, label: { text: diff, style: { fontSize: '22px' } }, marker: { size: 4.5, fillColor: colors.black } });
             m = cm;

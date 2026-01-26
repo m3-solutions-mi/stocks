@@ -76,7 +76,7 @@ const config_stocks = new Config(
         // ...('AEIS,ALNT,APYX,B,CENX,COPX,GDX,GE,GLTR,KALU,KLAC,KOD,KOPN,LASR,MU,PALL,REMX,SLV,SMH,SNDK,TBPH,TER,TSEM,VSAT,WDC').split(','),
         // ...('AEIS,ALB,ALNT,CECO,CENX,COPX,FLNC,GDX,GLTR,GOOGL,KALU,KLAC,KOPN,LASR,METC,MU,NEM,PALL,POWL,PSIX,REMX,RING,SLV,SNDK,TSEM,VICR,WDC').split(','),
         // ...('MTSI,MKSI,MRNA,INTC,METC,AMD,AMKR,DOOO,FIVE,POWL').split(','),
-        ...('AEIS,ALB,ALNT,CECO,CENX,COPX,FLNC,GDX,GH,GLTR,GOOGL,KALU,KLAC,KOPN,LASR,METC,MU,NEM,PALL,POWL,PSIX,REMX,RING,SLV,TSEM,URNJ,WDC').split(','),
+        // ...('AEIS,ALB,ALNT,CECO,CENX,COPX,FLNC,GDX,GH,GLTR,GOOGL,KALU,KLAC,KOPN,LASR,METC,MU,NEM,PALL,POWL,PSIX,REMX,RING,SLV,TSEM,URNJ,WDC').split(','),
 
         //@ LIKES
         // ...('A,AA,AAOI,ABVX,ACMR,AEIS,AENT,AEVA,AIP,ALAB,ALMS,AM,AMD,AMDL,AMKR,ANAB,ANGH,AP,APLD,APP,AR,ARWR,ASML,ASPS,ASTI,ASTS,ATAI,ATRO,ATXS,AVAV,AVDL,AX,B,BAER,BAI,BBIO,BDSX,BH,BIOA,BLTE,BTSG,C,CAMT,CECO,CELC,CENX,CIFR,CLLS,CM,CMPS,CMPX,CMTL,COPX,COR,CR,CRDO,CRML,CSTL,CTEC,CTMX,CTRN,D,DAPP,DMAC,DOOO,DPRO,DRIO,DRTS,DSGN,E,EDAP,EE,EGAN,ENGN,ENTA,ERAS,ESPR,EU,EVLV,EYE,EYPT,FBIO,FDMT,FIVE,FL,FLGC,FLNC,FMST,FORM,FTRE,FULC,GCT,GDX,GEOS,GEV,GH,GILT,GLUE,GOOG,GOOGL,GPRO,GRAL,GSAT,GSIT,GTX,HIVE,HL,HOOD,HUT,IBG,IDYA,IESC,IHRT,IMAB,IMNM,IMOS,IMTX,INBX,INDI,INDP,INDV,INSM,INTC,IPX,IR,IREN,IVA,JBIO,KALU,KLAC,KOD,KOPN,KTOS,KYMR,L,LASR,LCID,LMND,LQDA,LRCX,LUNR,LVLU,LWLG,LYEL,MAMA,MBX,MDB,MDXH,MEDP,METC,MFH,MGIC,MIRM,MKSI,MLYS,MNMD,MRCY,MTSI,MU,MYRG,NAUT,NBIS,NBTX,NEM,NERV,NESR,NVMI,NVTS,O,OKLO,OLMA,ONDS,OPEN,ORIC,ORKA,OSS,OUST,PAYS,PBYI,PGY,PHAT,PL,PLTR,POET,PONY,POWL,PPTA,PRAX,PRLD,PRME,PSIX,PSNL,QCLS,QTTB,QURE,R,RAPP,RAPT,RCAT,RDNW,REMX,RGNX,RGTI,RIGL,RILY,RING,RIOT,RKLB,RL,RLAY,RLMD,RMBS,ROIV,RPTX,RUN,RYTM,SANA,SANM,SATS,SEDG,SEPN,SERV,SETM,SHLS,SIMO,SITM,SKYT,SLDP,SLNH,SLV,SMTC,SNDK,SOFI,SRTA,SSRM,STOK,STRL,STRO,STX,SYM,SYRE,TBPH,TCMD,TE,TENX,TER,TERN,TLRY,TLS,TMC,TMDX,TNGX,TORO,TOYO,TSEM,TTMI,TXG,TXMD,TYRA,UCTT,UFO,UPB,URNJ,UROY,VELO,VERA,VERU,VICR,VRDN,WLDN,WULF,XMTR,ZBIO,ZNTL,ZYME').split(','),
@@ -92,12 +92,19 @@ const config_stocks = new Config(
     // '2025-12-14T00:00:00Z' // end
 );
 
-let alpaca = new AlpacaData(
-    localStorage.getItem('m3-stocks-key'),
-    localStorage.getItem('m3-stocks-secret'),
-    new Date(config_stocks.start_at).toISOString(),
-    'W2'
-);
+// let alpaca = new AlpacaData(
+//     localStorage.getItem('m3-stocks-key'),
+//     localStorage.getItem('m3-stocks-secret'),
+//     new Date(config_stocks.start_at).toISOString(),
+//     'W2'
+// );
+
+// let alpaca = new AlpacaData(
+//     '',
+//     '',
+//     '',
+//     ''
+// );
 
 // const config_symbol = new Config(
 //     localStorage.getItem('m3-stocks-key'),
@@ -457,8 +464,8 @@ const update_charts = (config = config_stocks) => {
     //#-------------------------------------------
     //# Symbols List 
     //#-------------------------------------------
-    const template = `<span class="w3-tag w3-round w3-padding w3-{c}" style="cursor:pointer;min-width:85px;margin-bottom:5px;" onclick="{f}('{s}')">{0}<br/>{1}</span>`
-    let html = '';
+    // const template = `<span class="w3-tag w3-round w3-padding w3-{c}" style="cursor:pointer;min-width:85px;margin-bottom:5px;" onclick="{f}('{s}')">{0}<br/>{1}</span>`
+    // let html = '';
     // config.symbols.forEach((s) => {
     //     const entry = config.data.find((v) => v.symbol === s)
     //     const g = entry.position ? entry.position.gain : entry.trades[entry.trades.length - 1].gain_1K;
@@ -492,39 +499,39 @@ const update_charts = (config = config_stocks) => {
 // const FIELD_SECRET = 'SECRET';
 // const FIELD_TOKEN = 'TOKEN';
 // const FIELD_SYMBOLS = 'SYMBOLS';
-class Stocks {
-    NAME = null;
-    PROCESSED_DATA = null;
-    POSITIONS = null;
-    ORDERS = null;
-    TOKEN = null;
-    SYMBOLS = null;
-    ALPACA = null;
-    // START_AT = '2025-04-01';
-    START_AT = '2026-01-05';
+// class Stocks {
+//     NAME = null;
+//     PROCESSED_DATA = null;
+//     POSITIONS = null;
+//     ORDERS = null;
+//     TOKEN = null;
+//     SYMBOLS = null;
+//     ALPACA = null;
+//     // START_AT = '2025-04-01';
+//     START_AT = '2026-01-05';
 
-    constructor(name, token, symbols = []) {
-        this.NAME = name;
-        this.TOKEN = token;
-        this.SYMBOLS = symbols;
+//     constructor(name, token, symbols = []) {
+//         this.NAME = name;
+//         this.TOKEN = token;
+//         this.SYMBOLS = symbols;
 
-        //* ALPACA */
-        this.ALPACA = new AlpacaData(localStorage.getItem('m3-trader-v5-key'), localStorage.getItem('m3-trader-v5-secret'), this.START_AT, 'W');
-    }
-    set_field(name, value) {
-        this[name] = value;
-    }
-    get_field(name) {
-        return this[name];
-    }
-    async get_symbols(start_at = this.START_AT) {
-        return new Promise(async (resolve) => {
-            this.PROCESSED_DATA = await this.ALPACA.bars_simplified(this.SYMBOLS, this.START_AT);
-            // console.log('SYMBOLS', this.PROCESSED_DATA);
-            resolve(this.PROCESSED_DATA);
-        });
-    }
-}
+//         //* ALPACA */
+//         this.ALPACA = new AlpacaData(localStorage.getItem('m3-trader-v5-key'), localStorage.getItem('m3-trader-v5-secret'), this.START_AT, 'W');
+//     }
+//     set_field(name, value) {
+//         this[name] = value;
+//     }
+//     get_field(name) {
+//         return this[name];
+//     }
+//     // async get_symbols(start_at = this.START_AT) {
+//     //     return new Promise(async (resolve) => {
+//     //         this.PROCESSED_DATA = await this.ALPACA.bars_simplified(this.SYMBOLS, this.START_AT);
+//     //         // console.log('SYMBOLS', this.PROCESSED_DATA);
+//     //         resolve(this.PROCESSED_DATA);
+//     //     });
+//     // }
+// }
 // const temp = new Stocks(
 //     'MINERALS',                              // NAME
 //     '123',                                   // TOKEN
@@ -548,9 +555,19 @@ async function update(instance) {
     const s = Date.now();
 
     //*@ GET PROCESSED DATA */
-    let start_date = '2026-01-05';
+    // let start_date = '2026-01-05';
     // start_date = '2026-01-05';
-    config_stocks.alpaca.bars_simplified(config_stocks.symbols, start_date).then((result) => {
+    const name = localStorage.getItem(`m3-stocks-account-name`) || 'paper';
+    let start_date = localStorage.getItem(`m3-stocks-${name}-start-at`) || '2025-01-05';
+    const symbols = localStorage.getItem(`m3-stocks-${name}-symbols`).split(',');
+    const key = localStorage.getItem(`m3-stocks-${name}-alpaca-key`);
+    const secret = localStorage.getItem(`m3-stocks-${name}-alpaca-secret`);
+    const seed = +(localStorage.getItem(`m3-stocks-${name}-seed`) || 1000);
+    config_stocks.alpaca.ALPACA_KEY = key;
+    config_stocks.alpaca.ALPACA_SECRET = secret;
+    config_stocks.alpaca.SEED = seed;
+
+    config_stocks.alpaca.bars_simplified(symbols, start_date).then((result) => {
         // instance.get_symbols().then((result) => {
         PROCESSED_DATA = result;
         console.log(`DATA | ${instance?.NAME || 'CONFIG'}`, PROCESSED_DATA)
@@ -571,28 +588,28 @@ async function update(instance) {
         }
 
         //* MONTHS */
-        const render_months = () => {
-            // data = Object.entries(PROCESSED_DATA.months).map((v) => { return { x: v[0].slice(5), y: round2(v[1]) } });
-            // // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
-            // // chart_top_2.options.chart.height = 400;
-            // // chart_top_2.options.dataLabels.enabled = false;
-            // chart_top_2.options.chart.type = 'bar';
-            // chart_top_2.options.dataLabels.offsetY = -32;
-            // chart_top_2.options.dataLabels.style = { fontSize: '20px', colors: [colors.black] };
-            // chart_top_2.options.dataLabels.formatter = (val, opts) => {
-            //     return round1(val / 1000)
-            // };
-            // chart_top_2.options.annotations.yaxis = [
-            //     { y: PROCESSED_DATA.months_avg, label: { _text: PROCESSED_DATA.months_avg / 1000 }, fillColor: colors.black, borderColor: colors.black },
-            //     { y: 0, label: { _text: '0' }, fillColor: colors.black, borderColor: colors.black }
-            // ];
-            // update_ui(chart_top_2);
-            // total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.months_avg)).reduce((p, c) => p + c));
-            // const elem = document.getElementById('top-months-total');
-            // total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-            // elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
-            // // document.getElementById('top-months-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
-        }
+        // const render_months = () => {
+        //     // data = Object.entries(PROCESSED_DATA.months).map((v) => { return { x: v[0].slice(5), y: round2(v[1]) } });
+        //     // // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
+        //     // // chart_top_2.options.chart.height = 400;
+        //     // // chart_top_2.options.dataLabels.enabled = false;
+        //     // chart_top_2.options.chart.type = 'bar';
+        //     // chart_top_2.options.dataLabels.offsetY = -32;
+        //     // chart_top_2.options.dataLabels.style = { fontSize: '20px', colors: [colors.black] };
+        //     // chart_top_2.options.dataLabels.formatter = (val, opts) => {
+        //     //     return round1(val / 1000)
+        //     // };
+        //     // chart_top_2.options.annotations.yaxis = [
+        //     //     { y: PROCESSED_DATA.months_avg, label: { _text: PROCESSED_DATA.months_avg / 1000 }, fillColor: colors.black, borderColor: colors.black },
+        //     //     { y: 0, label: { _text: '0' }, fillColor: colors.black, borderColor: colors.black }
+        //     // ];
+        //     // update_ui(chart_top_2);
+        //     // total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.months_avg)).reduce((p, c) => p + c));
+        //     // const elem = document.getElementById('top-months-total');
+        //     // total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+        //     // elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
+        //     // // document.getElementById('top-months-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+        // }
 
         //*@ COMBINED / CUMULATIVE */
         const render_combined = () => {
@@ -622,6 +639,7 @@ async function update(instance) {
             // add_points('month_');
             // add_points('quarter_');
             data = combined.data;
+            chart_top_3.options.yaxis.max = data[data.length - 1].y + 1000;
             // data = data.slice(-30);
             update_ui(chart_top_3);
             total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.days_total)).reduce((p, c) => p + c));
@@ -633,7 +651,7 @@ async function update(instance) {
 
         //* RENDER METHODS */
         render_breakdown();
-        render_months();
+        // render_months();
         render_combined();
     });
 
@@ -655,13 +673,19 @@ async function update(instance) {
         let elem = document.getElementById('day-total');
         elem.innerHTML = `${get_indicator(total)} ${Math.abs(round(total)).toLocaleString()}&nbsp;`;
         const color = round(total) > 0 ? 'green' : (round(total) < 0 ? 'red' : 'grey');
-        elem.classList.replace('w3-green', `w3-${color}`);
+        elem.classList.remove('w3-green');
+        elem.classList.remove('w3-grey');
+        elem.classList.remove('w3-red');
+        elem.classList.add('w3-green', `w3-${color}`);
         // total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
 
         //* DAY PERCENT */
         const percent = day_pct;
         elem = document.getElementById('day-pct');
         elem.innerHTML = `${percent.toLocaleString()}%`;
+        elem.classList.remove('w3-text-green');
+        elem.classList.remove('w3-text-grey');
+        elem.classList.remove('w3-text-red');
         elem.classList.replace('w3-text-green', `w3-text-${color}`);
         // total < 0 ? elem.classList.replace('w3-text-green', '/w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
     });
@@ -771,7 +795,7 @@ async function update(instance) {
 
     //*@ PORTFOLIO HISTORY */
     // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
-    start_date = '2026-01-05';
+    // start_date = '2026-01-05';
     config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
         PORTFOLIO_HISTORY = result;
         console.log('PORTFOLIO_HISTORY', PORTFOLIO_HISTORY);
@@ -796,8 +820,8 @@ async function update(instance) {
         })
         last = PORTFOLIO_HISTORY[PORTFOLIO_HISTORY.length - 1];
         chart_top_5.options.annotations.points.push(add_annotation_point(last.e, last.equity, 6.5, colors.deeppink));
-        chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-02T16:00:00').getTime()));
-        chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
+        // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-02T16:00:00').getTime()));
+        // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
 
         data = PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
         data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
@@ -843,7 +867,7 @@ async function click_symbol(s, elem, check_score = false) {
     ];
     // let entry = PROCESSED_DATA.symbols.find((v) => v.symbol === s);
     // if (!entry) {
-    const temp = await alpaca.bars_simplified([s], start.toISOString());
+    const temp = await config_stocks.alpaca.bars_simplified([s], start.toISOString());
     let entry = temp.symbols[0];
     // }
 
