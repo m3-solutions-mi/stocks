@@ -24,10 +24,10 @@ class Treemap {
                 enabled: true,
             },
             events: {
-                dataPointSelection: function (event, chartContext, opts) {
-                    console.log('data point selected', event);
-                }
-            }
+                // dataPointSelection: function (event, chartContext, opts) {
+                //     console.log('data point selected', event, chartContext, opts);
+                // }
+            },
         },
         annotations: {
             xaxis: [],

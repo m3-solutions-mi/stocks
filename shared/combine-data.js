@@ -124,9 +124,9 @@ const summarize_combined_data = (symbols) => {
         const t_sum_75 = round2(Object.values(obj[k]).reduce((p, c) => p + c) / count * 75);
         const t_avg_75 = round2(t_sum / (Object.values(obj[k]).length - 1) / count * 75);
 
-        console.group(`%c${k.toUpperCase()} SPLIT SUM | $${t_sum.toLocaleString()} | $${t_sum_50.toLocaleString()} @ 50K | $${t_sum_75.toLocaleString()} @ 75K`, 'color:yellow;');
-        console.log(`%c${k.toUpperCase()} SPLIT AVG | $${t_avg.toLocaleString()} | $${t_avg_50.toLocaleString()} @ 50K | $${t_avg_75.toLocaleString()} @ 75K`, 'color:orange;');
-        console.groupEnd();
+        // console.group(`%c${k.toUpperCase()} SPLIT SUM | $${t_sum.toLocaleString()} | $${t_sum_50.toLocaleString()} @ 50K | $${t_sum_75.toLocaleString()} @ 75K`, 'color:yellow;');
+        // console.log(`%c${k.toUpperCase()} SPLIT AVG | $${t_avg.toLocaleString()} | $${t_avg_50.toLocaleString()} @ 50K | $${t_avg_75.toLocaleString()} @ 75K`, 'color:orange;');
+        // console.groupEnd();
         obj[k + '_'] = { t_sum, t_avg };
         // obj[k + '_avg'] = t_avg;
     });

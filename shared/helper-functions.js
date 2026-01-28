@@ -499,10 +499,10 @@ const get_symbol_logo = (symbol) => {
 const add_annotation_x = (x) => {
     return { x, borderColor: colors.black, fillColor: colors.black, opacity: 1 };
 }
-const add_annotation_point = (x, y, size = 4.5, color = colors.black, text = null) => {
+const add_annotation_point = (x, y, size = 4.5, color = colors.black, text = null, offsetX = 0, offsetY = 0) => {
     const obj = { x, y, marker: { size, fillColor: color } };
     if (text) {
-        obj.label  = { text, style: { fontSize: '22px' } };
+        obj.label  = { text, offsetX, offsetY, style: { fontSize: '22px' } };
     }
     return obj;
 }

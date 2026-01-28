@@ -96064,7 +96064,7 @@ const stock_symbols_detail = [
     {symbol: 'WM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'OKLO', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'SCCO', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'NEM', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'NEM', name: 'NEWMONT CORPORATION', status: 'active', tradable: true, fractionable: true},
     {symbol: 'AVDE', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'BTC', name: 'Bitcoin ETF', status: 'active', tradable: true, fractionable: true},
     {symbol: 'SLV', name: 'iShares Silver Trust', status: 'active', tradable: true, fractionable: true}, // SILVER
