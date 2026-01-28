@@ -148,7 +148,7 @@ async function click_letter(letter) {
         }
     } else {
         selected_letter = letter;
-        
+
         //* alpaca symbols list */
         let filtered = stock_symbols_detail.filter((v) => v.symbol.startsWith(letter));
         if (use_filter) {
@@ -265,10 +265,13 @@ function toggle_settings() {
     document.getElementById('key').value = localStorage.getItem('m3-stocks-key') || '';
     document.getElementById('secret').value = localStorage.getItem('m3-stocks-secret') || '';
     document.getElementById('token').value = localStorage.getItem('m3-stocks-token') || '';
-    document.getElementById('symbol_picks').value = picks;
+    document.getElementById('symbols').value = picks;
     document.getElementById('likes').value = likes;
     document.getElementById('steady_picks').value = steady;
     document.getElementById('settings').classList.toggle('w3-hide');
+
+
+    click_account(ACCOUNT_NAME)
 }
 
 //#----------------------------
@@ -300,10 +303,16 @@ function update_settings(all = true) {
 //#----------------------------
 //# click account
 //#----------------------------
+let ACCOUNT_NAME = localStorage.getItem(`m3-stocks-account-name`) || 'paper';
 function click_account(value) {
-    document.getElementById('key').value = localStorage.getItem(`m3-stocks-key-${value}`) || 'NONE';
-    document.getElementById('secret').value = localStorage.getItem(`m3-stocks-secret-${value}`) || 'NONE';
-    document.getElementById('token').value = localStorage.getItem(`m3-stocks-token-${value}`) || 'NONE';
+    localStorage.setItem(`m3-stocks-account-name`, value);
+    ACCOUNT_NAME = value;
+    document.getElementById('key').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-alpaca-key`) || '';
+    document.getElementById('secret').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-alpaca-secret`) || '';
+    document.getElementById('seed').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-seed`) || '1000';
+    document.getElementById('start_date').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-start-at`) || '2026-01-01';
+    document.getElementById('symbols').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-symbols`) || '';
+    // document.getElementById('token').value = localStorage.getItem(`m3-stocks-token-${value}`) || 'NONE';
 }
 
 //#----------------------------
