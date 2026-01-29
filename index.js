@@ -149,6 +149,8 @@ let chart_top_2 = new Treemap('#top-chart-2');
 let chart_top_3 = new Treemap('#top-chart-3');
 let chart_top_4 = new Treemap('#top-chart-4');
 let chart_top_5 = new Treemap('#top-chart-5');
+let chart_top_6 = new Treemap('#top-chart-6');
+let chart_top_7 = new Treemap('#top-chart-7');
 
 
 //#-------------------------------------------
@@ -548,6 +550,7 @@ let PROCESSED_DATA = null;
 let POSITIONS = null;
 let ORDERS = null;
 let PORTFOLIO_HISTORY = null;
+let PORTFOLIO_DAY_HISTORY = null;
 let ACCOUNT = null;
 
 //* UPDATE DATA */
@@ -862,6 +865,80 @@ async function update(instance) {
         //* MONTH GAIN */
         elem = document.getElementById('gain-month');
         elem.innerHTML = `$${total.toLocaleString()}`;
+    });
+
+    //*@ PORTFOLIO 'DAY' HISTORY */
+    // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
+    // start_date = '2026-01-05';
+    //@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
+    config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'continuous').then((result) => {
+        PORTFOLIO_DAY_HISTORY = result;
+        console.log('PORTFOLIO_DAY_HISTORY', PORTFOLIO_DAY_HISTORY);
+
+        //* GENERATE CHART */
+        series = { name: 'Close', type: 'area', data: [] };
+        chart_top_7.options.chart.type = 'area';
+        chart_top_7.options.chart.height = 400;
+        chart_top_7.options.chart.sparkline = { enabled: true };
+        chart_top_7.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
+        chart_top_7.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
+        chart_top_7.options.dataLabels.enabled = false;
+        chart_top_7.options.fill = { type: 'solid' };
+
+        chart_top_7.options.annotations = { xaxis: [], yaxis: [], points: [], };
+        let last = 0;
+        // chart_top_7.options.annotations.points = PORTFOLIO_DAY_HISTORY.filter((v) => v.thm === 2000).map((v, i) => {
+        //     const value = round((v.equity - last));
+        //     last = v.equity;
+        //     return add_annotation_point(v.e, v.equity, 4.5, colors.black, value);
+        //     // return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
+        // })
+
+        // last = PORTFOLIO_DAY_HISTORY[PORTFOLIO_DAY_HISTORY.length - 1];
+        // chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.equity));
+        
+        PORTFOLIO_DAY_HISTORY.forEach((v) => {
+            const label = {
+                400: '4 am',
+                930: '9:30',
+                1100: '11 am',
+                1600: '4 pm',
+                2000: '8 pm',
+            }
+            if ([/*0,*/ 400, 930, 1100, 1600, 2000].indexOf(v.thm) >= 0) {
+                chart_top_7.options.annotations.xaxis.push(add_annotation_x(v.e, label[v.thm] || v.thm, v.thm === 0 ? colors.deeppink : colors.black));
+            }
+        })
+        // const first = PORTFOLIO_DAY_HISTORY[0];
+        // chart_top_7.options.annotations.points.push(add_annotation_point(last.e, last.equity - first.equity, 4.5, colors.deeppink, '123'))
+        // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
+
+        data = PORTFOLIO_DAY_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
+        // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 250 };
+        
+        //! only needed if timeframe !== '1Min'
+        // data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
+
+        last = data[data.length - 1];
+        const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length-1];
+        chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y));
+
+        // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 1000 };
+        update_ui(chart_top_7);
+
+        total = round(data[data.length - 1].y);
+        const gain = round(round2(round(data[data.length - 1].y - yesterday.y)));
+        //* PORTFOLIO BALANCE */
+        let elem = document.getElementById('top-portfolio-day-total');
+        gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+        elem.innerHTML = `${get_indicator(gain)} ${Math.abs(gain).toLocaleString()}`;
+        // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+
+        //* MONTH GAIN */
+        elem = document.getElementById('gain-today');
+        gain < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+        elem.innerHTML = `${(Math.abs(round2(total / yesterday.y * 100) - 100)).toLocaleString()}%`;
+        // elem.innerHTML = `$${(data[data.length-1].y - data[0].y).toLocaleString()}`;
     });
 }
 

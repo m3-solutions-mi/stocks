@@ -102,7 +102,8 @@
                                                 <input class="w3-radio w3-margin-right" style="cursor:pointer;"
                                                     type="radio" name="accounts" value="crypto"
                                                     onclick="click_account(this.value)">
-                                                <label class="w3-margin-top" style="margin-right: 45px;" l>CRYPTO</label>
+                                                <label class="w3-margin-top" style="margin-right: 45px;"
+                                                    l>CRYPTO</label>
                                             </div>
 
                                             <div _style="display:inline-flex;"><label>KEY</label><input id="key"
@@ -111,21 +112,21 @@
                                             <div style="margin-top:10px;"><label>SECRET</label><input id="secret"
                                                     class="w3-input w3-border" type="text" placeholder="Enter secret">
                                             </div>
-                                            <div style="display:none;margin-top:10px;width:50%;"><label>TOKEN</label><input id="token"
-                                                    class="w3-input w3-border" type="text" placeholder="Enter token">
+                                            <div style="display:none;margin-top:10px;width:50%;">
+                                                <label>TOKEN</label><input id="token" class="w3-input w3-border"
+                                                    type="text" placeholder="Enter token">
                                             </div>
-                                            <div class="w3-right" style="margin-top:10px;width:45%;"><label>START DATE</label><input
-                                                    id="start_date" class="w3-input w3-border" type="text" value="2026-01-05"
-                                                    placeholder="Enter seed dollars">
+                                            <div class="w3-right" style="margin-top:10px;width:45%;"><label>START
+                                                    DATE</label><input id="start_date" class="w3-input w3-border"
+                                                    type="text" value="2026-01-05" placeholder="Enter seed dollars">
                                             </div>
-                                            <div style="margin-top:10px;width:45%;"><label>SEED ( dollars / symbol )</label><input
-                                                    id="seed" class="w3-input w3-border" type="number" value="1000"
-                                                    placeholder="Enter seed dollars">
+                                            <div style="margin-top:10px;width:45%;"><label>SEED ( dollars / symbol
+                                                    )</label><input id="seed" class="w3-input w3-border" type="number"
+                                                    value="1000" placeholder="Enter seed dollars">
                                             </div>
-                                            <div style="margin-top:10px;"><label>SYMBOLS</label><textarea
-                                                    id="symbols" rows="4" class="w3-input w3-border"
-                                                    style="letter-spacing:2px;" type="text"
-                                                    placeholder="Enter picks"></textarea></div>
+                                            <div style="margin-top:10px;"><label>SYMBOLS</label><textarea id="symbols"
+                                                    rows="4" class="w3-input w3-border" style="letter-spacing:2px;"
+                                                    type="text" placeholder="Enter picks"></textarea></div>
                                             <div style="margin-top:10px;"><label>LIKES</label><textarea id="likes"
                                                     rows="4" class="w3-input w3-border" style="letter-spacing:2px;"
                                                     type="text" placeholder="Enter likes"></textarea></div>
@@ -154,9 +155,9 @@
                 </div>
                 <!--@ End | Tablet / Desktop Header -->
 
-                <!--* TOP NEW -->
+                <!--@ TOP NEW -->
                 <div class="w3-col s12 w3-xxlarge w3-card w3-white w3-margin-bottom w3-padding">
-                    <div class="_w3-center">
+                    <div class="w3-hide _w3-center">
 
                         <!--* CURRENT POSITIONS -->
                         <span class="" style="font-size: 56px !important;">
@@ -181,25 +182,52 @@
                             </h5>
                         </span>
                     </div>
-                    <!--* End | TOP NEW -->
+                    <!--@ End | TOP NEW -->
 
-                    <!--* MAIN -->
-                    <div class="w3-row w3-padding-top" style="border-top:1px solid lightgrey;">
+                    <!--@ MAIN -->
+                    <div class="w3-row w3-padding-top" style="_border-top:1px solid lightgrey;">
+
+                        <!--* TOP -->
+                        <div class="w3-col s12 w3-xxlarge w3-padding _w3-border-right">
+                            <div class="w3-col s12" style="font-size: 48px;margin-top:16px;"><i
+                                    class="fa fa-line-chart fa-fw w3-text-green"></i> Today
+                                |
+                                <b><span id="gain-today" class="w3-xlarge w3-text-green"
+                                        style="font-size: 36px !important;letter-spacing:6px;">$</span></b>
+                                <b><span id="top-portfolio-day-total"
+                                        class="w3-tag w3-green w3-roundw3-text-white w3-right"
+                                        style="font-size: 56px;letter-spacing:16px;">$-K</span>
+                                </b>
+                                <div id="top-chart-7" class="w3-margin-top"></div>
+                            </div>
+                        </div>
 
                         <!--* LEFT -->
                         <div class="w3-col s12 m6 w3-xxlarge w3-padding w3-border-right">
-                            <div class="w3-xxlarge" style="margin-top:36px;"><i
-                                    class="fa fa-university fa-fw w3-text-green"></i> Portfolio
+                            <div class="w3-xxlarge" style="margin-top:36px;">
+                                <i class="fa fa-university fa-fw w3-text-green"></i> Portfolio
                                 |
                                 <span id="gain-month" class="w3-xlarge" style="_font-size: 56px !important;">$</span>
                                 <!-- <span id="top-months-total-pct" class="w3-large"
                                         style="_font-size: 56px !important;">%</span> -->
                                 <span id="top-portfolio-total"
                                     class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
-                                    style="letter-spacing:4px;">$-K</span>
+                                    style="">$-K</span>
                                 <div id="top-chart-5" class="w3-margin-top"></div>
+
                             </div>
-                            <div class="w3-hide-small w3-xxlarge" style="margin-top:16px;">
+                            <div class="w3-hide w3-xxlarge" style="margin-top:16px;"><i
+                                    class="fa fa-clock-o fa-fw w3-text-green"></i> Today
+                                |
+                                <!-- <span id="gain-today" class="w3-xlarge" style="_font-size: 56px !important;">$</span> -->
+                                <!-- <span id="top-months-total-pct" class="w3-large"
+                                        style="_font-size: 56px !important;">%</span> -->
+                                <span id="top-today-total"
+                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                                    style="letter-spacing:4px;">%</span>
+                                <div id="top-chart-6" class="w3-margin-top"></div>
+                            </div>
+                            <div class="w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;">
                                 <i class="fa fa-bookmark-o fa-fw w3-text-green"></i> Breakdown
                                 <!-- <span id="top-symbols-total-pct" class="w3-small"
                                         style="_font-size: 56px !important;">%</span> -->
@@ -230,7 +258,16 @@
                                     style="letter-spacing:4px;">$-K</span>
                                 <div id="top-chart-4" class="w3-margin-top"></div>
                             </div>
-                            <div class="w3-hide-small w3-xxlarge" style="margin-top:32px;"><i
+                            <!-- <div class="w3-col s12 w3-xxlarge" style="margin-top:16px;"><i
+                                    class="fa fa-line-chart fa-fw w3-text-green"></i> Today
+                                |
+                                <span id="gain-today" class="w3-xlarge" style="_font-size: 56px !important;">$</span>
+                                <span id="top-portfolio-day-total"
+                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                                    style="letter-spacing:4px;">$-K</span>
+                                <div id="top-chart-7" class="w3-margin-top"></div>
+                            </div> -->
+                            <div class="w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;"><i
                                     class="fa fa-line-chart fa-fw w3-margin-right w3-text-green"></i>Cumulative
                                 |
                                 <span id="top-combined-total-pct" class="w3-large"
@@ -303,7 +340,8 @@
                                     <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
                                         style="cursor:pointer;" onclick="liquidate()">Liquidate</div> -->
                                 <!-- </div> -->
-                                <div id="chart8" class='w3-hide-small w3-col s12 m9 w3-padding' _style="border:1px solid lightgray;">
+                                <div id="chart8" class='w3-hide-small w3-col s12 m9 w3-padding'
+                                    _style="border:1px solid lightgray;">
                                 </div>
                                 <div id="chart10" class='w3-col s12 m3 w3-padding' _style="border:1px solid lightgray;">
                                 </div>
@@ -362,71 +400,71 @@
 
     <!--@ Pricing Tables -->
     <div class="w3-container w3-hide w3-col s12" style="margin-top:25px;margin-bottom:45px;">
-            <div class="w3-large w3-container w3-card w3-white w3-padding" style="padding-top:20px !important;">
-                <div class="w3-third w3-margin-bottom">
-                    <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
-                        <li class="w3-black w3-xxlarge w3-padding-32">Low Risk</li>
-                        <li class="w3-padding-16">
-                            <h2>Weekly Newsletter</h2>
-                            <span class="w3-opacity">Weekend Update</span>
-                        </li>
-                        <li class="w3-padding-16">
-                            <h2>$ 25</h2>
-                            <span class="w3-opacity">per month</span>
-                        </li>
-                        <li class="w3-padding-16">
-                            <h2>50 %</h2>
-                            <span class="w3-opacity">of profits gained</span>
-                        </li>
-                        <li class="w3-light-grey w3-padding-24">
-                            <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
-                        </li>
-                    </ul>
-                </div>
+        <div class="w3-large w3-container w3-card w3-white w3-padding" style="padding-top:20px !important;">
+            <div class="w3-third w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xxlarge w3-padding-32">Low Risk</li>
+                    <li class="w3-padding-16">
+                        <h2>Weekly Newsletter</h2>
+                        <span class="w3-opacity">Weekend Update</span>
+                    </li>
+                    <li class="w3-padding-16">
+                        <h2>$ 25</h2>
+                        <span class="w3-opacity">per month</span>
+                    </li>
+                    <li class="w3-padding-16">
+                        <h2>50 %</h2>
+                        <span class="w3-opacity">of profits gained</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
+                    </li>
+                </ul>
+            </div>
 
-                <div class="w3-third w3-margin-bottom">
-                    <ul class="w3-ul w3-border w3-white w3-center _w3-opacity w3-hover-opacity-off">
-                        <li class="w3-green w3-xxlarge w3-padding-32">Medium Risk</li>
-                        <li class="w3-padding-16">
-                            <h2>Weekly Newsletter</h2>
-                            <span class="w3-opacity">Weekend Update</span>
-                        </li>
-                        <li class="w3-padding-16">
-                            <h2>$ 25</h2>
-                            <span class="w3-opacity">per month</span>
-                        </li>
-                        <li class="w3-padding-16">
-                            <h2>50 %</h2>
-                            <span class="w3-opacity">of profits gained</span>
-                        </li>
-                        <li class="w3-light-grey w3-padding-24">
-                            <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
-                        </li>
-                    </ul>
-                </div>
+            <div class="w3-third w3-margin-bottom">
+                <ul class="w3-ul w3-border w3-white w3-center _w3-opacity w3-hover-opacity-off">
+                    <li class="w3-green w3-xxlarge w3-padding-32">Medium Risk</li>
+                    <li class="w3-padding-16">
+                        <h2>Weekly Newsletter</h2>
+                        <span class="w3-opacity">Weekend Update</span>
+                    </li>
+                    <li class="w3-padding-16">
+                        <h2>$ 25</h2>
+                        <span class="w3-opacity">per month</span>
+                    </li>
+                    <li class="w3-padding-16">
+                        <h2>50 %</h2>
+                        <span class="w3-opacity">of profits gained</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
+                    </li>
+                </ul>
+            </div>
 
-                <div class="w3-third">
-                    <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
-                        <li class="w3-black w3-xxlarge w3-padding-32">Year</li>
-                        <li class="w3-padding-16">
-                            <h2>Weekly Newsletter</h2>
-                            <span class="w3-opacity">Weekend Update</span>
-                        </li>
-                        <li class="w3-padding-16">
-                            <h2>$ 25</h2>
-                            <span class="w3-opacity">per month</span>
-                        </li>
-                        <li class="w3-padding-16">
-                            <h2>50 %</h2>
-                            <span class="w3-opacity">of profits gained</span>
-                        </li>
-                        <li class="w3-light-grey w3-padding-24">
-                            <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
-                        </li>
-                    </ul>
-                </div>
+            <div class="w3-third">
+                <ul class="w3-ul w3-border w3-white w3-center w3-opacity w3-hover-opacity-off">
+                    <li class="w3-black w3-xxlarge w3-padding-32">Year</li>
+                    <li class="w3-padding-16">
+                        <h2>Weekly Newsletter</h2>
+                        <span class="w3-opacity">Weekend Update</span>
+                    </li>
+                    <li class="w3-padding-16">
+                        <h2>$ 25</h2>
+                        <span class="w3-opacity">per month</span>
+                    </li>
+                    <li class="w3-padding-16">
+                        <h2>50 %</h2>
+                        <span class="w3-opacity">of profits gained</span>
+                    </li>
+                    <li class="w3-light-grey w3-padding-24">
+                        <button class="w3-button w3-teal w3-padding-large w3-hover-black">Sign Up</button>
+                    </li>
+                </ul>
             </div>
         </div>
+    </div>
     <!--@ End Pricing Tables -->
 
     </div>

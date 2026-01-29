@@ -277,6 +277,21 @@ function toggle_settings() {
 //#----------------------------
 //# update settings
 //#----------------------------
+function load_settings() {
+
+}
+// const ACCOUNT_NAME = 'account-name';
+function get_setting(name) {
+    return localStorage[`m3-stocks-${name}`] || '';
+}
+function set_setting(name, value) {
+    localStorage[`m3-stocks-${name}`] = value;
+    // console.log(localStorage[`m3-stocks-${name}`]);
+}
+
+//#----------------------------
+//# update settings
+//#----------------------------
 function update_settings(all = true) {
     if (all) {
         localStorage.setItem('m3-stocks-key', document.getElementById('key').value);
