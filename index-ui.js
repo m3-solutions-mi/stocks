@@ -298,7 +298,7 @@ function update_settings(all = true) {
         localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-alpaca-secret`, document.getElementById('secret').value);
         // localStorage.setItem('m3-stocks-token', document.getElementById('token').value);
     }
-    let v = document.getElementById('symbol_picks').value || localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-symbols`);
+    let v = document.getElementById('symbols').value || localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-symbols`);
     localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-symbols`, v);
     picks = v;
 
