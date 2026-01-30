@@ -294,8 +294,8 @@ function set_setting(name, value) {
 //#----------------------------
 function update_settings(all = true) {
     if (all) {
-        localStorage.setItem('m3-stocks-alpaca-key', document.getElementById('key').value);
-        localStorage.setItem('m3-stocks-alpaca-secret', document.getElementById('secret').value);
+        localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-alpaca-key`, document.getElementById('key').value);
+        localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-alpaca-secret`, document.getElementById('secret').value);
         // localStorage.setItem('m3-stocks-token', document.getElementById('token').value);
     }
     let v = document.getElementById('symbol_picks').value || localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-symbols`);

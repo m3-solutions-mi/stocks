@@ -563,6 +563,9 @@ async function update(instance) {
         localStorage.setItem(`m3-stocks-account-name`, 'paper');
         localStorage.setItem(`m3-stocks-paper-alpaca-key`, localStorage.getItem(`m3-stocks-key`));
         localStorage.setItem(`m3-stocks-paper-alpaca-secret`, localStorage.getItem(`m3-stocks-secret`));
+        localStorage.setItem(`m3-stocks-paper-symbols`, `AEIS,ALB,ALNT,CECO,CENX,COPX,FLNC,GDX,GH,GLTR,GOOGL,KALU,KLAC,KOPN,LASR,METC,MU,NEM,PALL,POWL,PSIX,REMX,RING,SLV,TSEM,URNJ,WDC`);
+        localStorage.setItem(`m3-stocks-paper-start-at`, `2026-01-05`);
+        localStorage.setItem(`m3-stocks-paper-seed`, 1000);
 
         //* CLEANUP */
         localStorage.removeItem('m3-stocks-key');
