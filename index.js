@@ -576,11 +576,11 @@ async function update(instance) {
     // let start_date = '2026-01-05';
     // start_date = '2026-01-05';
     const name = localStorage.getItem(`m3-stocks-account-name`) || 'paper';
-    let start_date = localStorage.getItem(`m3-stocks-${name}-start-at`) || '2025-01-05';
+    let start_date = localStorage.getItem(`m3-stocks-${name}-start-at`) ?? '2025-01-05';
     const symbols = localStorage.getItem(`m3-stocks-${name}-symbols`).split(',');
     const key = localStorage.getItem(`m3-stocks-${name}-alpaca-key`);
     const secret = localStorage.getItem(`m3-stocks-${name}-alpaca-secret`);
-    const seed = +(localStorage.getItem(`m3-stocks-${name}-seed`) || 1000);
+    const seed = +(localStorage.getItem(`m3-stocks-${name}-seed`) ?? 1000);
     config_stocks.alpaca.ALPACA_KEY = key;
     config_stocks.alpaca.ALPACA_SECRET = secret;
     config_stocks.alpaca.SEED = seed;
