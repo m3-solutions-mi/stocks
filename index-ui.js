@@ -161,17 +161,28 @@ async function click_letter(letter) {
             class="symbol w3-tag w3-round w3-padding w3-white" 
             style="color:{fc} !important;border:{b};cursor:pointer;min-width:85px;margin-bottom:5px;" 
             onclick="click_symbol('{s}', this)">
+            <span class="{c} w3-badge w3-dark-grey w3-text-white"> {s}</span>
             {0}
         </span>`
         let html = '';
-        filtered.map((v) => v.symbol).sort().forEach((s) => {
+        // filtered.map((v) => v.symbol).sort().forEach((symbol) => {
+        filtered.forEach((symbol) => {
+            const s = symbol.symbol;
+            const n = symbol.name || '_';
             const fc = s.endsWith('/USD') ? 'blue' : 'black'
+            let sector = 'U';
+            sector = n.toLowerCase().indexOf('mining') >= 0 ? 'M' : sector;
+            sector = n.toLowerCase().indexOf('mine') >= 0 ? 'M' : sector;
+            sector = n.toLowerCase().indexOf('precious') >= 0 ? 'M' : sector;
+            sector = n.toLowerCase().indexOf('tech') >= 0 ? 'T' : sector;
             // const border = `${likes.indexOf(s) >= 0 ? '2px solid blue' : ((config_stocks.symbols.indexOf(s) > 0 ? '3px solid black' : ''))}`;
             html += template
                 .replace('{id}', s)
                 .replace('{0}', s)
                 .replace('{s}', s)
                 .replace('{fc}', fc)
+                .replace('{s}', sector)
+                .replace('{c}', sector === 'U' ? 'w3-hide' : '')
                 .replace('{b}',
                     picks.indexOf(s) >= 0 ? '3px solid blue' : likes.indexOf(s) >= 0 ? '3px solid black' : '') + '\n';
         });

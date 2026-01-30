@@ -496,15 +496,19 @@ const get_symbol_logo = (symbol) => {
     //https://assets.parqet.com/logos/symbol/AEIS?format=png
     fetch(`https://assets.parqet.com/logos/symbol/${symbol}?format=png`).then((v) => { return v; })
 }
-const add_annotation_x = (x, text = null, color = colors.black) => {
+const add_annotation_x = (x, text = null, color = colors.black, offsetX = 0) => {
     const obj = { x, borderColor: color, fillColor: color, opacity: 1 };
     if (text) {
-        obj.label  = { text, /*offsetX,*/ offsetY: 15, orientation: 'horizontal', style: { fontSize: '22px' } };
+        obj.label  = { text, offsetX, offsetY: 15, orientation: 'horizontal', style: { fontSize: '22px' } };
     }
     return obj;
 }
 const add_annotation_y = (y) => {
-    return { y, borderColor: colors.black, fillColor: colors.black, opacity: 1 };
+    const obj = { y, borderColor: colors.black, fillColor: colors.black, opacity: 1 };
+    // if (text) {
+    //     obj.label  = { text, offsetX, offsetY, style: { fontSize: '22px' } };
+    // }
+    return obj;
 }
 const add_annotation_point = (x, y, size = 4.5, color = colors.black, text = null, offsetX = 0, offsetY = 0) => {
     const obj = { x, y, marker: { size, fillColor: color } };

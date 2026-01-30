@@ -854,7 +854,8 @@ async function update(instance) {
 
         data = PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
         data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
-        chart_top_5.options.yaxis = { max: data[data.length - 1].y + 1000 };
+        // chart_top_5.options.yaxis = { max: data[data.length - 1].y + 1000 };
+        chart_top_5.options.yaxis = { max: Math.max(...data.map((v)=>v.y)) + 1000 };
         update_ui(chart_top_5);
 
         total = round(data[data.length - 1].y);
@@ -874,7 +875,7 @@ async function update(instance) {
     // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
     // start_date = '2026-01-05';
     //@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
-    config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'continuous').then((result) => {
+    config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
         PORTFOLIO_DAY_HISTORY = result;
         console.log('PORTFOLIO_DAY_HISTORY', PORTFOLIO_DAY_HISTORY);
 
@@ -909,7 +910,7 @@ async function update(instance) {
                 2000: '8 pm',
             }
             if ([/*0,*/ 400, 930, 1100, 1600, 2000].indexOf(v.thm) >= 0) {
-                chart_top_7.options.annotations.xaxis.push(add_annotation_x(v.e, label[v.thm] || v.thm, v.thm === 0 ? colors.deeppink : colors.black));
+                chart_top_7.options.annotations.xaxis.push(add_annotation_x(v.e, label[v.thm] || v.thm, v.thm === 0 ? colors.deeppink : colors.black, v.thm === 400 ? 35 : 0));
             }
         })
         // const first = PORTFOLIO_DAY_HISTORY[0];
@@ -918,8 +919,9 @@ async function update(instance) {
 
         data = PORTFOLIO_DAY_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
         // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 250 };
+        // chart_top_7.options.yaxis = { max: Math.max(...data.map((v)=>v.y)) + 250 };
         
-        //! only needed if timeframe !== '1Min'
+        //! only needed if... (timeframe !== '1Min',...)
         data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
 
         last = data[data.length - 1];
