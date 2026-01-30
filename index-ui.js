@@ -294,21 +294,21 @@ function set_setting(name, value) {
 //#----------------------------
 function update_settings(all = true) {
     if (all) {
-        localStorage.setItem('m3-stocks-key', document.getElementById('key').value);
-        localStorage.setItem('m3-stocks-secret', document.getElementById('secret').value);
-        localStorage.setItem('m3-stocks-token', document.getElementById('token').value);
+        localStorage.setItem('m3-stocks-alpaca-key', document.getElementById('key').value);
+        localStorage.setItem('m3-stocks-alpaca-secret', document.getElementById('secret').value);
+        // localStorage.setItem('m3-stocks-token', document.getElementById('token').value);
     }
-    let v = document.getElementById('symbol_picks').value || localStorage.getItem('m3-stocks-picks');
-    localStorage.setItem('m3-stocks-picks', v);
+    let v = document.getElementById('symbol_picks').value || localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-symbols`);
+    localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-symbols`, v);
     picks = v;
 
-    v = document.getElementById('likes').value || localStorage.getItem('m3-stocks-likes');
-    localStorage.setItem('m3-stocks-likes', v);
-    likes = v;
+    // v = document.getElementById('likes').value || localStorage.getItem('m3-stocks-likes');
+    // localStorage.setItem('m3-stocks-likes', v);
+    // likes = v;
 
-    v = document.getElementById('steady_picks').value || localStorage.getItem('m3-stocks-steady');
-    localStorage.setItem('m3-stocks-steady', v);
-    steady = v;
+    // v = document.getElementById('steady_picks').value || localStorage.getItem('m3-stocks-steady');
+    // localStorage.setItem('m3-stocks-steady', v);
+    // steady = v;
 
     // steady = document.getElementById('steady_picks').value;
     console.yellow('settings updated');
