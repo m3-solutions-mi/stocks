@@ -920,7 +920,7 @@ async function update(instance) {
         // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 250 };
         
         //! only needed if timeframe !== '1Min'
-        // data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
+        data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
 
         last = data[data.length - 1];
         const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length-1];
