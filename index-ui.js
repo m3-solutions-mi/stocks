@@ -302,6 +302,14 @@ function update_settings(all = true) {
     localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-symbols`, v);
     picks = v;
 
+    v = document.getElementById('start_date').value || localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-start-at`);
+    localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-start-at`, v);
+    picks = v;
+
+    v = document.getElementById('seed').value || localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-seed`);
+    localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-seed`, v);
+    picks = v;
+
     // v = document.getElementById('likes').value || localStorage.getItem('m3-stocks-likes');
     // localStorage.setItem('m3-stocks-likes', v);
     // likes = v;
