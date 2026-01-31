@@ -517,6 +517,9 @@ class AlpacaData {
                 // o: round2((v.o * qty)),
                 // h: round2((v.h * qty)),
                 // l: round2((v.l * qty)),
+                sma: round2((v.sma * qty) - 1000),
+                lb: round2((v.lb * qty) - 1000),
+                ub: round2((v.ub * qty) - 1000),
                 v: v.v,
                 n: v.n,
                 vw: v.vw

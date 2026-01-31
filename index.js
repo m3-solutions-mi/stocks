@@ -984,13 +984,15 @@ async function click_symbol(s, elem, check_score = false) {
     const bars = (num_symbol_days === -15 ? bars_source/*.slice(-40)*/ : bars_source); //* recent 5 minute data
     const num = 1000 / entry.bars_raw[0].o;
     series[0].data = bars.map((b) => { return { x: b.e, y: round2(b.c) } });
-    // series[0].data.push({x: entry.latest.e, y: entry.latest.c });
-    // if (num_symbol_days !== -15) {
     series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.o) } });
+    // series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.sma) } });
     // series[2].data = bars.map((b) => { return { x: b.e, y: round2((b.lb * num) * (config_stocks.alpaca.CONFIG.stop_pct)) } });
 
-    let tl = calculateTrendline(series[0].data.map((v) => v.y));
-    series.push({ name: 'Trendline', type: 'line', color: colors.orange, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+    series.push({ name: 'Bollinger', type: 'line', color: colors.black, data: bars.map((b, i) => { return { x: b.e, y: (i < 15 ? 0 : round2(i === bars.length - 1 ? bars[bars.length - 2].lb : b.lb)) } })});
+    // series.push({ name: 'Bollinger', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(bars[i].sma) } }) });
+
+    // let tl = calculateTrendline(series[0].data.map((v) => v.y));
+    // series.push({ name: 'Trendline', type: 'line', color: colors.orange, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
 
 
     // tl = calculateTarget(series[0].data.map((v) => v.y), 0.25, 1000);
@@ -1008,11 +1010,12 @@ async function click_symbol(s, elem, check_score = false) {
     treemap_symbol_days.options.chart.type = 'area';
     treemap_symbol_days.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
     treemap_symbol_days.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
-    treemap_symbol_days.options.chart.sparkline = { enabled: true };
+    // treemap_symbol_days.options.chart.sparkline = { enabled: false };
+    // treemap_symbol_days.options.chart.legend = { show: true };
     treemap_symbol_days.options.dataLabels.enabled = false;
     treemap_symbol_days.options.fill = { type: 'solid' };
     treemap_symbol_days.options.xaxis = { type: 'datetime' };
-    treemap_symbol_days.options.stroke = { width: [3, 3, 4, 4, 4], };
+    treemap_symbol_days.options.stroke = { width: [3, 3, 3, 4, 4, 4, 4, 4], };
     treemap_symbol_days.options.annotations = { xaxis: [], yaxis: [], points: [] };
     last_n = getMonthName(new Date(series[0].data[0].x));
     series[0].data.forEach((v, i) => {
@@ -1065,6 +1068,8 @@ async function click_symbol(s, elem, check_score = false) {
         });
         console.log(filled_at);
     }
+
+    // series[0].hidden =  true;
 
     //* RENNDER CHART */
     data = series;

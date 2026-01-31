@@ -96054,7 +96054,7 @@ const stock_symbols_detail = [
     {symbol: 'CARV', name: 'Carvana', status: 'active', tradable: true, fractionable: true},
     {symbol: 'F', _name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'GE', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'GEV', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'GEV', name: 'GE VERNOVA INC', status: 'active', tradable: true, fractionable: true},
     {symbol: 'GM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'IBM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'JPM', name: '-', status: 'active', tradable: true, fractionable: true},

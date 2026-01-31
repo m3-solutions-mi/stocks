@@ -170,11 +170,31 @@ async function click_letter(letter) {
             const s = symbol.symbol;
             const n = symbol.name || '_';
             const fc = s.endsWith('/USD') ? 'blue' : 'black'
-            let sector = 'U';
+            let sector = '?';
             sector = n.toLowerCase().indexOf('mining') >= 0 ? 'M' : sector;
             sector = n.toLowerCase().indexOf('mine') >= 0 ? 'M' : sector;
             sector = n.toLowerCase().indexOf('precious') >= 0 ? 'M' : sector;
+            sector = n.toLowerCase().indexOf('alum') >= 0 ? 'M' : sector;
+            sector = n.toLowerCase().indexOf('metal') >= 0 ? 'M' : sector;
+            sector = n.toLowerCase().indexOf('material') >= 0 ? 'M' : sector;
             sector = n.toLowerCase().indexOf('tech') >= 0 ? 'T' : sector;
+            sector = n.toLowerCase().indexOf('network') >= 0 ? 'T' : sector;
+            sector = n.toLowerCase().indexOf('conduct') >= 0 ? 'T' : sector;
+            sector = n.toLowerCase().indexOf('comput') >= 0 ? 'T' : sector;
+            sector = n.toLowerCase().indexOf('thera') >= 0 ? 'H' : sector;
+            sector = n.toLowerCase().indexOf('pharma') >= 0 ? 'H' : sector;
+            sector = n.toLowerCase().indexOf('health') >= 0 ? 'H' : sector;
+            sector = n.toLowerCase().indexOf('medic') >= 0 ? 'H' : sector;
+            sector = n.toLowerCase().indexOf('bio') >= 0 ? 'H' : sector;
+            sector = n.toLowerCase().indexOf('science') >= 0 ? 'H' : sector;
+            sector = n.toLowerCase().indexOf('oncolo') >= 0 ? 'H' : sector;
+            sector = n.toLowerCase().indexOf('solar') >= 0 ? 'E' : sector;
+            sector = n.toLowerCase().indexOf('enviro') >= 0 ? 'E' : sector;
+            sector = n.toLowerCase().indexOf('energy') >= 0 ? 'E' : sector;
+            sector = n.toLowerCase().indexOf('power') >= 0 ? 'E' : sector;
+            sector = n.toLowerCase().indexOf('capital') >= 0 ? 'B' : sector;
+            sector = n.toLowerCase().indexOf('bank') >= 0 ? 'B' : sector;
+            sector = n.toLowerCase().indexOf('financ') >= 0 ? 'B' : sector;
             // const border = `${likes.indexOf(s) >= 0 ? '2px solid blue' : ((config_stocks.symbols.indexOf(s) > 0 ? '3px solid black' : ''))}`;
             html += template
                 .replace('{id}', s)
@@ -182,7 +202,7 @@ async function click_letter(letter) {
                 .replace('{s}', s)
                 .replace('{fc}', fc)
                 .replace('{s}', sector)
-                .replace('{c}', sector === 'U' ? 'w3-hide' : '')
+                .replace('{c}', sector === '?' ? 'w3-hide' : '')
                 .replace('{b}',
                     picks.indexOf(s) >= 0 ? '3px solid blue' : likes.indexOf(s) >= 0 ? '3px solid black' : '') + '\n';
         });
