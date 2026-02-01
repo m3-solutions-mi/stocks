@@ -499,7 +499,7 @@ const get_symbol_logo = (symbol) => {
 const add_annotation_x = (x, text = null, color = colors.black, offsetX = 0) => {
     const obj = { x, borderColor: color, fillColor: color, opacity: 1 };
     if (text) {
-        obj.label  = { text, offsetX, offsetY: 15, orientation: 'horizontal', style: { fontSize: '22px' } };
+        obj.label = { text, offsetX, offsetY: 15, orientation: 'horizontal', style: { fontSize: '22px' } };
     }
     return obj;
 }
@@ -513,7 +513,41 @@ const add_annotation_y = (y) => {
 const add_annotation_point = (x, y, size = 4.5, color = colors.black, text = null, offsetX = 0, offsetY = 0) => {
     const obj = { x, y, marker: { size, fillColor: color } };
     if (text) {
-        obj.label  = { text, offsetX, offsetY, style: { fontSize: '22px' } };
+        obj.label = { text, offsetX, offsetY, style: { fontSize: '22px' } };
     }
     return obj;
+}
+const get_sector = (n) => {
+    let sector = 'G';
+    sector = n.toLowerCase().indexOf('mining') >= 0 ? 'M' : sector;
+    sector = n.toLowerCase().indexOf('mine') >= 0 ? 'M' : sector;
+    sector = n.toLowerCase().indexOf('precious') >= 0 ? 'M' : sector;
+    sector = n.toLowerCase().indexOf('alum') >= 0 ? 'M' : sector;
+    sector = n.toLowerCase().indexOf('metal') >= 0 ? 'M' : sector;
+    sector = n.toLowerCase().indexOf('material') >= 0 ? 'M' : sector;
+    sector = n.toLowerCase().indexOf('tech') >= 0 ? 'T' : sector;
+    sector = n.toLowerCase().indexOf('network') >= 0 ? 'T' : sector;
+    sector = n.toLowerCase().indexOf('conduct') >= 0 ? 'T' : sector;
+    sector = n.toLowerCase().indexOf('comput') >= 0 ? 'T' : sector;
+    sector = n.toLowerCase().indexOf('thera') >= 0 ? 'H' : sector;
+    sector = n.toLowerCase().indexOf('pharma') >= 0 ? 'H' : sector;
+    sector = n.toLowerCase().indexOf('health') >= 0 ? 'H' : sector;
+    sector = n.toLowerCase().indexOf('medic') >= 0 ? 'H' : sector;
+    sector = n.toLowerCase().indexOf('bio') >= 0 ? 'H' : sector;
+    sector = n.toLowerCase().indexOf('science') >= 0 ? 'H' : sector;
+    sector = n.toLowerCase().indexOf('oncolo') >= 0 ? 'H' : sector;
+    sector = n.toLowerCase().indexOf('solar') >= 0 ? 'E' : sector;
+    sector = n.toLowerCase().indexOf('enviro') >= 0 ? 'E' : sector;
+    sector = n.toLowerCase().indexOf('energy') >= 0 ? 'E' : sector;
+    sector = n.toLowerCase().indexOf('power') >= 0 ? 'E' : sector;
+    sector = n.toLowerCase().indexOf('capital') >= 0 ? 'B' : sector;
+    sector = n.toLowerCase().indexOf('bank') >= 0 ? 'B' : sector;
+    sector = n.toLowerCase().indexOf('financ') >= 0 ? 'B' : sector;
+    let badge_color = 'w3-dark-grey';
+    badge_color = sector === 'E' ? badge_color = 'w3-blue' : badge_color;
+    badge_color = sector === 'H' ? badge_color = 'w3-orange' : badge_color;
+    badge_color = sector === 'M' ? badge_color = 'w3-light-blue' : badge_color;
+    badge_color = sector === 'T' ? badge_color = 'w3-purple' : badge_color;
+
+    return {sector, badge_color};
 }

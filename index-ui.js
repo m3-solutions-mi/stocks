@@ -40,7 +40,7 @@ function set_use_filter(checked) {
 //#----------------------------
 document.addEventListener('click', function (event) {
     if (event.target.classList.contains('symbol')) {
-        console.log(event);
+        // console.log(event);
         if (event.altKey) {
             //* DELETE */
             document.getElementById(selected_symbol).classList.remove('w3-border');
@@ -134,7 +134,7 @@ async function click_letter(letter) {
                     last = l;
                     await sleep(1000);
                 }
-                click_symbol(s.symbol, document.getElementById(s.symbol), true);
+                await click_symbol(s.symbol, document.getElementById(s.symbol), true);
                 await sleep(2 * 1000);
             }
             console.log(symbols_list);
@@ -161,7 +161,7 @@ async function click_letter(letter) {
             class="symbol w3-tag w3-round w3-padding w3-white" 
             style="color:{fc} !important;border:{b};cursor:pointer;min-width:85px;margin-bottom:5px;" 
             onclick="click_symbol('{s}', this)">
-            <span class="{c} w3-badge w3-dark-grey w3-text-white"> {s}</span>
+            <span class="{c} w3-badge _w3-dark-grey w3-text-white {bc}"> {s}</span>
             {0}
         </span>`
         let html = '';
@@ -170,39 +170,47 @@ async function click_letter(letter) {
             const s = symbol.symbol;
             const n = symbol.name || '_';
             const fc = s.endsWith('/USD') ? 'blue' : 'black'
-            let sector = '?';
-            sector = n.toLowerCase().indexOf('mining') >= 0 ? 'M' : sector;
-            sector = n.toLowerCase().indexOf('mine') >= 0 ? 'M' : sector;
-            sector = n.toLowerCase().indexOf('precious') >= 0 ? 'M' : sector;
-            sector = n.toLowerCase().indexOf('alum') >= 0 ? 'M' : sector;
-            sector = n.toLowerCase().indexOf('metal') >= 0 ? 'M' : sector;
-            sector = n.toLowerCase().indexOf('material') >= 0 ? 'M' : sector;
-            sector = n.toLowerCase().indexOf('tech') >= 0 ? 'T' : sector;
-            sector = n.toLowerCase().indexOf('network') >= 0 ? 'T' : sector;
-            sector = n.toLowerCase().indexOf('conduct') >= 0 ? 'T' : sector;
-            sector = n.toLowerCase().indexOf('comput') >= 0 ? 'T' : sector;
-            sector = n.toLowerCase().indexOf('thera') >= 0 ? 'H' : sector;
-            sector = n.toLowerCase().indexOf('pharma') >= 0 ? 'H' : sector;
-            sector = n.toLowerCase().indexOf('health') >= 0 ? 'H' : sector;
-            sector = n.toLowerCase().indexOf('medic') >= 0 ? 'H' : sector;
-            sector = n.toLowerCase().indexOf('bio') >= 0 ? 'H' : sector;
-            sector = n.toLowerCase().indexOf('science') >= 0 ? 'H' : sector;
-            sector = n.toLowerCase().indexOf('oncolo') >= 0 ? 'H' : sector;
-            sector = n.toLowerCase().indexOf('solar') >= 0 ? 'E' : sector;
-            sector = n.toLowerCase().indexOf('enviro') >= 0 ? 'E' : sector;
-            sector = n.toLowerCase().indexOf('energy') >= 0 ? 'E' : sector;
-            sector = n.toLowerCase().indexOf('power') >= 0 ? 'E' : sector;
-            sector = n.toLowerCase().indexOf('capital') >= 0 ? 'B' : sector;
-            sector = n.toLowerCase().indexOf('bank') >= 0 ? 'B' : sector;
-            sector = n.toLowerCase().indexOf('financ') >= 0 ? 'B' : sector;
+            const sector = get_sector(n);
+            // let sector = 'G';
+            // sector = n.toLowerCase().indexOf('mining') >= 0 ? 'M' : sector;
+            // sector = n.toLowerCase().indexOf('mine') >= 0 ? 'M' : sector;
+            // sector = n.toLowerCase().indexOf('precious') >= 0 ? 'M' : sector;
+            // sector = n.toLowerCase().indexOf('alum') >= 0 ? 'M' : sector;
+            // sector = n.toLowerCase().indexOf('metal') >= 0 ? 'M' : sector;
+            // sector = n.toLowerCase().indexOf('material') >= 0 ? 'M' : sector;
+            // sector = n.toLowerCase().indexOf('tech') >= 0 ? 'T' : sector;
+            // sector = n.toLowerCase().indexOf('network') >= 0 ? 'T' : sector;
+            // sector = n.toLowerCase().indexOf('conduct') >= 0 ? 'T' : sector;
+            // sector = n.toLowerCase().indexOf('comput') >= 0 ? 'T' : sector;
+            // sector = n.toLowerCase().indexOf('thera') >= 0 ? 'H' : sector;
+            // sector = n.toLowerCase().indexOf('pharma') >= 0 ? 'H' : sector;
+            // sector = n.toLowerCase().indexOf('health') >= 0 ? 'H' : sector;
+            // sector = n.toLowerCase().indexOf('medic') >= 0 ? 'H' : sector;
+            // sector = n.toLowerCase().indexOf('bio') >= 0 ? 'H' : sector;
+            // sector = n.toLowerCase().indexOf('science') >= 0 ? 'H' : sector;
+            // sector = n.toLowerCase().indexOf('oncolo') >= 0 ? 'H' : sector;
+            // sector = n.toLowerCase().indexOf('solar') >= 0 ? 'E' : sector;
+            // sector = n.toLowerCase().indexOf('enviro') >= 0 ? 'E' : sector;
+            // sector = n.toLowerCase().indexOf('energy') >= 0 ? 'E' : sector;
+            // sector = n.toLowerCase().indexOf('power') >= 0 ? 'E' : sector;
+            // sector = n.toLowerCase().indexOf('capital') >= 0 ? 'B' : sector;
+            // sector = n.toLowerCase().indexOf('bank') >= 0 ? 'B' : sector;
+            // sector = n.toLowerCase().indexOf('financ') >= 0 ? 'B' : sector;
+            // let badge_color = 'w3-dark-grey';
+            // badge_color = sector === 'E' ? badge_color = 'w3-blue' : badge_color;
+            // badge_color = sector === 'H' ? badge_color = 'w3-orange' : badge_color;
+            // badge_color = sector === 'M' ? badge_color = 'w3-light-blue' : badge_color;
+            // badge_color = sector === 'T' ? badge_color = 'w3-purple' : badge_color;
+
             // const border = `${likes.indexOf(s) >= 0 ? '2px solid blue' : ((config_stocks.symbols.indexOf(s) > 0 ? '3px solid black' : ''))}`;
             html += template
                 .replace('{id}', s)
                 .replace('{0}', s)
                 .replace('{s}', s)
                 .replace('{fc}', fc)
-                .replace('{s}', sector)
+                .replace('{s}', sector.sector)
                 .replace('{c}', sector === '?' ? 'w3-hide' : '')
+                .replace('{bc}', sector.badge_color)
                 .replace('{b}',
                     picks.indexOf(s) >= 0 ? '3px solid blue' : likes.indexOf(s) >= 0 ? '3px solid black' : '') + '\n';
         });

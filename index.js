@@ -1040,12 +1040,12 @@ async function click_symbol(s, elem, check_score = false) {
     treemap_symbol_days.options.annotations.yaxis.push({ y: max, borderColor: colors.black, fillColor: colors.black, _opacity: 0 });
 
     //* ADD BUY DATE LINE TO CHART */
-    const order = ORDERS
+    const orders = ORDERS
         // .filter((v) => v.side === 'buy')
         .filter((v) => v.symbol === s)
         ;
-    if (order[0] && order[0].side === 'buy') {
-        const filled_at = new Date(order[0].filled_at);
+    if (orders[0] && orders[0].side === 'buy') {
+        const filled_at = new Date(orders[0].filled_at);
         const g = +(POSITIONS.find((v) => v.symbol === s).unrealized_pl);
         treemap_symbol_days.options.annotations.xaxis.push({
             x: filled_at.getTime(),
@@ -1066,7 +1066,7 @@ async function click_symbol(s, elem, check_score = false) {
                 },
             },
         });
-        console.log(filled_at);
+        // console.log(filled_at);
     }
 
     // series[0].hidden =  true;
@@ -1086,22 +1086,22 @@ async function click_symbol(s, elem, check_score = false) {
     const detail = stock_symbols_detail.find((v) => v.symbol === s);
     const g = round((series[0].data[series[0].data.length - 1].y - series[0].data[0].y));// * (1000 / series[0].data[0].y));
     const last = series[0].data[series[0].data.length - 1].y;
-    const trend_delta = series[2].data[series[2].data.length - 1].y - series[2].data[0].y;
     let color = g >= 0 ? 'w3-green' : 'w3-red';
     let html = '';
     html += `${get_indicator(g)} ${s}`;
     html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
     html += `&nbsp;&nbsp;|&nbsp;&nbsp;<span class="_w3-right ${color} w3-padding">$${g.toLocaleString()}</span>`;
     // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(max - last).toLocaleString()}`;
-    html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(trend_delta).toLocaleString()}`;
+    // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(trend_delta).toLocaleString()}`;
     document.getElementById('symbol-days-title').innerHTML = html;
-
+    
     // window.scrollTo(0, document.body.scrollHeight);
-
+    
     //* ADD IF SCORE IS HIGH
-    if (trend_delta > 1000 && check_score) {
-        click_letter('⏺');
-    }
+    // const trend_delta = series[0].data[series[0].data.length - 1].y - series[0].data[0].y;
+    // if (trend_delta > 1000 && check_score) {
+    //     click_letter('⏺');
+    // }
 }
 function m3_129() {
     config_stocks.alpaca.bars_simplified(
