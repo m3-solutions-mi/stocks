@@ -875,7 +875,11 @@ async function update(instance) {
     // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
     // start_date = '2026-01-05';
     //@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
-    config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
+    //* config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
+    const num_days = '3D'; // 1D | 2D | 3D | 4D | 5D
+    const timeframe = '15Min'; // 1Min | 5Min | 15Min | 1H
+    const reporting  = 'continuous'; // continuous | extended_hours | market_hours
+    config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {
         PORTFOLIO_DAY_HISTORY = result;
         console.log('PORTFOLIO_DAY_HISTORY', PORTFOLIO_DAY_HISTORY);
 
