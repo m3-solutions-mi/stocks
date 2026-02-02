@@ -1080,8 +1080,8 @@ class AlpacaData {
             url += `&intraday_reporting=${reporting}`;
             url += `&pnl_reset=${pnl_reset}`
             fetch(url, options)
-            // fetch('https://paper-api.alpaca.markets/v2/account/portfolio/history?timeframe=1D&intraday_reporting=extended_hours&start=2025-10-01&pnl_reset=per_day', options)
-            // fetch(`${this.buy_sell_root_url}/v2/account/portfolio/history?start=2025-08-01&end=2025-12-31&timeframe=1D&intraday_reporting=${reporting}&pnl_reset=${pnl_reset}`, options)
+                // fetch('https://paper-api.alpaca.markets/v2/account/portfolio/history?timeframe=1D&intraday_reporting=extended_hours&start=2025-10-01&pnl_reset=per_day', options)
+                // fetch(`${this.buy_sell_root_url}/v2/account/portfolio/history?start=2025-08-01&end=2025-12-31&timeframe=1D&intraday_reporting=${reporting}&pnl_reset=${pnl_reset}`, options)
                 .then(res => res.json())
                 .then(res => {
                     const data = [];
@@ -1102,5 +1102,24 @@ class AlpacaData {
                 })
                 .catch(err => console.error(err));
         });
+    }
+    get_news(symbol, content = true) {
+        return new Promise((resolve, reject) => {
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    'APCA-API-KEY-ID': this.ALPACA_KEY,
+                    'APCA-API-SECRET-KEY': this.ALPACA_SECRET,
+                }
+            };
+
+            fetch(`https://data.alpaca.markets/v1beta1/news?sort=desc&symbols=${symbol}&include_content=${content}`, options)
+                .then(res => res.json())
+                .then(res => {
+                    resolve(res.news.map((v)=>`${v.created_at} | ${v.headline} | ${v.url}`))
+                })
+                .catch(err => console.error(err));
+        })
     }
 }

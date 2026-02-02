@@ -349,9 +349,9 @@ function update_settings(all = true) {
     localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-seed`, v);
     // picks = v;
 
-    // v = document.getElementById('likes').value || localStorage.getItem('m3-stocks-likes');
-    // localStorage.setItem('m3-stocks-likes', v);
-    // likes = v;
+    v = document.getElementById('likes').value || localStorage.getItem('m3-stocks-likes');
+    localStorage.setItem('m3-stocks-likes', v);
+    likes = v;
 
     // v = document.getElementById('steady_picks').value || localStorage.getItem('m3-stocks-steady');
     // localStorage.setItem('m3-stocks-steady', v);
