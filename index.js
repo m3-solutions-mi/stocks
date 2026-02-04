@@ -797,6 +797,7 @@ async function update(instance) {
                 .replace('{day}', `${round2(day)}`)
                 .replace('{c2}', color_day)
         });
+        document.getElementById('symbols-count').innerHTML = `&nbsp;&nbsp;|&nbsp;&nbsp;${POSITIONS.length}`;
         document.getElementById('symbol-boxes-positions').innerHTML = html;
         document.getElementById('symbol-names').value = config_stocks.symbols.join(',');
         document.getElementById('symbol-table-body').innerHTML = html_table;
@@ -835,6 +836,7 @@ async function update(instance) {
         chart_top_5.options.dataLabels.enabled = false;
         chart_top_5.options.fill = { type: 'solid' };
 
+        //* day indicators */
         chart_top_5.options.annotations = { xaxis: [], yaxis: [], points: [], };
         let last = 0;
         chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v) => v.thm === 2000).map((v, i) => {
@@ -847,6 +849,15 @@ async function update(instance) {
         chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetY'] = 50;
         chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].marker.fillColor = colors.deeppink;
 
+        //* month indicators */
+        let m = null;
+        chart_top_5.options.annotations.xaxis = chart_top_5.options.annotations.points.map((v, i) => {
+            if (i > 0 && new Date(v.x).getMonth() !== new Date(chart_top_5.options.annotations.points[i-1].x).getMonth()) {
+                return add_annotation_x(v.x);
+            }
+            m = new Date(v.x).getMonth();
+        })
+
         // last = PORTFOLIO_HISTORY[PORTFOLIO_HISTORY.length - 1];
         // chart_top_5.options.annotations.points.push(add_annotation_point(last.e, last.equity, 6.5, colors.deeppink));
         // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-02T16:00:00').getTime()));
@@ -855,7 +866,11 @@ async function update(instance) {
         data = PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
         data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
         // chart_top_5.options.yaxis = { max: data[data.length - 1].y + 1000 };
-        chart_top_5.options.yaxis = { max: Math.max(...data.map((v)=>v.y)) + 1000 };
+        chart_top_5.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 1000 };
+
+        last = data[data.length - 1];
+        chart_top_5.options.annotations.yaxis.push(add_annotation_y(last.y));
+
         update_ui(chart_top_5);
 
         total = round(data[data.length - 1].y);
@@ -878,7 +893,7 @@ async function update(instance) {
     //* config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
     const num_days = '1D'; // 1D | 2D | 3D | 4D | 5D
     const timeframe = '1Min'; // 1Min | 5Min | 15Min | 1H
-    const reporting  = 'extended_hours'; // continuous | extended_hours | market_hours
+    const reporting = 'extended_hours'; // continuous | extended_hours | market_hours
     config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {
         PORTFOLIO_DAY_HISTORY = result;
         console.log('PORTFOLIO_DAY_HISTORY', PORTFOLIO_DAY_HISTORY);
@@ -904,7 +919,7 @@ async function update(instance) {
 
         // last = PORTFOLIO_DAY_HISTORY[PORTFOLIO_DAY_HISTORY.length - 1];
         // chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.equity));
-        
+
         PORTFOLIO_DAY_HISTORY.forEach((v) => {
             const label = {
                 400: '4 am',
@@ -924,12 +939,12 @@ async function update(instance) {
         data = PORTFOLIO_DAY_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
         // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 250 };
         // chart_top_7.options.yaxis = { max: Math.max(...data.map((v)=>v.y)) + 250 };
-        
+
         //! only needed if... (timeframe !== '1Min',...)
         data.push({ x: Date.now(), y: +(ACCOUNT.equity) });
 
         last = data[data.length - 1];
-        const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length-1];
+        const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1];
         chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y));
 
         // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 1000 };
@@ -992,7 +1007,7 @@ async function click_symbol(s, elem, check_score = false) {
     // series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.sma) } });
     // series[2].data = bars.map((b) => { return { x: b.e, y: round2((b.lb * num) * (config_stocks.alpaca.CONFIG.stop_pct)) } });
 
-    series.push({ name: 'Bollinger', type: 'line', color: colors.black, data: bars.map((b, i) => { return { x: b.e, y: (i < 15 ? 0 : round2(i === bars.length - 1 ? bars[bars.length - 2].lb : b.lb)) } })});
+    series.push({ name: 'Bollinger', type: 'line', color: colors.black, data: bars.map((b, i) => { return { x: b.e, y: (i < 15 ? 0 : round2(i === bars.length - 1 ? bars[bars.length - 2].lb : b.lb)) } }) });
     // series.push({ name: 'Bollinger', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(bars[i].sma) } }) });
 
     // let tl = calculateTrendline(series[0].data.map((v) => v.y));
@@ -1098,9 +1113,9 @@ async function click_symbol(s, elem, check_score = false) {
     // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(max - last).toLocaleString()}`;
     // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(trend_delta).toLocaleString()}`;
     document.getElementById('symbol-days-title').innerHTML = html;
-    
+
     // window.scrollTo(0, document.body.scrollHeight);
-    
+
     //* ADD IF SCORE IS HIGH
     // const trend_delta = series[0].data[series[0].data.length - 1].y - series[0].data[0].y;
     // if (trend_delta > 1000 && check_score) {

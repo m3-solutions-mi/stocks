@@ -13,7 +13,7 @@ setInterval(async () => {
     document.getElementById('mobile-clock').innerHTML = d.toLocaleTimeString().split(' ')[0];
     document.getElementById('clock').innerHTML = d.toLocaleTimeString().split(' ')[0];
     document.getElementById('date').innerHTML = getYMD(d);
-    if (!init || (d.getSeconds() === 1 && refresh)) {
+    if (!init || ((d.getSeconds() === 1 || d.getSeconds() === 20 || d.getSeconds() === 40) && refresh)) {
         init = true;
         if (d.getDay() === 0 || d.getDay() === 6) {
             // refresh = false;
