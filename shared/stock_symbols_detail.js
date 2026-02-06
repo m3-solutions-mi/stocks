@@ -96068,6 +96068,7 @@ const stock_symbols_detail = [
     {symbol: 'AVDE', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'CAT', name: 'Caterpillar', status: 'active', tradable: true, fractionable: true},
     {symbol: 'BTC', name: 'Bitcoin ETF', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'WMT', name: 'Walmart', status: 'active', tradable: true, fractionable: true},
     {symbol: 'SLV', name: 'iShares Silver Trust', status: 'active', tradable: true, fractionable: true}, // SILVER
     {symbol: 'GLTR', name: 'abrdn Physical Precious Metals Basket Shares ETF', status: 'active', tradable: true, fractionable: true}, // GOLD
     {symbol: 'B', name: 'BARRICK MINING CORPORATION - GOLD', status: 'active', tradable: true, fractionable: true}, // GOLD

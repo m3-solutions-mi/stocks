@@ -83,6 +83,9 @@ const config_stocks = new Config(
 
         //@ STEADY PICKS - TOP 10
         // ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC').split(','),
+
+
+        ...('AEIS,ALNT,BELFB,CECO,DHC,FIVE,GEV,GOOGL,LASR,MKSI,MU,NXT,POWL,SNDK,STX,TSEM,WDC,SITM,CAT,LITE,NXT,HOOD').split(','),
     ].filter((v, i, a) => i === a.indexOf(v)).sort(),
     1000,
     // '2025-03-15T00:00:00Z', // start
@@ -630,7 +633,7 @@ async function update(instance) {
         // }
 
         //*@ COMBINED / CUMULATIVE */
-        const render_combined = () => {
+        const render_combined = async () => {
             //* ADD POINT ANNOTATIONS */
             const add_points = (field = 'month_') => {
                 let t = 0;
@@ -660,11 +663,11 @@ async function update(instance) {
             // add_points('month_');
             // add_points('quarter_');
             data = combined.data;
-            chart_top_3.options.yaxis.max = data[data.length - 1].y + 1000;
+            // chart_top_3.options.yaxis.max = data[data.length - 1].y + 1000;
             // data = data.slice(-30);
             update_ui(chart_top_3);
-            total = round2(PROCESSED_DATA.symbols.map((v) => round2(v.days_total)).reduce((p, c) => p + c));
-            const elem = document.getElementById('top-combined-total');
+            total = round2(result.symbols.map((v) => round2(v.days_total)).reduce((p, c) => p + c));
+            let elem = document.getElementById('top-combined-total');
             total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
             elem.innerHTML = `${get_indicator(total)} ${round(total).toLocaleString()}`;
             document.getElementById('top-combined-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
@@ -822,7 +825,11 @@ async function update(instance) {
     //*@ PORTFOLIO HISTORY */
     // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
     // start_date = '2026-01-05';
-    config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
+    // let num_days = '1D'; // 1D | 2D | 3D | 4D | 5D
+    let timeframe = '1D'; // 1Min | 5Min | 15Min | 1H
+    let reporting = 'extended_hours'; // continuous | extended_hours | market_hours
+    config_stocks.alpaca.get_portfolio_history(null, start_date, null, timeframe, reporting).then((result) => {
+    // config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
         PORTFOLIO_HISTORY = result;
         console.log('PORTFOLIO_HISTORY', PORTFOLIO_HISTORY);
 
@@ -852,7 +859,7 @@ async function update(instance) {
         //* month indicators */
         let m = null;
         chart_top_5.options.annotations.xaxis = chart_top_5.options.annotations.points.map((v, i) => {
-            if (i > 0 && new Date(v.x).getMonth() !== new Date(chart_top_5.options.annotations.points[i-1].x).getMonth()) {
+            if (i > 0 && new Date(v.x).getMonth() !== new Date(chart_top_5.options.annotations.points[i - 1].x).getMonth()) {
                 return add_annotation_x(v.x);
             }
             m = new Date(v.x).getMonth();
@@ -891,9 +898,9 @@ async function update(instance) {
     // start_date = '2026-01-05';
     //@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
     //* config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
-    const num_days = '1D'; // 1D | 2D | 3D | 4D | 5D
-    const timeframe = '1Min'; // 1Min | 5Min | 15Min | 1H
-    const reporting = 'extended_hours'; // continuous | extended_hours | market_hours
+    num_days = '2D'; // 1D | 2D | 3D | 4D | 5D
+    timeframe = '1Min'; // 1Min | 5Min | 15Min | 1H
+    reporting = 'continuous'; // continuous | extended_hours | market_hours
     config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {
         PORTFOLIO_DAY_HISTORY = result;
         console.log('PORTFOLIO_DAY_HISTORY', PORTFOLIO_DAY_HISTORY);
@@ -925,10 +932,11 @@ async function update(instance) {
                 400: '4 am',
                 930: '9:30',
                 1100: '11 am',
+                1200: '12 pm',
                 1600: '4 pm',
                 2000: '8 pm',
             }
-            if ([/*0,*/ 400, 930, 1100, 1600, 2000].indexOf(v.thm) >= 0) {
+            if ([/*0,*/ 400, 930, 1100, 1200, 1600, 2000].indexOf(v.thm) >= 0) {
                 chart_top_7.options.annotations.xaxis.push(add_annotation_x(v.e, label[v.thm] || v.thm, v.thm === 0 ? colors.deeppink : colors.black, v.thm === 400 ? 35 : 0));
             }
         })

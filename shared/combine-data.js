@@ -43,7 +43,7 @@ const combine_data = (symbols, seed_per_symbol = 1000, add_per_month = 0 * 1000)
         }
     });
     const temp = result[result.length - 1].y;
-    annotations.push({ x: result[result.length - 1].x, y: temp, label: { text: round1((temp - last) / 1000), offsetX: -30, offsetY: 50, style: { fontSize: '22px' } }, marker: { size: 6, fillColor: colors.deeppink } });
+    annotations.push({ x: result[result.length - 1].x, y: temp, label: { text: round1((temp - last) / 1000), offsetX: -30, offsetY:  50, style: { fontSize: '22px' } }, marker: { size: 6, fillColor: colors.deeppink } });
     return { data: result, annotations, annotations_x };
 };
 /**
