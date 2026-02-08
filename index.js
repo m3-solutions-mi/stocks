@@ -560,6 +560,44 @@ let ACCOUNT = null;
 async function update(instance) {
     const s = Date.now();
 
+    //*@ ADD SECTION */
+    const add_section = (output_id, name, section_id, value_1, value_2, icon = 'fa-line-chart', s = 12, m = 6, l = 6, size_t = 48, size_1 = 36, size_2 = 56) => {
+        //* new template */
+        const map = {
+            4: chart_top_4,
+            5: chart_top_5,
+            7: chart_top_7,
+        }
+        let id = 7;
+        if (!document.getElementById(`section-${section_id}`)) {
+            let template = `
+                <div id="section-${section_id}" class="w3-col s${s} m${m} l${l} w3-xxlarge w3-padding _w3-border-right">
+                    <div class="w3-col s12" style="font-size: ${size_t}px;margin-top:16px;"><i
+                            class="fa ${icon} fa-fw w3-text-green"></i> ${name}
+                        |
+                        <b><span id="value-1-${section_id}" class="w3-xlarge w3-text-green"
+                                style="font-size: ${size_1}px !important;letter-spacing:6px;">$</span></b>
+                        <b><span id="value-2-${section_id}" class="w3-tag w3-green w3-roundw3-text-white w3-right"
+                                style="font-size: ${size_2}px;letter-spacing:16px;">$-K</span>
+                        </b>
+                        <div id="top-chart-${section_id}" class="w3-margin-top"></div>
+                    </div>
+                </div>`;
+            let elem_output = document.getElementById(output_id);
+            elem_output.innerHTML += template;
+        }
+        let elem = document.getElementById(`value-2-${section_id}`);
+        value_2 < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+        elem.innerHTML = `${get_indicator(value_2)} ${Math.abs(value_2).toLocaleString()}`;
+        elem = document.getElementById(`value-1-${section_id}`);
+        value_2 < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+        elem.innerHTML = `${(Math.abs(round2(value_1))).toLocaleString()}`;
+
+        update_ui(map[section_id]);
+        // update();
+    }
+    //*@ End | ADD SECTION */
+
     //*@ TRASNSFER OLD ENTRIES */
     if (!localStorage.getItem(`m3-stocks-account-name`)) {
         console.yellow('TRANSFERRING LOCAL STORAGE ENTRIES');
@@ -588,7 +626,7 @@ async function update(instance) {
     config_stocks.alpaca.ALPACA_SECRET = secret;
     config_stocks.alpaca.SEED = seed;
 
-    config_stocks.alpaca.bars_simplified(symbols, start_date).then((result) => {
+    config_stocks.alpaca.bars_simplified(symbols, start_date).then(async (result) => {
         // instance.get_symbols().then((result) => {
         PROCESSED_DATA = result;
         console.log(`DATA | ${instance?.NAME || 'CONFIG'}`, PROCESSED_DATA)
@@ -648,7 +686,7 @@ async function update(instance) {
             const summary = summarize_combined_data(PROCESSED_DATA.symbols);
             series = { name: 'Close', type: 'area', data: [] };
             chart_top_3.options.chart.type = 'area';
-            chart_top_3.options.chart.height = 400;
+            chart_top_3.options.chart.height = 385;
             chart_top_3.options.chart.sparkline = { enabled: true };
             chart_top_3.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
             chart_top_3.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleDateString(); };
@@ -680,7 +718,7 @@ async function update(instance) {
     });
 
     //*@ ACCOUNT */
-    config_stocks.alpaca.get_account().then((result) => {
+    config_stocks.alpaca.get_account().then(async (result) => {
         ACCOUNT = result;
         // console.group('ACCOUNT');
         const equity = round2(+(ACCOUNT.equity)).toLocaleString();
@@ -722,7 +760,7 @@ async function update(instance) {
         //* CHART /*
         data = POSITIONS.map((v) => { return { x: v.symbol, y: round(v.unrealized_pl) } });
         // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
-        chart_top_4.options.chart.height = 415;
+        chart_top_4.options.chart.height = 400;
         chart_top_4.options.dataLabels.formatter = function (text, op) {
             return [text, op.value]
         };
@@ -730,19 +768,23 @@ async function update(instance) {
             // console.log('data point selected', event, chartContext, opts);
             console.log('data point selected | ', opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].x);
         }
-        update_ui(chart_top_4);
+        // update_ui(chart_top_4);
 
-        //* LAST TOTAL */
+        //* LAST TOTAL | PERCENT */
         total = round2(POSITIONS.map((v) => +(v.unrealized_pl)).reduce((p, c) => p + c));
-        let elem = document.getElementById('last-total');
-        elem.innerHTML = `${get_indicator(total)} ${Math.abs(round(total)).toLocaleString()}&nbsp;`;
-        total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-
-        //* LAST PERCENT */
         const percent = round2(total / (POSITIONS.length * 1000) * 100);
-        elem = document.getElementById('last-pct');
-        elem.innerHTML = `${percent.toLocaleString()}%`;
-        total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+
+        // let elem = document.getElementById('last-total');
+        // elem.innerHTML = `${get_indicator(total)} ${Math.abs(round(total)).toLocaleString()}&nbsp;`;
+        // total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+
+        // //* LAST PERCENT */
+        // elem = document.getElementById('last-pct');
+        // elem.innerHTML = `${percent.toLocaleString()}%`;
+        // total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+        
+        // update_ui(chart_top_4);
+        add_section('output', 'Positions', 4, percent, round(total), 'fa-tags', 12, 6, 6, 36, 24, 36);
 
         //* SEED MONEY */
         elem = document.getElementById('last-seed');
@@ -829,7 +871,7 @@ async function update(instance) {
     let timeframe = '1D'; // 1Min | 5Min | 15Min | 1H
     let reporting = 'extended_hours'; // continuous | extended_hours | market_hours
     config_stocks.alpaca.get_portfolio_history(null, start_date, null, timeframe, reporting).then((result) => {
-    // config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
+        // config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
         PORTFOLIO_HISTORY = result;
         console.log('PORTFOLIO_HISTORY', PORTFOLIO_HISTORY);
 
@@ -878,19 +920,22 @@ async function update(instance) {
         last = data[data.length - 1];
         chart_top_5.options.annotations.yaxis.push(add_annotation_y(last.y));
 
-        update_ui(chart_top_5);
+        // update_ui(chart_top_5);
 
         total = round(data[data.length - 1].y);
         const gain = round(round2(round(data[data.length - 1].y - data[0].y)));
-        //* PORTFOLIO BALANCE */
-        let elem = document.getElementById('top-portfolio-total');
-        total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-        elem.innerHTML = `${get_indicator(gain)} ${gain.toLocaleString()}`;
-        // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+        // //* PORTFOLIO BALANCE */
+        // let elem = document.getElementById('top-portfolio-total');
+        // total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+        // elem.innerHTML = `${get_indicator(gain)} ${gain.toLocaleString()}`;
+        // // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
 
         //* MONTH GAIN */
         elem = document.getElementById('gain-month');
         elem.innerHTML = `$${total.toLocaleString()}`;
+        
+        // update_ui(chart_top_5);
+        add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 6, 6, 36, 24, 36);
     });
 
     //*@ PORTFOLIO 'DAY' HISTORY */
@@ -898,6 +943,7 @@ async function update(instance) {
     // start_date = '2026-01-05';
     //@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
     //* config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
+
     num_days = '2D'; // 1D | 2D | 3D | 4D | 5D
     timeframe = '1Min'; // 1Min | 5Min | 15Min | 1H
     reporting = 'continuous'; // continuous | extended_hours | market_hours
@@ -907,6 +953,15 @@ async function update(instance) {
 
         //* GENERATE CHART */
         series = { name: 'Close', type: 'area', data: [] };
+        // chart_top_7.options = Object.assign(chart_top_7.options, {
+        //     chart: {
+        //         type: 'area',
+        //         height: 300,
+        //         sparkline: {enabled: true },
+        //     },
+        //     xaxis:  { type: 'datetime', labels: { datetimeUTC: true, } },
+        //     _tooltip: { x: { formatter: function (value, timestamp) { return new Date(value).toLocaleString(); } } }, 
+        // });
         chart_top_7.options.chart.type = 'area';
         chart_top_7.options.chart.height = 400;
         chart_top_7.options.chart.sparkline = { enabled: true };
@@ -956,21 +1011,62 @@ async function update(instance) {
         chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y));
 
         // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 1000 };
-        update_ui(chart_top_7);
+        // update_ui(chart_top_7);
 
         total = round(data[data.length - 1].y);
         const gain = round(round2(round(data[data.length - 1].y - yesterday.y)));
         //* PORTFOLIO BALANCE */
-        let elem = document.getElementById('top-portfolio-day-total');
-        gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-        elem.innerHTML = `${get_indicator(gain)} ${Math.abs(gain).toLocaleString()}`;
-        // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+        // let elem = document.getElementById('top-portfolio-day-total');
+        // gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+        // elem.innerHTML = `${get_indicator(gain)} ${Math.abs(gain).toLocaleString()}`;
+        // // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
 
         //* MONTH GAIN */
-        elem = document.getElementById('gain-today');
-        gain < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
-        elem.innerHTML = `${(Math.abs(round2(total / yesterday.y * 100) - 100)).toLocaleString()}%`;
-        // elem.innerHTML = `$${(data[data.length-1].y - data[0].y).toLocaleString()}`;
+        // elem = document.getElementById('gain-today');
+        // gain < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+        // elem.innerHTML = `${(Math.abs(round2(total / yesterday.y * 100) - 100)).toLocaleString()}%`;
+        // // elem.innerHTML = `$${(data[data.length-1].y - data[0].y).toLocaleString()}`;
+
+        //* new template */
+        // const map = {
+        //     7: chart_top_7
+        // }
+        // let id = 7;
+        // if (!document.getElementById(`section-${id}`)) {
+        //     let template = `
+        //         <div id="section-{id}" class="w3-col s12 w3-xxlarge w3-padding _w3-border-right">
+        //             <div class="w3-col s12" style="font-size: 48px;margin-top:16px;"><i
+        //                     class="fa {icon} fa-fw w3-text-green"></i> Today
+        //                 |
+        //                 <b><span id="value-1-{id}" class="w3-xlarge w3-text-green"
+        //                         style="font-size: 36px !important;letter-spacing:6px;">$</span></b>
+        //                 <b><span id="value-2-{id}" class="w3-tag w3-green w3-roundw3-text-white w3-right"
+        //                         style="font-size: 56px;letter-spacing:16px;">$-K</span>
+        //                 </b>
+        //                 <div id="top-chart-{id}" class="w3-margin-top"></div>
+        //             </div>
+        //         </div>`;
+        //     let elem_output = document.getElementById('output');
+        //     template = replaceAll(template, '{icon}', 'fa-line-chart');
+        //     template = replaceAll(template, '{id}', '7');
+        //     template = template;
+        //     elem_output.innerHTML = template;
+        // }
+        // elem = document.getElementById(`value-2-${id}`);
+        // gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+        // elem.innerHTML = `${get_indicator(gain)} ${Math.abs(gain).toLocaleString()}`;
+        // elem = document.getElementById(`value-1-${id}`);
+        // gain < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+        // elem.innerHTML = `${(Math.abs(round2(total / yesterday.y * 100) - 100)).toLocaleString()}%`;
+
+        // Object.values(map).forEach((v) => {
+        //     update_ui(v);
+        // });
+
+        // `${(Math.abs(round2(value_1 / yesterday.y * 100) - 100)).toLocaleString()}%`
+        
+        // update_ui(chart_top_7);
+        add_section('output', 'Today', 7, round2(total / yesterday.y * 100) - 100, gain, 'fa-line-chart', 12, 12, 12, 36, 24, 36);
     });
 }
 

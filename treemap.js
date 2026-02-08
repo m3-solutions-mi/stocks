@@ -155,6 +155,7 @@ class Treemap {
             this.options.series[0].data = data;
         }
         if (this.chart_instance) {
+            // console.log(this.chart_id);
             this.chart_instance.destroy();
         }
         this.chart_instance = new ApexCharts(document.querySelector(this.chart_id), this.options);
