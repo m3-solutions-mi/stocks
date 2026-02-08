@@ -760,7 +760,7 @@ async function update(instance) {
         //* CHART /*
         data = POSITIONS.map((v) => { return { x: v.symbol, y: round(v.unrealized_pl) } });
         // data = data.sort((a, b) => a.y < b.y ? 1 : -1);
-        chart_top_4.options.chart.height = 400;
+        chart_top_4.options.chart.height = 350;
         chart_top_4.options.dataLabels.formatter = function (text, op) {
             return [text, op.value]
         };
@@ -878,7 +878,7 @@ async function update(instance) {
         //* GENERATE CHART */
         series = { name: 'Close', type: 'area', data: [] };
         chart_top_5.options.chart.type = 'area';
-        chart_top_5.options.chart.height = 400;
+        chart_top_5.options.chart.height = 350;
         chart_top_5.options.chart.sparkline = { enabled: true };
         chart_top_5.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
         chart_top_5.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
