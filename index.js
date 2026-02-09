@@ -770,7 +770,7 @@ async function update(instance) {
         }
         // update_ui(chart_top_4);
 
-        //* LAST TOTAL | PERCENT */
+        //*@ LAST TOTAL | PERCENT */
         total = round2(POSITIONS.map((v) => +(v.unrealized_pl)).reduce((p, c) => p + c));
         const percent = round2(total / (POSITIONS.length * 1000) * 100);
 
@@ -783,15 +783,15 @@ async function update(instance) {
         // elem.innerHTML = `${percent.toLocaleString()}%`;
         // total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
         
-        // update_ui(chart_top_4);
         add_section('output', 'Positions', 4, percent, round(total), 'fa-tags', 12, 6, 6, 36, 24, 36);
+        update_ui(chart_top_4);
 
         //* SEED MONEY */
         elem = document.getElementById('last-seed');
         elem.innerHTML = `[${round1(POSITIONS.length).toLocaleString()}K]`;
 
 
-        //* SYMBOLS BOXES & TABLE */
+        //*@ SYMBOLS BOXES & TABLE */
         const template = `<span id="{id}" 
             class="w3-tag w3-round w3-padding w3-{c}" 
             style="cursor:pointer;min-width:144px;margin-bottom:5px;color:{fc}!important;" 
@@ -869,8 +869,8 @@ async function update(instance) {
     // start_date = '2026-01-05';
     // let num_days = '1D'; // 1D | 2D | 3D | 4D | 5D
     let timeframe = '1D'; // 1Min | 5Min | 15Min | 1H
-    let reporting = 'extended_hours'; // continuous | extended_hours | market_hours
-    config_stocks.alpaca.get_portfolio_history(null, start_date, null, timeframe, reporting).then((result) => {
+    let reporting = 'continuous'; // continuous | extended_hours | market_hours
+    config_stocks.alpaca.get_portfolio_history(null, start_date, new Date(Date.now() + (24*60*60*1000)).toISOString(), timeframe, reporting).then((result) => {
         // config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
         PORTFOLIO_HISTORY = result;
         console.log('PORTFOLIO_HISTORY', PORTFOLIO_HISTORY);
@@ -934,8 +934,8 @@ async function update(instance) {
         elem = document.getElementById('gain-month');
         elem.innerHTML = `$${total.toLocaleString()}`;
         
-        // update_ui(chart_top_5);
         add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 6, 6, 36, 24, 36);
+        update_ui(chart_top_5);
     });
 
     //*@ PORTFOLIO 'DAY' HISTORY */
@@ -944,7 +944,7 @@ async function update(instance) {
     //@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
     //* config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
 
-    num_days = '2D'; // 1D | 2D | 3D | 4D | 5D
+    num_days = '3D'; // 1D | 2D | 3D | 4D | 5D
     timeframe = '1Min'; // 1Min | 5Min | 15Min | 1H
     reporting = 'continuous'; // continuous | extended_hours | market_hours
     config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {

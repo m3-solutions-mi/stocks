@@ -858,6 +858,42 @@ class AlpacaData {
             }
         });
     }
+    async bars_15(symbols, start, end) {
+        return new Promise(async (resolve) => {
+            const promises = symbols.map((s) => this.bars(s, '10Min', start, end, [], [], false, 100, false));
+            const results = await Promise.all(promises);
+            const obj = {};
+            results.forEach((s) => {
+                const filtered = s.bars_1K.filter((v) => v.thm === 940 || v.thm === 1550);
+                filtered.forEach((b, i) => {
+                    // obj.push(i === 0 ? 0 : b.c - filtered[i - 1].c);
+                    // b.delta = i === 0 ? 0 : b.c - filtered[i - 1].c; //! DAYS & NIGHTS
+                    b.delta = i === 0 ? 0 : (b.thm === 940 ? b.c - filtered[i - 1].c : 0); //! ONLY NIGHTS
+                })
+                obj[s.symbol] = { sum: round2(filtered.map((v) => v.delta).reduce((p, c) => p + c)), filtered }
+            })
+
+            // Sum the elements at corresponding indices
+            const combined = Object.values(obj).map((v) => v.filtered).filter((v) => v !== undefined).reduce((accumulator, currentArray) => {
+                return currentArray.map((value, index) => {
+                    // Add the current value to the accumulator's value at the same index
+                    return (accumulator[index] || 0) + round2(value.delta);
+                });
+            }, []); // Initial value for the accumulator is an empty array []
+            // console.log(combined);
+
+            
+            obj['sum'] = round2(Object.values(obj).map((v) => v.sum).reduce((p, c) => p + c));
+            obj['last'] = round2(Object.values(obj).map((v) => v.filtered).filter((v) => v !== undefined).map((v) => v[v.length - 2].delta).reduce((p, c) => p + c));
+            obj['combined'] = {sum: round2(combined.reduce((p,c)=>p+c)), data: combined.filter((v)=>v !== 0).map((v)=>round2(v))};
+            console.chart(combined.filter((v)=>v !== 0).map((v)=>round2(v)))
+            resolve(obj);
+            // resolve({ sum: obj.reduce((p, c) => p + c), obj, filtered });
+            // results.forEach((res) => {
+            // });
+            // resolve(results.filter());
+        });
+    }
     async latest_bar(symbol) {
         return new Promise(async (resolve) => {
             // await sleep(delay);
@@ -1117,7 +1153,7 @@ class AlpacaData {
             fetch(`https://data.alpaca.markets/v1beta1/news?sort=desc&symbols=${symbol}&include_content=${content}`, options)
                 .then(res => res.json())
                 .then(res => {
-                    resolve(res.news.map((v)=>`${v.created_at} | ${v.headline} | ${v.url}`))
+                    resolve(res.news.map((v) => `${v.created_at} | ${v.headline} | ${v.url}`))
                 })
                 .catch(err => console.error(err));
         })

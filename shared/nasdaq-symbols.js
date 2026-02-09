@@ -1,4 +1,4 @@
-// Symbol|Security Name|Market Category|Test Issue|Financial Status|Round Lot Size|ETF|NextShares
+//* Symbol|Security Name|Market Category|Test Issue|Financial Status|Round Lot Size|ETF|NextShares */
 const nasdaq_symbols = () => {
     const entries = nasdaq_symbols_raw.split('\n');
     // console.log(entries);
