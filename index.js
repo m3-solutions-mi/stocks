@@ -85,7 +85,8 @@ const config_stocks = new Config(
         // ...('KOD,ARWR,SEPN,LITE,LASR,ZBIO,UPB,PHAT,GLUE,WDC').split(','),
 
 
-        ...('AEIS,ALNT,BELFB,CECO,DHC,FIVE,GEV,GOOGL,LASR,MKSI,MU,NXT,POWL,SNDK,STX,TSEM,WDC,SITM,CAT,LITE,NXT,HOOD').split(','),
+        // BELFB
+        ...('AEIS,ALNT,CECO,DHC,FIVE,GEV,GOOGL,LASR,MKSI,MU,NXT,POWL,SNDK,STX,TSEM,WDC,SITM,CAT,LITE,NXT,HOOD').split(','),
     ].filter((v, i, a) => i === a.indexOf(v)).sort(),
     1000,
     // '2025-03-15T00:00:00Z', // start
@@ -869,7 +870,7 @@ async function update(instance) {
     // start_date = '2026-01-05';
     // let num_days = '1D'; // 1D | 2D | 3D | 4D | 5D
     let timeframe = '1D'; // 1Min | 5Min | 15Min | 1H
-    let reporting = 'continuous'; // continuous | extended_hours | market_hours
+    let reporting = 'extended_hours'; // continuous | extended_hours | market_hours
     config_stocks.alpaca.get_portfolio_history(null, start_date, new Date(Date.now() + (24*60*60*1000)).toISOString(), timeframe, reporting).then((result) => {
         // config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
         PORTFOLIO_HISTORY = result;
@@ -888,14 +889,15 @@ async function update(instance) {
         //* day indicators */
         chart_top_5.options.annotations = { xaxis: [], yaxis: [], points: [], };
         let last = 0;
-        chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v) => v.thm === 2000).map((v, i) => {
+        chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v, i) => v.thm === 2000).map((v, i) => {
             const value = round((v.equity - last));
             last = v.equity;
-            return add_annotation_point(v.e, v.equity, 4.5, colors.black, value);
+            return add_annotation_point(v.e, v.equity, 4.5, colors.black,  i === 0 ? value : null);
             // return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
         })
-        chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetX'] = -25;
-        chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetY'] = 50;
+        // chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetX'] = -25;
+        // chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetY'] = 50;
+        // chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label.text = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].y.toString();
         chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].marker.fillColor = colors.deeppink;
 
         //* month indicators */
@@ -944,7 +946,7 @@ async function update(instance) {
     //@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
     //* config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
 
-    num_days = '3D'; // 1D | 2D | 3D | 4D | 5D
+    num_days = '1D'; // 1D | 2D | 3D | 4D | 5D
     timeframe = '1Min'; // 1Min | 5Min | 15Min | 1H
     reporting = 'continuous'; // continuous | extended_hours | market_hours
     config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {
