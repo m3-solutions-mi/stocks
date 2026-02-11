@@ -86,7 +86,7 @@ const config_stocks = new Config(
 
 
         // BELFB
-        ...('AEIS,ALNT,CECO,DHC,FIVE,GEV,GOOGL,LASR,MKSI,MU,NXT,POWL,SNDK,STX,TSEM,WDC,SITM,CAT,LITE,NXT,HOOD').split(','),
+        ...('AEIS,ALNT,CECO,DHC,FIVE,GEV,GOOGL,LASR,MKSI,MU,NXT,POWL,SNDK,STX,TSEM,WDC,SITM,CAT,LITE,NXT,FORM').split(','),
     ].filter((v, i, a) => i === a.indexOf(v)).sort(),
     1000,
     // '2025-03-15T00:00:00Z', // start
@@ -784,7 +784,8 @@ async function update(instance) {
         // elem.innerHTML = `${percent.toLocaleString()}%`;
         // total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
         
-        add_section('output', 'Positions', 4, percent, round(total), 'fa-tags', 12, 6, 6, 36, 24, 36);
+        add_section('output', 'Positions', 4, percent, round(total), 'fa-tags', 12, 12, 12, 36, 24, 36);
+        chart_top_4.options.chart.height = 250;
         update_ui(chart_top_4);
 
         //* SEED MONEY */
@@ -870,7 +871,7 @@ async function update(instance) {
     // start_date = '2026-01-05';
     // let num_days = '1D'; // 1D | 2D | 3D | 4D | 5D
     let timeframe = '1D'; // 1Min | 5Min | 15Min | 1H
-    let reporting = 'extended_hours'; // continuous | extended_hours | market_hours
+    let reporting = 'continuous'; // continuous | extended_hours | market_hours
     config_stocks.alpaca.get_portfolio_history(null, start_date, new Date(Date.now() + (24*60*60*1000)).toISOString(), timeframe, reporting).then((result) => {
         // config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
         PORTFOLIO_HISTORY = result;
@@ -892,7 +893,7 @@ async function update(instance) {
         chart_top_5.options.annotations.points = PORTFOLIO_HISTORY.filter((v, i) => v.thm === 2000).map((v, i) => {
             const value = round((v.equity - last));
             last = v.equity;
-            return add_annotation_point(v.e, v.equity, 4.5, colors.black,  i === 0 ? value : null);
+            return add_annotation_point(v.e, v.equity, 4.5, colors.black,  value);
             // return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
         })
         // chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetX'] = -25;
@@ -936,7 +937,8 @@ async function update(instance) {
         elem = document.getElementById('gain-month');
         elem.innerHTML = `$${total.toLocaleString()}`;
         
-        add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 6, 6, 36, 24, 36);
+        add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 12, 12, 36, 24, 36);
+        chart_top_5.options.chart.height = 250;
         update_ui(chart_top_5);
     });
 
@@ -1001,6 +1003,7 @@ async function update(instance) {
         // chart_top_7.options.annotations.points.push(add_annotation_point(last.e, last.equity - first.equity, 4.5, colors.deeppink, '123'))
         // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
 
+        // const start_price = PORTFOLIO_DAY_HISTORY[0].equity;
         data = PORTFOLIO_DAY_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
         // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 250 };
         // chart_top_7.options.yaxis = { max: Math.max(...data.map((v)=>v.y)) + 250 };
@@ -1067,8 +1070,9 @@ async function update(instance) {
 
         // `${(Math.abs(round2(value_1 / yesterday.y * 100) - 100)).toLocaleString()}%`
         
-        // update_ui(chart_top_7);
         add_section('output', 'Today', 7, round2(total / yesterday.y * 100) - 100, gain, 'fa-line-chart', 12, 12, 12, 36, 24, 36);
+        chart_top_7.options.chart.height = 250;
+        update_ui(chart_top_7);
     });
 }
 

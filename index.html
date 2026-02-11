@@ -142,7 +142,8 @@
                                             <span id="" class="w3-left">v1.0.2</span>
 
                                             <br />
-                                            <div class="w3-center _w3-margin-top" style="letter-spacing: 4px; margin-top:50px;">
+                                            <div class="w3-center _w3-margin-top"
+                                                style="letter-spacing: 4px; margin-top:50px;">
                                                 <div class="w3-border w3-round-large w3-padding w3-white w3-xlarge w3-margin w3-center"
                                                     style="cursor:pointer;" onclick="buy_all()">Buy All</div>
                                                 <div class="w3-border w3-round-large w3-padding w3-white w3-xlarge w3-margin w3-center"
@@ -215,8 +216,23 @@
                     <!-- </div> -->
                     <!--@ End | TEMPLATE -->
 
+
+                    <!--* Configuration Selections -->
+                    <div class="w3-center" style="margin-top:-0px;">
+                        <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="view_type"
+                            value="account" onclick="click_config(this.value)" checked>
+                        <label class="w3-hide-small" style="position:relative;top:6px;margin-left: 5px;">Account</label>
+
+                        <input class="w3-hide-small w3-radio" style="cursor:pointer;margin-left: 20px;" type="radio" name="view_type"
+                            value="estimated" onclick="click_config(this.value)">
+                        <label class="w3-hide-small" style="position:relative;top:6px;margin-left: 5px;">Estimated</label>
+                    </div>
+
+
                     <!--@ OUTPUT -->
                     <div id="output" class="w3-row w3-padding-top" style="_border-top:1px solid lightgrey;">
+
+
                     </div>
                     <!--@ End | OUTPUT -->
 
@@ -263,7 +279,7 @@
                                     style="letter-spacing:4px;">%</span>
                                 <div id="top-chart-6" class="w3-margin-top"></div>
                             </div>
-                            <div class="w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;">
+                            <div class="_w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;">
                                 <i class="fa fa-bookmark-o fa-fw w3-text-green"></i> Breakdown
                                 <!-- <span id="top-symbols-total-pct" class="w3-small"
                                         style="_font-size: 56px !important;">%</span> -->
@@ -303,7 +319,7 @@
                                     style="letter-spacing:4px;">$-K</span>
                                 <div id="top-chart-7" class="w3-margin-top"></div>
                             </div> -->
-                            <div class="w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;"><i
+                            <div class="_w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;"><i
                                     class="fa fa-line-chart fa-fw w3-margin-right w3-text-green"></i>Cumulative
                                 |
                                 <span id="top-combined-total-pct" class="w3-large"
