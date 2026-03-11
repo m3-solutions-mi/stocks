@@ -13,6 +13,7 @@ class AlpacaData {
     ALPACA_KEY = null;
     ALPACA_SECRET = null;
     START_OF_YEAR = null;
+    FEED = 'iex'; // iex, sip
     WINDOWS = {
         NONE: ['2025-12-22'],
         WEEKS: [
@@ -584,11 +585,10 @@ class AlpacaData {
             await sleep(delay);
 
             const s = symbol.replace('/', '%2F');
-            const feed = 'sip';
             // const feed = 'iex'; //! DO NOT USE IEX FOR ALPACA - LIMITED DATA
 
             let options = { method: 'GET', headers: { accept: 'application/json' } };
-            let url = `${this.baseUrl}/v1beta3/crypto/us/bars?symbols=${s}&timeframe=${timeframe}&start=${start}&end=${end}&limit=5000&sort=asc`
+            let url = `${this.baseUrl}/v1beta3/crypto/us/bars?symbols=${s}&timeframe=${timeframe}&start=${start}&end=${end}&feed=${this.FEED}&limit=5000&sort=asc`
 
             const isCrypto = s.endsWith('USD');
             if (isCrypto === false) {
@@ -605,7 +605,7 @@ class AlpacaData {
                 const d = new Date();
                 const hm = +((d.getHours() * 100) + +(d.getMinutes().toString().padStart(2, '0')));
                 isOpen = isOpen ? (start.substring(0, 10) === getTodayLocal() ? hm > 930 : isOpen) : isOpen;
-                url = isOpen ? `${this.baseUrl}/v2/stocks/bars?symbols=${s}&start=${start}&end=${end}&timeframe=${timeframe}&limit=5000&adjustment=raw&feed=${feed}&sort=asc` : null;
+                url = isOpen ? `${this.baseUrl}/v2/stocks/bars?symbols=${s}&start=${start}&end=${end}&timeframe=${timeframe}&limit=5000&adjustment=raw&feed=${this.FEED}&sort=asc` : null;
             }
 
             // symbol = symbol.replace('/', '-');
@@ -634,7 +634,7 @@ class AlpacaData {
                     .then((res) => res.bars[symbol] || [])
                     .then((res) => this.addMetaData(res))
                     // .then((res) => this.convertToPercent(symbol, res))
-                    .then((res) => timeframe === '1Min' ? this.addMissingData(res, s, end) : res)
+                    // .then((res) => timeframe === '1Min' ? this.addMissingData(res, s, end) : res)
                     // .then((res) => this.addBollingerBands('bands_c', res, isCrypto ? 50 : 28, isCrypto ? 1.0 : 0.7))
                     .then((res) => this.addIMI(res, 14))
                     .then((res) => this.addBollingerBands('bands_c', res, isCrypto ? 28 : 14, 0.7, 1.0)) //TODO: get from config
@@ -657,9 +657,9 @@ class AlpacaData {
             }
         });
     }
-    async bars_simplified(symbols, start = this.START_OF_YEAR, end = new Date().toISOString()) {
+    async bars_simplified(symbols, timeframe = '1D', start = this.START_OF_YEAR, end = new Date().toISOString()) {
         return new Promise(async (resolve) => {
-            const promises = symbols.map((s) => this.bars(s, '1D', start, end, [], [], false, 100, false));
+            const promises = symbols.map((s) => this.bars(s, timeframe, start, end, [], [], false, 100, false));
             const results = await Promise.all(promises);
             const obj = [];
             results.forEach((res) => {
@@ -789,11 +789,10 @@ class AlpacaData {
             // await sleep(delay);
 
             const s = symbol.replace('/', '%2F');
-            const feed = 'sip';
             // const feed = 'iex'; //! DO NOT USE IEX FOR ALPACA - LIMITED DATA
 
             let options = { method: 'GET', headers: { accept: 'application/json' } };
-            let url = `${this.baseUrl}/v1beta3/crypto/us/bars?symbols=${s}&timeframe=${timeframe}&start=${start}&end=${end}&limit=5000&sort=asc`
+            let url = `${this.baseUrl}/v1beta3/crypto/us/bars?symbols=${s}&timeframe=${timeframe}&start=${start}&end=${end}&feed=${this.FEED}&limit=5000&sort=asc`
 
             const isCrypto = s.endsWith('USD');
             if (isCrypto === false) {
@@ -810,7 +809,7 @@ class AlpacaData {
                 const d = new Date();
                 const hm = +((d.getHours() * 100) + +(d.getMinutes().toString().padStart(2, '0')));
                 isOpen = isOpen ? (start.substring(0, 10) === getTodayLocal() ? hm > 930 : isOpen) : isOpen;
-                url = isOpen ? `${this.baseUrl}/v2/stocks/bars?symbols=${s}&start=${start}&end=${end}&timeframe=${timeframe}&limit=5000&adjustment=raw&feed=${feed}&sort=asc` : null;
+                url = isOpen ? `${this.baseUrl}/v2/stocks/bars?symbols=${s}&start=${start}&end=${end}&timeframe=${timeframe}&limit=5000&adjustment=raw&feed=${this.FEED}&sort=asc` : null;
             }
 
             if (url) {
@@ -858,6 +857,7 @@ class AlpacaData {
             }
         });
     }
+    //*@ CUSTOM ANALYSIS - 10 Min */
     async bars_15(symbols, start, end) {
         return new Promise(async (resolve) => {
             const promises = symbols.map((s) => this.bars(s, '10Min', start, end, [], [], false, 100, false));
@@ -867,8 +867,8 @@ class AlpacaData {
                 const filtered = s.bars_1K.filter((v) => v.thm === 940 || v.thm === 1550);
                 filtered.forEach((b, i) => {
                     // obj.push(i === 0 ? 0 : b.c - filtered[i - 1].c);
-                    // b.delta = i === 0 ? 0 : b.c - filtered[i - 1].c; //! DAYS & NIGHTS
-                    b.delta = i === 0 ? 0 : (b.thm === 940 ? b.c - filtered[i - 1].c : 0); //! ONLY NIGHTS
+                    b.delta = i === 0 ? 0 : b.c - filtered[i - 1].c; //! DAYS & NIGHTS
+                    // b.delta = i === 0 ? 0 : (b.thm === 940 ? b.c - filtered[i - 1].c : 0); //! ONLY NIGHTS
                 })
                 obj[s.symbol] = { sum: round2(filtered.map((v) => v.delta).reduce((p, c) => p + c)), filtered }
             })
@@ -882,11 +882,25 @@ class AlpacaData {
             }, []); // Initial value for the accumulator is an empty array []
             // console.log(combined);
 
-            
+            const entries = Object.entries(obj)[0][1].filtered.map((v) => { return { date: v.tl, gain: 0 } });
+            entries.forEach((e) => {
+                Object.values(obj).forEach((o) => {
+                    const found = o.filtered.find((v) => v.tl === e.date);
+                    e.gain += found ? round2(found.delta) : 0;
+                })
+            })
+            console.log('entries | ', entries.filter((v)=>v.date.indexOf('9:40') > 0).map((v)=>v.gain).reduce((p,c)=>p+c), entries.filter((v)=>v.date.indexOf('9:40') > 0));
+            console.log(`entries | ${symbols.length}K | ${entries.map((v)=>v.gain).reduce((p,c)=>p+c).toLocaleString()}`, entries);
+
+
             obj['sum'] = round2(Object.values(obj).map((v) => v.sum).reduce((p, c) => p + c));
             obj['last'] = round2(Object.values(obj).map((v) => v.filtered).filter((v) => v !== undefined).map((v) => v[v.length - 2].delta).reduce((p, c) => p + c));
-            obj['combined'] = {sum: round2(combined.reduce((p,c)=>p+c)), data: combined.filter((v)=>v !== 0).map((v)=>round2(v))};
-            console.chart(combined.filter((v)=>v !== 0).map((v)=>round2(v)))
+            obj['combined'] = {
+                sum: round2(combined.reduce((p, c) => p + c)),
+                per_day: round2(combined.reduce((p, c) => p + c)) / combined.filter((v) => v !== 0).length,
+                data: combined.filter((v) => v !== 0).map((v) => round2(v))
+            };
+            console.chart(combined.filter((v) => v !== 0).map((v) => round2(v)))
             resolve(obj);
             // resolve({ sum: obj.reduce((p, c) => p + c), obj, filtered });
             // results.forEach((res) => {
@@ -899,8 +913,6 @@ class AlpacaData {
             // await sleep(delay);
 
             const s = symbol.replace('/', '%2F');
-            const feed = 'sip';
-            // const feed = 'iex'; //! DO NOT USE IEX FOR ALPACA - LIMITED DATA
 
             const options = {
                 method: 'GET',
@@ -910,8 +922,7 @@ class AlpacaData {
                     'APCA-API-SECRET-KEY': this.ALPACA_SECRET || SECRET
                 }
             };
-            // https://data.alpaca.markets/v2/stocks/bars/latest?symbols=GLTR&feed=sip
-            let url = `${this.baseUrl}/v2/stocks/bars/latest?symbols=${s}&feed=sip`
+            let url = `${this.baseUrl}/v2/stocks/bars/latest?symbols=${s}&feed=${this.FEED}`
 
             if (url) {
                 fetch(url, options)
@@ -1090,7 +1101,7 @@ class AlpacaData {
                 }
             };
 
-            fetch('https://paper-api.alpaca.markets/v2/account', options)
+            fetch(`${this.buy_sell_root_url}/v2/account`, options)
                 .then(res => res.json())
                 .then(res => resolve(res))
                 .catch(err => console.error('error in orders()', err));

@@ -76,7 +76,7 @@ const summarize_combined_data = (symbols) => {
             })
         })
     })
-    console.log(symbols_raw);
+    //! console.log(symbols_raw);
 
     //* summarize */
     const seed = 1000;
@@ -147,7 +147,7 @@ const summarize_combined_data = (symbols) => {
     // obj['week_']['xy'] = Object.entries(obj.week).map((v, i) => { return { x: new Date(v[0].replace('_', '-') + '-01T00:00:00').getTime(), y: round2(v[1]) } });
     obj['month_']['xy'] = Object.entries(obj.month).map((v, i) => { return { x: new Date(v[0].replace('_', '-').substring(0, 7) + '-01T00:00:00').getTime(), y: round2(v[1]) } });
     obj['quarter_']['xy'] = Object.entries(obj.quarter).map((v, i) => { return { x: new Date(v[0].replace('_', '-').substring(0, 7) + '-01T00:00:00').getTime(), y: round2(v[1]) } });
-    console.log(obj);
+    //! console.log(obj);
     // console.log(combined_data);
     return obj;
 }

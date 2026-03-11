@@ -7,7 +7,7 @@
 //#----------------------------
 function click_config(name) {
     console.log(name);
-    ['positions', 'filtered', 'symbols'].forEach((v) => {
+    [/*'positions',*/ 'filtered', 'symbols'].forEach((v) => {
         document.getElementById(`symbol-boxes-${v}`).style.display = 'none'
     });
     document.getElementById(`symbol-boxes-${name}`).style.display = 'block'
@@ -33,6 +33,13 @@ function set_use_raw(checked) {
 //#----------------------------
 function set_use_filter(checked) {
     use_filter = checked ? true : false;
+}
+
+//#----------------------------
+//# set use 24h
+//#----------------------------
+function set_use_24h(checked) {
+    use_24h = checked ? true : false;
 }
 
 //#----------------------------
