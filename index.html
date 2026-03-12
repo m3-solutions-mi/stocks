@@ -72,7 +72,7 @@
 
                             <div class="w3-col s7 w3-padding _w3-xxlarge w3-bold w3-text-black">
 
-                                <div class="W3-container w3-text-black">
+                                <div class="w3-container w3-text-black">
                                     <h1 style="margin-top:10px;">
                                         <b>M3&nbsp;Solutions&nbsp;MI</b>
                                         <span
@@ -107,11 +107,12 @@
                                             </div>
 
                                             <!--* ACCOUNT INPUTS  -->
-                                            <div><label>KEY</label><input id="key"
-                                                    class="w3-input w3-border" style="filter:blur(4px);" type="text" placeholder="Enter key">
+                                            <div><label>KEY</label><input id="key" class="w3-input w3-border"
+                                                    style="filter:blur(4px);" type="text" placeholder="Enter key">
                                             </div>
                                             <div style="margin-top:10px;"><label>SECRET</label><input id="secret"
-                                                    class="w3-input w3-border" style="filter:blur(4px);" type="text" placeholder="Enter secret">
+                                                    class="w3-input w3-border" style="filter:blur(4px);" type="text"
+                                                    placeholder="Enter secret">
                                             </div>
                                             <div style="display:none;margin-top:10px;width:50%;">
                                                 <label>TOKEN</label><input id="token" class="w3-input w3-border"
@@ -260,12 +261,12 @@
                         </div> -->
                         <!--* portfolio  -->
                         <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
-                            <div class="w3-col s3 m3 l3 w3-border-right">
+                            <div class="w3-col s3 m4 l3 w3-border-right">
                                 <b>▼&nbsp;Portfolio</b>
                                 <br />
                                 <b><span id="value-2-5" class="w3-tag w3-red w3-roundw3-text-white w3-left"
                                         style="font-size: 24px;letter-spacing:16px;"><span
-                                            style="">▼</span>&nbsp;44</span>
+                                            style="">▼</span>&nbsp;-</span>
                                 </b>
                                 <br />
                                 <b>
@@ -273,14 +274,14 @@
                                         style="font-size: 24px !important;letter-spacing:6px;"></span>
                                 </b>
                             </div>
-                            <div class="w3-col s12 m9 l9">
+                            <div class="w3-col s12 m8 l9">
                                 <!-- <b>Chart</b> -->
                                 <div id="top-chart-5"></div>
                             </div>
                         </div>
-                        <!--* portfolio  -->
+                        <!--* 24 hour  -->
                         <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
-                            <div class="w3-col s3 m3 l3">
+                            <div class="w3-col s3 m4 l3">
                                 <b>▼&nbsp;24&nbsp;hour</b>
                                 <br />
                                 <b><span id="value-24-hour" class="w3-tag w3-red w3-roundw3-text-white w3-left"
@@ -292,14 +293,14 @@
                                                 style="font-size: 24px !important;letter-spacing:6px;"></span>
                                         </b> -->
                             </div>
-                            <div class="w3-col s12 m9 l9">
+                            <div class="w3-col s12 m8 l9">
                                 <!-- <b>Chart</b> -->
                                 <div id="top-chart-7"></div>
                             </div>
                         </div>
                         <!--* positions  -->
                         <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
-                            <div class="w3-col s3 m3 l3">
+                            <div class="w3-col s3 m4 l3">
                                 <b>▼&nbsp;Positions</b>
                                 <br />
                                 <b><span id="value-2-4" class="w3-tag w3-red w3-roundw3-text-white w3-left"
@@ -311,258 +312,267 @@
                                                 style="font-size: 24px !important;letter-spacing:6px;"></span>
                                         </b> -->
                             </div>
-                            <div class="w3-col s12 m9 l9">
+                            <div class="w3-col s12 m8 l9">
                                 <!-- <b>Chart</b> -->
                                 <div id="top-chart-4"></div>
                             </div>
                         </div>
                         <!--* today  -->
                         <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
-                            <div class="w3-col s3 m3 l3">
+                            <div class="w3-col s3 m4 l3">
                                 <b>▼&nbsp;Today</b>
                                 <br />
                                 <b>
                                     <span id="value-2-7" class="w3-tag w3-red w3-round w3-text-white w3-left"
                                         style="font-size: 24px;letter-spacing:16px;"><span
-                                            style="">▼</span>&nbsp;44</span>
+                                            style="">▼</span>&nbsp;-</span>
                                 </b>
                                 <br />
                                 <b><span id="value-24-hour-percent" class="w3-xlarge w3-text-red"
                                         style="font-size: 24px !important;letter-spacing:6px;">6.4%</span></b>
                             </div>
 
-                            <div class="w3-col s12 m9 l9 w3-xlarge">
-                                <b>Symbols</span></b>
-                                <span id="symbols-count"></span>
-                                <div id="symbol-boxes-positions" class="w3-left" style="display:block;"></div>
-                            </div>
-                        </div>
+                            <div class="w3-col s12 m8 l9 w3-xlarge">
+                                <b>Symbols
+            </span></b>
+            <span id="symbols-count"></span>
+            <div id="symbol-boxes-positions" class="w3-left" style="display:block;"></div>
+        </div>
+    </div>
 
-                        
-                        <!--* chart  -->
-                        <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
-                            <p id="symbol-days-title"><span></span>-</p>
-                            <div class="w3-col s12 m8">
-                                <!-- <b>Chart</b> -->
-                                <div id="chart8" class="w3-padding w3-margin"></div>
-                            </div>
 
-                            <div class="w3-col s12 m4">
-                                <!-- <b>Chart</b> -->
-                                <div id="chart10" class="w3-padding w3-margin"></div>
-                            </div>
-                        </div>
+    <!--* chart  -->
+    <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
+        <p id="symbol-days-title"><span></span>-</p>
+        <div class="w3-col s12 m8">
+            <!-- <b>Chart</b> -->
+            <div id="chart8" class="w3-padding w3-margin"></div>
+        </div>
 
-                        <!--* Configuration Selections -->
-                        <div class="w3-xlarge w3-container _w3-card w3-white" style="margin-top:20px;">
-                            <div class="w3-right" style="display:inline-flex;align-content: center;">
-                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
-                                    value="positions" onclick="click_config(this.value)" checked>
-                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Positions</label>
+        <div class="w3-col s12 m4">
+            <!-- <b>Chart</b> -->
+            <div id="chart10" class="w3-padding w3-margin"></div>
+        </div>
+    </div>
 
-                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
-                                    value="filtered" onclick="click_config(this.value)" disabled>
-                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Filtered</label>
+    <!--* Configuration Selections -->
 
-                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
-                                    value="symbols" onclick="click_config(this.value)">
-                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Symbols</label>
+    <div class="w3-xlarge w3-container _w3-card w3-white" style="margin-top:20px;">
 
-                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
-                                    onclick="set_use_filter(this.checked)" checked>
-                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Filter</label>
+        <div id="symbol-sell"
+            class="w3-left w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin-right w3-center"
+            style="cursor:pointer;" onclick="buy_symbol()">Buy</div>
+        <div id="symbol-buy"
+            class="w3-left w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge _w3-margin w3-center"
+            style="cursor:pointer;" onclick="sell_symbol()">Sell</div>
+        <div id="symbol-ndaq"
+            class="w3-left w3-hide w3-hide-small w3-border w3-round-large w3-padding _w3-text-grey w3-xlarge _w3-margin w3-center"
+            style="cursor:pointer;margin-left:48px;" onclick="click_symbol('NDAQ')">NDAQ</div>
 
-                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
-                                    onclick="set_use_raw(this.checked)" checked>
-                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Raw</label>
+        <div class="w3-right" style="display:inline-flex;align-content: center;">
+            <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config" value="positions"
+                onclick="click_config(this.value)" checked>
+            <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Positions</label>
 
-                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
-                                    onclick="set_use_24h(this.checked)" checked>
-                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">24h</label>
+            <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config" value="filtered"
+                onclick="click_config(this.value)" disabled>
+            <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Filtered</label>
 
-                                <!-- <input class="w3-radio" style="cursor:pointer;" type="checkbox"
+            <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config" value="symbols"
+                onclick="click_config(this.value)">
+            <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Symbols</label>
+
+            <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
+                onclick="set_use_filter(this.checked)" checked>
+            <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Filter</label>
+
+            <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
+                onclick="set_use_raw(this.checked)" checked>
+            <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Raw</label>
+
+            <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
+                onclick="set_use_24h(this.checked)" checked>
+            <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">24h</label>
+
+            <!-- <input class="w3-radio" style="cursor:pointer;" type="checkbox"
                                     onclick="set_num_days(this.checked)" checked>
                                 <label style="margin:-2px 20px 0px 10px;">40 Days</label> -->
-                            </div>
-                        </div>
 
-                        <div id="symbol-boxes-filtered" class="w3-center w3-xlarge w3-text-grey"
-                            style="display:none;margin-top:20px;">
-                            Trending
-                            <div id="symbols-filtered"></div>
-                        </div>
-                        <div id="symbol-boxes-symbols" style="display:none;">
-                            <div id="symbols-for-letter" class="w3-center" style="margin-top:20px;"></div>
-                            <hr />
-                            <div id="letters" class="w3-center"></div>
-                        </div>
+        </div>
+    </div>
+
+    <div id="symbol-boxes-filtered" class="w3-center w3-xlarge w3-text-grey" style="display:none;margin-top:20px;">
+        Trending
+        <div id="symbols-filtered"></div>
+    </div>
+    <div id="symbol-boxes-symbols" style="display:none;">
+        <div id="symbols-for-letter" class="w3-center" style="margin-top:20px;"></div>
+        <hr />
+        <div id="letters" class="w3-center"></div>
+    </div>
 
 
-                        <div id="symbols-table" class="w3-large _w3-container _w3-card w3-white"
-                            style="padding-top:20px;">
-                            <table class="w3-table-all w3-xlarge">
-                                <thead>
-                                    <tr class="w3-light-grey">
-                                        <th>Symbol</th>
-                                        <th class="w3-hide-small">Name</th>
-                                        <th>Date</th>
-                                        <th>Day</th>
-                                        <th>Gain</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="symbol-table-body">
-                                    <!-- <tr>
+    <div id="symbols-table" class="w3-large _w3-container _w3-card w3-white" style="padding-top:20px;">
+        <table class="w3-table-all w3-xlarge">
+            <thead>
+                <tr class="w3-light-grey">
+                    <th>Symbol</th>
+                    <th class="w3-hide-small">Name</th>
+                    <th>Date</th>
+                    <th>Day</th>
+                    <th>Gain</th>
+                </tr>
+            </thead>
+            <tbody id="symbol-table-body">
+                <!-- <tr>
                                     <td>▲ AEIS</td>
                                     <td>Advanced Energy Industries, Inc. Common Stoc</td>
                                     <td>$ 72</td>
                                 </tr> -->
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- <br /> -->
-                    </div>
-                    <br />
-                </div>
-                <!--@ end | responsive layout -->
+            </tbody>
+        </table>
+    </div>
+    <!-- <br /> -->
+    </div>
+    <br />
+    </div>
+    <!--@ end | responsive layout -->
 
 
-                <div id="symbols-table-new" class="w3-hide w3-large w3-container _w3-card w3-white">
-                    <table class="w3-table-all w3-xlarge w3-margin-top">
-                        <thead>
-                            <tr class="w3-light-grey">
-                                <th style="width:20%;">Symbol</th>
-                                <th style="_width:10%;">Summary</th>
-                                <!-- <th>Date</th> -->
-                                <th style="width:40%;">Chart</th>
-                                <!-- <th>Gain</th> -->
-                                <th style="width:40%;">-</th>
-                            </tr>
-                        </thead>
-                        <tbody id="symbol-table-body-new">
-                            <tr>
-                                <td>▼&nbsp;Portfolio
-                                    <br />
-                                    <b><span id="value-2-5" class="w3-tag w3-red w3-roundw3-text-white w3-left"
-                                            style="font-size: 24px;letter-spacing:16px;"><span
-                                                style="">▼</span>&nbsp;-</span>
-                                    </b>
-                                    <br />
-                                    <b>
-                                        <span id="value-1-5" class="w3-xlarge w3-text-green"
-                                            style="font-size: 24px !important;letter-spacing:6px;"></span>
-                                    </b>
-                                </td>
-                                <!-- <td>Advanced Energy Industries, Inc. Common Stoc</td> -->
-                                <!-- <td>$ 72</td>
+    <div id="symbols-table-new" class="w3-hide w3-large w3-container _w3-card w3-white">
+        <table class="w3-table-all w3-xlarge w3-margin-top">
+            <thead>
+                <tr class="w3-light-grey">
+                    <th style="width:20%;">Symbol</th>
+                    <th style="_width:10%;">Summary</th>
+                    <!-- <th>Date</th> -->
+                    <th style="width:40%;">Chart</th>
+                    <!-- <th>Gain</th> -->
+                    <th style="width:40%;">-</th>
+                </tr>
+            </thead>
+            <tbody id="symbol-table-body-new">
+                <tr>
+                    <td>▼&nbsp;Portfolio
+                        <br />
+                        <b><span id="value-2-5" class="w3-tag w3-red w3-roundw3-text-white w3-left"
+                                style="font-size: 24px;letter-spacing:16px;"><span style="">▼</span>&nbsp;-</span>
+                        </b>
+                        <br />
+                        <b>
+                            <span id="value-1-5" class="w3-xlarge w3-text-green"
+                                style="font-size: 24px !important;letter-spacing:6px;"></span>
+                        </b>
+                    </td>
+                    <!-- <td>Advanced Energy Industries, Inc. Common Stoc</td> -->
+                    <!-- <td>$ 72</td>
                                     <td>$ 103</td> -->
-                                <td colspan="3">
-                                    <div id="top-chart-5"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>▼&nbsp;24&nbsp;hour
-                                    <br />
-                                    <b><span id="value-24-hour" class="w3-tag w3-red w3-roundw3-text-white w3-left"
-                                            style="font-size: 24px;letter-spacing:16px;"><span style=""></span>
-                                    </b>
-                                    <!-- <br />
+                    <td colspan="3">
+                        <div id="top-chart-5"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>▼&nbsp;24&nbsp;hour
+                        <br />
+                        <b><span id="value-24-hour" class="w3-tag w3-red w3-roundw3-text-white w3-left"
+                                style="font-size: 24px;letter-spacing:16px;"><span style=""></span>
+                        </b>
+                        <!-- <br />
                                         <b>
                                             <span id="value-1-7" class="w3-xlarge w3-text-green"
                                                 style="font-size: 24px !important;letter-spacing:6px;"></span>
                                         </b> -->
-                                </td>
-                                <!-- <td>Advanced Energy Industries, Inc. Common Stoc</td> -->
-                                <!-- <td>$ 72</td>
+                    </td>
+                    <!-- <td>Advanced Energy Industries, Inc. Common Stoc</td> -->
+                    <!-- <td>$ 72</td>
                                     <td>$ 103</td> -->
-                                <td colspan="3">
-                                    <div id="top-chart-7"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>▼&nbsp;Positions
-                                    <br />
-                                    <b><span id="value-2-4" class="w3-tag w3-red w3-roundw3-text-white w3-left"
-                                            style="font-size: 24px;letter-spacing:16px;"><span
-                                                style="">▼</span>&nbsp;-</span>
-                                    </b>
-                                </td>
-                                <!-- <td>Advanced Energy Industries, Inc. Common Stoc</td> -->
-                                <!-- <td>$ 72</td>
+                    <td colspan="3">
+                        <div id="top-chart-7"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>▼&nbsp;Positions
+                        <br />
+                        <b><span id="value-2-4" class="w3-tag w3-red w3-roundw3-text-white w3-left"
+                                style="font-size: 24px;letter-spacing:16px;"><span style="">▼</span>&nbsp;-</span>
+                        </b>
+                    </td>
+                    <!-- <td>Advanced Energy Industries, Inc. Common Stoc</td> -->
+                    <!-- <td>$ 72</td>
                                     <td>$ 103</td> -->
-                                <td colspan="3">
-                                    <div id="top-chart-4"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>▼&nbsp;Today
-                                    <br />
-                                    <b>
-                                        <span id="value-2-7" class="w3-tag w3-red w3-round w3-text-white w3-left"
-                                            style="font-size: 24px;letter-spacing:16px;"><span
-                                                style="">▼</span>&nbsp;44</span>
-                                    </b>
-                                    <br />
-                                    <b><span id="value-24-hour-percent" class="w3-xlarge w3-text-red"
-                                            style="font-size: 24px !important;letter-spacing:6px;">6.4%</span></b>
-                                </td>
-                                <!-- <td>Advanced Energy Industries, Inc. Common Stoc</td> -->
-                                <!-- <td>$ 72</td>
+                    <td colspan="3">
+                        <div id="top-chart-4"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>▼&nbsp;Today
+                        <br />
+                        <b>
+                            <span id="value-2-7" class="w3-tag w3-red w3-round w3-text-white w3-left"
+                                style="font-size: 24px;letter-spacing:16px;"><span style="">▼</span>&nbsp;-</span>
+                        </b>
+                        <br />
+                        <b><span id="value-24-hour-percent" class="w3-xlarge w3-text-red"
+                                style="font-size: 24px !important;letter-spacing:6px;">6.4%</span></b>
+                    </td>
+                    <!-- <td>Advanced Energy Industries, Inc. Common Stoc</td> -->
+                    <!-- <td>$ 72</td>
                                     <td>$ 103</td> -->
-                                <td colspan="3">
-                                    <div id="symbol-boxes-positions" class="w3-left" style="display:block;"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <!-- <td>▼ AEIS
+                    <td colspan="3">
+                        <div id="symbol-boxes-positions" class="w3-left" style="display:block;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <!-- <td>▼ AEIS
                                         <br />
                                         Advanced Energy Industries, Inc
                                     </td> -->
-                                <td colspan="4">
-                                    <p id="symbol-days-title"><span></span>-</p>
-                                </td>
-                                <!-- <td>Day: <b class="w3-text-red" style="letter-spacing: 4px;">-3.89</b>
+                    <td colspan="4">
+                        <p id="symbol-days-title"><span></span>-</p>
+                    </td>
+                    <!-- <td>Day: <b class="w3-text-red" style="letter-spacing: 4px;">-3.89</b>
                                         <br />
                                         GAIN: <b class="w3-text-red" style="letter-spacing: 4px;">-6.15</b>
                                     </td> -->
-                                <!-- <td>$ 72</td> -->
-                                <!-- <td><div id="_top-chart-3"></div></td> -->
-                                <!-- <td colspan="5">
+                    <!-- <td>$ 72</td> -->
+                    <!-- <td><div id="_top-chart-3"></div></td> -->
+                    <!-- <td colspan="5">
                                         <div id="chart8"></div>
                                     </td>
                                     <td _colspan="2">
                                         <div id="chart10"></div>
                                     </td> -->
-                            </tr>
-                            <tr>
-                                <td colspan="3">
-                                    <div id="chart8"></div>
-                                </td>
-                                <td _colspan="1">
-                                    <div id="chart10"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4">
-                                    <div id="chart-symbol-candlestick"></div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <div id="chart8"></div>
+                    </td>
+                    <td _colspan="1">
+                        <div id="chart10"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <div id="chart-symbol-candlestick"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
 
 
-                    <!--@ OUTPUT -->
-                    <div id="output" class="_w3-hide w3-row w3-padding-top" style="_border-top:1px solid lightgrey;">
+        <!--@ OUTPUT -->
+        <div id="output" class="_w3-hide w3-row w3-padding-top" style="_border-top:1px solid lightgrey;">
 
 
-                    </div>
-                    <!--@ End | OUTPUT -->
+        </div>
+        <!--@ End | OUTPUT -->
 
-                    <!--@ MAIN -->
-                    <div class="w3-hide w3-row w3-padding-top" style="_border-top:1px solid lightgrey;">
+        <!--@ MAIN -->
+        <div class="w3-hide w3-row w3-padding-top" style="_border-top:1px solid lightgrey;">
 
-                        <!--* TOP -->
-                        <!-- <div class="w3-col s12 w3-xxlarge w3-padding _w3-border-right">
+            <!--* TOP -->
+            <!-- <div class="w3-col s12 w3-xxlarge w3-padding _w3-border-right">
                             <div class="w3-col s12" style="font-size: 48px;margin-top:16px;"><i
                                     class="fa fa-line-chart fa-fw w3-text-green"></i> Today
                                 |
@@ -576,63 +586,60 @@
                             </div>
                         </div> -->
 
-                        <!--* LEFT -->
-                        <div class="w3-col s12 m4 w3-xxlarge w3-padding w3-border-right">
-                            <div class="w3-hide w3-xxlarge" style="margin-top:36px;">
-                                <i class="fa fa-university fa-fw w3-text-green"></i> Portfolio
-                                |
-                                <span id="gain-month" class="w3-xlarge" style="_font-size: 56px !important;">$</span>
-                                <!-- <span id="top-months-total-pct" class="w3-large"
+            <!--* LEFT -->
+            <div class="w3-col s12 m4 w3-xxlarge w3-padding w3-border-right">
+                <div class="w3-hide w3-xxlarge" style="margin-top:36px;">
+                    <i class="fa fa-university fa-fw w3-text-green"></i> Portfolio
+                    |
+                    <span id="gain-month" class="w3-xlarge" style="_font-size: 56px !important;">$</span>
+                    <!-- <span id="top-months-total-pct" class="w3-large"
                                         style="_font-size: 56px !important;">%</span> -->
-                                <span id="top-portfolio-total"
-                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
-                                    style="">$-K</span>
-                                <div id="top-chart-5" class="w3-margin-top"></div>
+                    <span id="top-portfolio-total" class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                        style="">$-K</span>
+                    <div id="top-chart-5" class="w3-margin-top"></div>
 
-                            </div>
-                            <div class="w3-hide w3-xxlarge" style="margin-top:16px;"><i
-                                    class="fa fa-clock-o fa-fw w3-text-green"></i> Today
-                                |
-                                <!-- <span id="gain-today" class="w3-xlarge" style="_font-size: 56px !important;">$</span> -->
-                                <!-- <span id="top-months-total-pct" class="w3-large"
+                </div>
+                <div class="w3-hide w3-xxlarge" style="margin-top:16px;"><i
+                        class="fa fa-clock-o fa-fw w3-text-green"></i> Today
+                    |
+                    <!-- <span id="gain-today" class="w3-xlarge" style="_font-size: 56px !important;">$</span> -->
+                    <!-- <span id="top-months-total-pct" class="w3-large"
                                         style="_font-size: 56px !important;">%</span> -->
-                                <span id="top-today-total"
-                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
-                                    style="letter-spacing:4px;">%</span>
-                                <div id="top-chart-6" class="w3-margin-top"></div>
-                            </div>
-                            <div class="_w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;">
-                                <i class="fa fa-bookmark-o fa-fw w3-text-green"></i> Breakdown
-                                <!-- <span id="top-symbols-total-pct" class="w3-small"
+                    <span id="top-today-total" class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                        style="letter-spacing:4px;">%</span>
+                    <div id="top-chart-6" class="w3-margin-top"></div>
+                </div>
+                <div class="_w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;">
+                    <i class="fa fa-bookmark-o fa-fw w3-text-green"></i> Breakdown
+                    <!-- <span id="top-symbols-total-pct" class="w3-small"
                                         style="_font-size: 56px !important;">%</span> -->
-                                <span id="top-symbols-total"
-                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
-                                    style="letter-spacing:4px;">$-K
-                                    <br />
-                                </span>
-                                <div id="top-chart-1" class="w3-margin-top"></div>
-                            </div>
-                            <!-- <div class="w3-xxlarge" style="display:none;margin-top:36px;"><i
+                    <span id="top-symbols-total" class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                        style="letter-spacing:4px;">$-K
+                        <br />
+                    </span>
+                    <div id="top-chart-1" class="w3-margin-top"></div>
+                </div>
+                <!-- <div class="w3-xxlarge" style="display:none;margin-top:36px;"><i
                                     class="fa fa-calendar-o fa-fw w3-text-green"></i> Months
                                 <span id="top-months-total"
                                     class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
                                     style="letter-spacing:4px;">$-K</span>
                                 <div id="top-chart-2" class="w3-margin-top"></div>
                             </div> -->
-                        </div>
-                        <!--* End | LEFT -->
+            </div>
+            <!--* End | LEFT -->
 
-                        <!--* RIGHT -->
-                        <div class="w3-hide w3-col s12 m8 w3-xxlarge _w3-center w3-padding">
-                            <div class="w3-hide w3-xxlarge" style="margin-top:36px;"><i
-                                    class="fa fa-tags fa-fw w3-margin-right w3-text-green"></i>Positions
-                                |
-                                <span id="last-pct" class="w3-xlarge" style="_font-size: 56px !important;">%</span>
-                                <span id="last-total" class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
-                                    style="letter-spacing:4px;">$-K</span>
-                                <div id="top-chart-4" class="w3-margin-top"></div>
-                            </div>
-                            <!-- <div class="w3-col s12 w3-xxlarge" style="margin-top:16px;"><i
+            <!--* RIGHT -->
+            <div class="w3-hide w3-col s12 m8 w3-xxlarge _w3-center w3-padding">
+                <div class="w3-hide w3-xxlarge" style="margin-top:36px;"><i
+                        class="fa fa-tags fa-fw w3-margin-right w3-text-green"></i>Positions
+                    |
+                    <span id="last-pct" class="w3-xlarge" style="_font-size: 56px !important;">%</span>
+                    <span id="last-total" class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                        style="letter-spacing:4px;">$-K</span>
+                    <div id="top-chart-4" class="w3-margin-top"></div>
+                </div>
+                <!-- <div class="w3-col s12 w3-xxlarge" style="margin-top:16px;"><i
                                     class="fa fa-line-chart fa-fw w3-text-green"></i> Today
                                 |
                                 <span id="gain-today" class="w3-xlarge" style="_font-size: 56px !important;">$</span>
@@ -641,38 +648,36 @@
                                     style="letter-spacing:4px;">$-K</span>
                                 <div id="top-chart-7" class="w3-margin-top"></div>
                             </div> -->
-                            <div class="_w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;"><i
-                                    class="fa fa-line-chart fa-fw w3-margin-right w3-text-green"></i>Cumulative
-                                |
-                                <span id="top-combined-total-pct" class="w3-large"
-                                    style="_font-size: 56px !important;">%</span>
-                                <span id="top-combined-total"
-                                    class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
-                                    style="letter-spacing:4px;">$-K</span>
-                                <div id="top-chart-3" class="w3-margin-top"></div>
-                            </div>
-                        </div>
-                        <!--* End | RIGHT -->
-                    </div>
-                    <!--@ End | MAIN -->
+                <div class="_w3-hide w3-hide-small w3-xxlarge" style="margin-top:16px;"><i
+                        class="fa fa-line-chart fa-fw w3-margin-right w3-text-green"></i>Cumulative
+                    |
+                    <span id="top-combined-total-pct" class="w3-large" style="_font-size: 56px !important;">%</span>
+                    <span id="top-combined-total" class="w3-tag w3-green w3-round w3-xxlarge w3-text-white w3-right"
+                        style="letter-spacing:4px;">$-K</span>
+                    <div id="top-chart-3" class="w3-margin-top"></div>
+                </div>
+            </div>
+            <!--* End | RIGHT -->
+        </div>
+        <!--@ End | MAIN -->
 
-                    <!-- </div> -->
-                    <!--@ End | TOP NEW -->
+        <!-- </div> -->
+        <!--@ End | TOP NEW -->
 
-                    <hr />
+        <hr />
 
-                    <!--@ Bottom -->
-                    <!-- <div class="w3-col s12" style="margin-top:5px;"> -->
-                    <div class="w3-hide w3-large w3-container _w3-card w3-white">
+        <!--@ Bottom -->
+        <!-- <div class="w3-col s12" style="margin-top:5px;"> -->
+        <div class="w3-hide w3-large w3-container _w3-card w3-white">
 
-                        <!--* Stock Symbols -->
-                        <h2 class="w3-text-grey w3-padding-16"><i
-                                class="fa fa-line-chart fa-fw w3-margin-right w3-xxlarge w3-text-green"
-                                style="cursor:pointer;" onclick="toggleSymbolDayChart()"></i>
-                            Stock Symbols<span id="symbols-count" class="w3-xlarge"></span>
+            <!--* Stock Symbols -->
+            <h2 class="w3-text-grey w3-padding-16"><i
+                    class="fa fa-line-chart fa-fw w3-margin-right w3-xxlarge w3-text-green" style="cursor:pointer;"
+                    onclick="toggleSymbolDayChart()"></i>
+                Stock Symbols<span id="symbols-count" class="w3-xlarge"></span>
 
-                            <!-- * Configuration Selections -->
-                            <!-- <div class="w3-right" style="display:inline-flex;align-content: center;">
+                <!-- * Configuration Selections -->
+                <!-- <div class="w3-right" style="display:inline-flex;align-content: center;">
                                 <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
                                     value="positions" onclick="click_config(this.value)" checked>
                                 <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Positions</label>
@@ -698,40 +703,40 @@
                                 <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">24h</label>
                             </div> -->
 
-                            <!--* Symbol Chart -->
-                            <div id="symbol-day-chart" class="w3-hide w3-container w3-center w3-xlarge">
-                                <div id="symbol-buy"
-                                    class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
-                                    style="cursor:pointer;" onclick="sell_symbol()">Sell</div>
-                                <div id="symbol-sell"
-                                    class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
-                                    style="cursor:pointer;" onclick="buy_symbol()">Buy</div>
-                                <p id="symbol-days-title">Symbol OHLC Day Chart
-                                </p>
-                                <!-- <div class="w3-right _w3-margin-top" style="letter-spacing: 4px;"> -->
-                                <!-- <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                <!--* Symbol Chart -->
+                <div id="symbol-day-chart" class="w3-hide w3-container w3-center w3-xlarge">
+                    <div id="symbol-buy"
+                        class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                        style="cursor:pointer;" onclick="sell_symbol()">Sell</div>
+                    <div id="symbol-sell"
+                        class="w3-right w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
+                        style="cursor:pointer;" onclick="buy_symbol()">Buy</div>
+                    <p id="symbol-days-title">Symbol OHLC Day Chart
+                    </p>
+                    <!-- <div class="w3-right _w3-margin-top" style="letter-spacing: 4px;"> -->
+                    <!-- <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
                                         style="cursor:pointer;" onclick="buy_all()">Buy All</div>
                                     <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
                                         style="cursor:pointer;" onclick="liquidate()">Liquidate</div> -->
-                                <!-- </div> -->
-                                <div id="chart8" class='w3-hide-small w3-col s12 m9 w3-padding'
-                                    _style="border:1px solid lightgray;">
-                                </div>
-                                <div id="chart10" class='w3-col s12 m3 w3-padding' _style="border:1px solid lightgray;">
-                                </div>
-                            </div>
-                        </h2>
+                    <!-- </div> -->
+                    <div id="chart8" class='w3-hide-small w3-col s12 m9 w3-padding'
+                        _style="border:1px solid lightgray;">
+                    </div>
+                    <div id="chart10" class='w3-col s12 m3 w3-padding' _style="border:1px solid lightgray;">
+                    </div>
+                </div>
+            </h2>
 
-                        <!--* Symbol Boxes -->
-                        <div id="symbol-names-input" class="w3-center w3-margin w3-text-grey"
-                            style="display:none;_display:flex;justify-content:center;">
-                            <label style="margin-right:15px;margin-top:8px;">Symbol&nbsp;Names</label>
-                            <textarea id="symbol-names" class="w3-input w3-border" style="width:60%;" type="text"
-                                placeholder="Enter key"></textarea>
-                        </div>
+            <!--* Symbol Boxes -->
+            <div id="symbol-names-input" class="w3-center w3-margin w3-text-grey"
+                style="display:none;_display:flex;justify-content:center;">
+                <label style="margin-right:15px;margin-top:8px;">Symbol&nbsp;Names</label>
+                <textarea id="symbol-names" class="w3-input w3-border" style="width:60%;" type="text"
+                    placeholder="Enter key"></textarea>
+            </div>
 
-                        <!-- <div id="symbol-boxes-positions" class="w3-center" style="display:block;"></div> -->
-                        <!-- <div id="symbol-boxes-filtered" class="w3-center w3-xlarge w3-text-grey" style="display:none;">
+            <!-- <div id="symbol-boxes-positions" class="w3-center" style="display:block;"></div> -->
+            <!-- <div id="symbol-boxes-filtered" class="w3-center w3-xlarge w3-text-grey" style="display:none;">
                             Trending
                             <div id="symbols-filtered"></div>
                         </div>
@@ -742,34 +747,34 @@
                         </div>
                         <br />
                         &nbsp; -->
-                    </div>
+        </div>
 
-                    <div id="symbols-table" class="w3-hide w3-large w3-container _w3-card w3-white">
-                        <table class="w3-table-all w3-xlarge">
-                            <thead>
-                                <tr class="w3-light-grey">
-                                    <th>Symbol</th>
-                                    <th class="w3-hide-small">Name</th>
-                                    <!-- <th>Date</th> -->
-                                    <th>Day</th>
-                                    <th>Gain</th>
-                                </tr>
-                            </thead>
-                            <tbody id="symbol-table-body">
-                                <!-- <tr>
+        <div id="symbols-table" class="w3-hide w3-large w3-container _w3-card w3-white">
+            <table class="w3-table-all w3-xlarge">
+                <thead>
+                    <tr class="w3-light-grey">
+                        <th>Symbol</th>
+                        <th class="w3-hide-small">Name</th>
+                        <!-- <th>Date</th> -->
+                        <th>Day</th>
+                        <th>Gain</th>
+                    </tr>
+                </thead>
+                <tbody id="symbol-table-body">
+                    <!-- <tr>
                                     <td>▲ AEIS</td>
                                     <td>Advanced Energy Industries, Inc. Common Stoc</td>
                                     <td>$ 72</td>
                                 </tr> -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- <br /> -->
-                </div>
+                </tbody>
+            </table>
         </div>
-        <!--@ End | Bottom -->
+        <!-- <br /> -->
+    </div>
+    </div>
+    <!--@ End | Bottom -->
 
-        </span>
+    </span>
     </div>
 
     <!--@ Pricing Tables -->

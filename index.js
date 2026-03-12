@@ -1159,6 +1159,7 @@ async function click_symbol(s, elem, check_score = false) {
     }
     document.getElementById('symbol-buy').classList.remove('w3-hide');
     document.getElementById('symbol-sell').classList.remove('w3-hide');
+    document.getElementById('symbol-ndaq').classList.remove('w3-hide');
 
     const tz = new Date(`2025-04-01T12:00:00`).getTimezoneOffset() / 60;
     const start = new Date(`2025-04-01T00:00:00-0${tz}:00`);
