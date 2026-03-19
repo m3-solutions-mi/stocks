@@ -579,6 +579,70 @@ class AlpacaData {
             resolve(res);
         });
     }
+    async bars_m3(symbol, timeframe = '1d', start = this.START_OF_YEAR, end = new Date().toISOString(), open_positions, orders_list, reset = true, delay = 100, add30 = true) {
+        return new Promise(async (resolve) => {
+
+            await sleep(delay);
+
+            const s = symbol.replace('/', '%2F');
+            // const feed = 'iex'; //! DO NOT USE IEX FOR ALPACA - LIMITED DATA
+
+            // const myHeaders = new Headers();
+            // myHeaders.append("Content-Type", "application/json");
+            // myHeaders.append("m3_token", "193750"); // Example of another header
+            let options = { method: 'GET', headers: { m3_token: '193750' } };
+            // let url = `http://localhost:3000/${s}/${timeframe}/${start}/${end}`;
+            let url = `https://m3-solutions-mi.com/${s}/${timeframe}/${start}/${end}`;
+
+            // symbol = symbol.replace('/', '-');
+            // url = `http://localhost:3102/yahoo/${symbol.replace('/', '-')}/1d/${start}/${end}`
+            open_positions = [];
+            orders_list = [];
+            if (open_positions.length > 0) {
+                open_positions[0].t = orders_list[0].t;
+            }
+            if (url) {
+                fetch(url, options)
+                    .then(res => res.json())
+                    .then((res) => {
+                        // console.log(res); 
+                        return res;
+                    })
+                    // .then((res) => this.get_next_page(symbol, url, delay, res, options))
+                    .then((res) => { res.symbol = symbol; return res; })
+                    .then((res) => {
+                        if (!res.bars[symbol]) {
+                            console.error(JSON.stringify(res));
+                            res.bars = { [symbol]: [{ o: 0, c: 0 }] };
+                        }
+                        return res;
+                    })
+                    .then((res) => res.bars[symbol] || [])
+                    .then((res) => this.addMetaData(res))
+                    // .then((res) => this.convertToPercent(symbol, res))
+                    // .then((res) => timeframe === '1Min' ? this.addMissingData(res, s, end) : res)
+                    // .then((res) => this.addBollingerBands('bands_c', res, isCrypto ? 50 : 28, isCrypto ? 1.0 : 0.7))
+                    .then((res) => this.addIMI(res, 14))
+                    .then((res) => this.addBollingerBands('bands_c', res, 14, 0.7, 1.0)) //TODO: get from config
+                    .then((res) => this.addTrendlines(res))
+                    .then((res) => this.addWeightedRollingAverage(res))
+                    .then((res) => this.refactor(symbol, res))
+                    .then((res) => this.analyze(symbol, res))
+                    .then((res) => this.summarize(res))
+                    .then((res) => this.levels(res))
+                    .then((res) => this.trendline(res))
+                    .then((res) => this.score(res))
+                    .then((res) => this.positions(symbol, open_positions, res))
+                    .then((res) => this.orders(symbol, orders_list, res))
+                    .then((res) => add30 ? this.add30Min(res, end) : res)
+                    .then((res) => this.add_bars_2(res))
+                    // .then((res) => this.add_latest_bar(res))
+                    .then((res) => resolve(res));
+            } else {
+                resolve(null);
+            }
+        });
+    }
     async bars(symbol, timeframe = '1D', start = this.START_OF_YEAR, end = new Date().toISOString(), open_positions, orders_list, reset = true, delay = 100, add30 = true) {
         return new Promise(async (resolve) => {
 
@@ -659,7 +723,7 @@ class AlpacaData {
     }
     async bars_simplified(symbols, timeframe = '1D', start = this.START_OF_YEAR, end = new Date().toISOString()) {
         return new Promise(async (resolve) => {
-            const promises = symbols.map((s) => this.bars(s, timeframe, start, end, [], [], false, 100, false));
+            const promises = symbols.map((s) => this.bars_m3(s, timeframe, start, end, [], [], false, 100, false));
             const results = await Promise.all(promises);
             const obj = [];
             results.forEach((res) => {
@@ -889,8 +953,8 @@ class AlpacaData {
                     e.gain += found ? round2(found.delta) : 0;
                 })
             })
-            console.log('entries | ', entries.filter((v)=>v.date.indexOf('9:40') > 0).map((v)=>v.gain).reduce((p,c)=>p+c), entries.filter((v)=>v.date.indexOf('9:40') > 0));
-            console.log(`entries | ${symbols.length}K | ${entries.map((v)=>v.gain).reduce((p,c)=>p+c).toLocaleString()}`, entries);
+            console.log('entries | ', entries.filter((v) => v.date.indexOf('9:40') > 0).map((v) => v.gain).reduce((p, c) => p + c), entries.filter((v) => v.date.indexOf('9:40') > 0));
+            console.log(`entries | ${symbols.length}K | ${entries.map((v) => v.gain).reduce((p, c) => p + c).toLocaleString()}`, entries);
 
 
             obj['sum'] = round2(Object.values(obj).map((v) => v.sum).reduce((p, c) => p + c));
@@ -1105,6 +1169,23 @@ class AlpacaData {
                 .then(res => res.json())
                 .then(res => resolve(res))
                 .catch(err => console.error('error in orders()', err));
+        });
+    }
+    get_account_activities(size = 100) {
+        return new Promise((resolve, reject) => {
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    'APCA-API-KEY-ID': this.ALPACA_KEY,
+                    'APCA-API-SECRET-KEY': this.ALPACA_SECRET,
+                }
+            };
+
+            fetch(`${this.buy_sell_root_url}/v2/account/activities?category=non_trade_activity&direction=desc&page_size=${size}`, options)
+                .then(res => res.json())
+                .then(res => resolve(res))
+                .catch(err => console.error(err));
         });
     }
     get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {

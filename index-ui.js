@@ -416,7 +416,7 @@ function toggleSymbolDayChart() {
 function buy_symbol() {
     const confirmed = confirm('are you sure you want to BUY symbol?');
     if (confirmed) {
-        const seed = 100; //1000;
+        const seed = 200; //1000;
         config_stocks.alpaca.buy(selected_symbol, seed).then((res) => {
             console.log(res);
         });

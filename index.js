@@ -599,7 +599,7 @@ async function update(instance) {
         elem.innerHTML = `${get_indicator(value_2)}&nbsp;${Math.abs(value_2).toLocaleString()}`;
         elem = document.getElementById(`value-1-${section_id}`);
         value_2 < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
-        elem.innerHTML = `$&nbsp;${(Math.abs(round2(value_1))).toLocaleString()}<br/>${(100 - round1(value_1 / 2500 * 100)).toLocaleString()}%`;
+        elem.innerHTML = `$&nbsp;${(Math.abs(round2(value_1))).toLocaleString()}<br/>${(round1(value_1 / 5500 * 100) - 100).toLocaleString()}%`;
 
         update_ui(map[section_id]);
         // update();
@@ -648,6 +648,8 @@ async function update(instance) {
         config_stocks.alpaca.get_portfolio_history(null, '2026-02-28', new Date().toISOString(), '1D', reporting),               //* HISTORY | DAYS */
         config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', reporting),                                         //* HISTORY | MINUTES */
         config_stocks.alpaca.get_news(symbols.join(',')),                                                                        //* NEWS */
+        config_stocks.alpaca.bars_simplified(['NDAQ', '^IXIC', 'CL=F', '^VIX'], '1D', '2026-02-01'),                                //* INDICATORS DATA */ 
+        config_stocks.alpaca.get_account_activities(),                                                                           //* ACCOUNT ACTIVITIES */ 
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1D', '2026-02-01'),                                                   //* NDAQ DAYS */
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1Min', new Date(Date.now() - (24 * 60 * 60 * 1000)).toISOString()),   //* NDAQ 24h */
     ];
@@ -660,6 +662,8 @@ async function update(instance) {
         PORTFOLIO_HISTORY: results[4],
         PORTFOLIO_HISTORY_MINUTES: results[5],
         NEWS: results[6],
+        INDICATORS: results[7],
+        ACTIVITIES: results[8],
         // NDAQ_DAYS: results[7],
         // NDAQ_24: results[8],
     }
@@ -672,6 +676,14 @@ async function update(instance) {
     })
     console.log(`RESULTS | $${RESULTS.ACCOUNT.equity.toLocaleString()}`, RESULTS);
     //*@ End | GET ALL DATA */
+
+    //*@ HEADER INDICATORS */
+    ['ndaq', 'nasdaq', 'oil', 'vix'].forEach((v, i) => {
+        let gain = RESULTS.INDICATORS.symbols[i].bars_raw[RESULTS.INDICATORS.symbols[i].bars_raw.length - 1].c;
+        elem = document.getElementById(`header-${v}`);
+        elem.innerHTML = gain >= 1000 ? round3(gain / 1000) + 'K' : gain;
+        elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    });
 
 
     // config_stocks.alpaca.bars_simplified(symbols, '1D', start_date).then(async (result) => {
@@ -780,7 +792,7 @@ async function update(instance) {
 
     //* DAY TOTAL */
     total = day_gain;
-    let elem = document.getElementById('day-total');
+    elem = document.getElementById('day-total');
     elem.innerHTML = `${get_indicator(total)} ${Math.abs(round(total)).toLocaleString()}&nbsp;`;
     const color = round(total) > 0 ? 'green' : (round(total) < 0 ? 'red' : 'grey');
     elem.classList.remove('w3-green');
@@ -829,6 +841,14 @@ async function update(instance) {
     // elem = document.getElementById('last-pct');
     // elem.innerHTML = `${percent.toLocaleString()}%`;
     // total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+
+
+    elem = document.getElementById('header-positions');
+    elem.innerHTML = round1(total);
+    elem.parentElement.classList.replace('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem = document.getElementById('header-positions-pct')
+    elem.innerHTML = round2(total / 5500 * 100) + ' %';
+    elem.parentElement.classList.replace('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
 
     add_section('output', 'Positions', 4, percent, round(total), 'fa-tags', 12, 12, 12, 36, 24, 36);
     chart_top_4.options.chart.height = CHART_HEIGHT;
@@ -964,7 +984,21 @@ async function update(instance) {
     // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-02T16:00:00').getTime()));
     // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
 
-    data = RESULTS.PORTFOLIO_HISTORY.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
+    // data = RESULTS.PORTFOLIO_HISTORY.map((v) => { 
+    //     const invested = RESULTS.ACTIVITIES.reverse()
+    //         .filter((v2)=>new Date(v2.date) <= new Date(v.t))
+    //         .filter((v2)=>v2.activity_type === 'CSD')
+    //         .map((v2)=>{return {net_amount: v2.net_amount}})
+    //         .map((v2)=>+(v2.net_amount))
+    //         // .reduce((p,c)=>p+c);
+    //     return { x: v.e, y: v.equity - (invested.length > 0 ? invested.reduce((p,c)=>p+c) : 0) }
+    // });
+    // data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
+
+    data = RESULTS.PORTFOLIO_HISTORY.map((v) => {
+        return { x: v.e, y: v.equity }
+    });//.slice(-15);
+
     data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
     // chart_top_5.options.yaxis = { max: data[data.length - 1].y + 1000 };
     chart_top_5.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 750 };
@@ -974,8 +1008,8 @@ async function update(instance) {
 
     // update_ui(chart_top_5);
 
-    total = round(data[data.length - 1].y);
-    let gain = round(data[data.length - 1].y) - 2500;
+    total = round1(data[data.length - 1].y);
+    gain = round1(data[data.length - 1].y - 5500);
     // let gain = round(round2(round(data[data.length - 1].y - data[0].y)));
 
     // //* PORTFOLIO BALANCE */
@@ -987,6 +1021,13 @@ async function update(instance) {
     //* MONTH GAIN */
     elem = document.getElementById('gain-month');
     elem.innerHTML = `$${total.toLocaleString()}`;
+
+    elem = document.getElementById('header-portfolio');
+    elem.innerHTML = gain;
+    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem = document.getElementById('header-portfolio-pct')
+    elem.innerHTML = round2(gain / 5500 * 100) + ' %';
+    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
 
     add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 12, 12, 36, 24, 36);
     chart_top_5.options.chart.height = CHART_HEIGHT;
@@ -1057,8 +1098,10 @@ async function update(instance) {
 
     // const start_price = 0; // PORTFOLIO_DAY_HISTORY[0].equity;
     data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
+    const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 15:59:00').getTime();
+    data = data.filter((v) => v.x >= st);
     // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 250 };
-    chart_top_7.options.yaxis = { max: Math.max(...data.map((v)=>v.y)) + 0 };
+    chart_top_7.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 0 };
 
     //! only needed if... (timeframe !== '1Min',...)
     data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
@@ -1070,8 +1113,8 @@ async function update(instance) {
     // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 1000 };
     // update_ui(chart_top_7);
 
-    total = round1(data[data.length - 1].y);
-    gain = round1(data[data.length - 1].y - yesterday.y);
+    total = round3(data[data.length - 1].y);
+    gain = round3(data[data.length - 1].y - yesterday.y);
     //* PORTFOLIO BALANCE */
     // let elem = document.getElementById('top-portfolio-day-total');
     // gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
@@ -1122,12 +1165,26 @@ async function update(instance) {
 
     // `${(Math.abs(round2(value_1 / yesterday.y * 100) - 100)).toLocaleString()}%`
 
+
+    elem = document.getElementById('header-today');
+    elem.innerHTML = gain >= 1000 ? round3(gain / 1000) + 'K' : gain;
+    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem = document.getElementById('header-today-pct')
+    elem.innerHTML = round2(gain / 5500 * 100) + ' %';
+    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     add_section('output', 'Today', 7, round1(total / yesterday.y * 100) - 100, gain, 'fa-line-chart', 12, 12, 12, 36, 24, 36);
 
     elem = document.getElementById(`value-24-hour`);
     gain = round1(data[data.length - 1].y - data[0].y);
     gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
     elem.innerHTML = `${get_indicator(gain)}&nbsp;${Math.abs(gain).toLocaleString()}`;
+
+    elem = document.getElementById('header-24h');
+    elem.innerHTML = gain >= 1000 ? round2(gain / 1000) + 'K' : gain;
+    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem = document.getElementById('header-24h-pct')
+    elem.innerHTML = round1(gain / 5500 * 100) + ' %';
+    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
 
     // TODO: update setting of table column 1 values
     elem = document.getElementById(`value-24-hour-percent`);
@@ -1160,6 +1217,9 @@ async function click_symbol(s, elem, check_score = false) {
     document.getElementById('symbol-buy').classList.remove('w3-hide');
     document.getElementById('symbol-sell').classList.remove('w3-hide');
     document.getElementById('symbol-ndaq').classList.remove('w3-hide');
+    document.getElementById('symbol-nasdaq').classList.remove('w3-hide');
+    document.getElementById('symbol-oil').classList.remove('w3-hide');
+    document.getElementById('symbol-vix').classList.remove('w3-hide');
 
     const tz = new Date(`2025-04-01T12:00:00`).getTimezoneOffset() / 60;
     const start = new Date(`2025-04-01T00:00:00-0${tz}:00`);
@@ -1230,16 +1290,16 @@ async function click_symbol(s, elem, check_score = false) {
         }
         last_n = n;
 
-        if (bars[i].thm === 930 || bars[i].thm === 1600) {
-            treemap_symbol_days.options.annotations.points.push({ x: v.x, y: v.y, marker: { size: 6, fillColor: colors.orange } });
-            treemap_symbol_days.options.annotations.xaxis.push(add_annotation_x(v.x, bars[i].thm === 930 ? '9:30' : '4:00'));
-            // treemap_symbol_days.options.annotations.points.push({ x: v.x, y: v.y, marker: { size: 6, fillColor: colors.orange } });
+        // if (bars[i].thm === 930 || bars[i].thm === 1600) {
+        //     treemap_symbol_days.options.annotations.points.push({ x: v.x, y: v.y, marker: { size: 6, fillColor: colors.orange } });
+        //     treemap_symbol_days.options.annotations.xaxis.push(add_annotation_x(v.x, bars[i].thm === 930 ? '9:30' : '4:00'));
+        //     // treemap_symbol_days.options.annotations.points.push({ x: v.x, y: v.y, marker: { size: 6, fillColor: colors.orange } });
 
-            //* order
-            // if (bars[i].thm === 930) {
-            //     treemap_symbol_days.options.annotations.points.push({ x: v.x, y: entry.orders[0].filled_avg_price, marker: { size: 6, fillColor: colors.deeppink } });
-            // }
-        }
+        //     //* order
+        //     // if (bars[i].thm === 930) {
+        //     //     treemap_symbol_days.options.annotations.points.push({ x: v.x, y: entry.orders[0].filled_avg_price, marker: { size: 6, fillColor: colors.deeppink } });
+        //     // }
+        // }
     })
     const max = Math.max(...series[0].data.map((v) => v.y));
     treemap_symbol_days.options.annotations.points.push({ x: series[0].data[series[0].data.length - 1].x, y: series[0].data[series[0].data.length - 1].y, marker: { size: 6, fillColor: colors.black } });
