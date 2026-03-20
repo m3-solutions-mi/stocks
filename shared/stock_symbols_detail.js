@@ -96084,6 +96084,7 @@ const stock_symbols_detail = [
     {symbol: 'REMX', name: 'VanEck Rare Earth and Strategic Metals ETF', status: 'active', tradable: true, fractionable: true}, // 
     {symbol: 'SETM', name: 'Sprott Critical Materials ETF', status: 'active', tradable: true, fractionable: true}, // 
     {symbol: 'ALB', name: 'ALBEMARLE CORPORATION - Lithium', status: 'active', tradable: true, fractionable: true}, // 
+    {symbol: 'LASE', name: '-', status: 'active', tradable: true, fractionable: true}, // 
     // {symbol: 'COMM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'SWMR', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'VIXY', name: '-', status: 'active', tradable: true, fractionable: true},

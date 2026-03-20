@@ -591,8 +591,7 @@ class AlpacaData {
             // myHeaders.append("Content-Type", "application/json");
             // myHeaders.append("m3_token", "193750"); // Example of another header
             let options = { method: 'GET', headers: { m3_token: '193750' } };
-            // let url = `http://localhost:3000/${s}/${timeframe}/${start}/${end}`;
-            let url = `https://m3-solutions-mi.com/${s}/${timeframe}/${start}/${end}`;
+            let url = localStorage.getItem('m3-stocks-data-url')+`/${s}/${timeframe}/${start}/${end}`;
 
             // symbol = symbol.replace('/', '-');
             // url = `http://localhost:3102/yahoo/${symbol.replace('/', '-')}/1d/${start}/${end}`

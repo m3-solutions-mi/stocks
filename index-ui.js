@@ -100,19 +100,21 @@ document.addEventListener('keydown', function (event) {
     }
     if (/*event.ctrlKey &&*/ event.key === '-') {
         // Prevent the default browser action (usually zooming in)
-        event.preventDefault();
+        if (event.target.id !== 'data-url') {
+            event.preventDefault();
 
-        document.getElementById(selected_symbol).classList.remove('w3-border');
-        document.getElementById(selected_symbol).classList.remove('w3-border-blue');
-        document.getElementById(selected_symbol).style.border = '';
+            document.getElementById(selected_symbol).classList.remove('w3-border');
+            document.getElementById(selected_symbol).classList.remove('w3-border-blue');
+            document.getElementById(selected_symbol).style.border = '';
 
-        const elem = document.getElementById('likes');
-        let value = localStorage.getItem('m3-stocks-likes');
-        value = value.replace(`${selected_symbol}`, '').replace(`,,`, ',');
-        value = value.split(',').filter((v, i, a) => i === a.indexOf(v)).sort().join(',');
-        elem.value = value;
-        localStorage.setItem('m3-stocks-likes', value);
-        update_settings(false);
+            const elem = document.getElementById('likes');
+            let value = localStorage.getItem('m3-stocks-likes');
+            value = value.replace(`${selected_symbol}`, '').replace(`,,`, ',');
+            value = value.split(',').filter((v, i, a) => i === a.indexOf(v)).sort().join(',');
+            elem.value = value;
+            localStorage.setItem('m3-stocks-likes', value);
+            update_settings(false);
+        }
     }
 });
 
@@ -310,7 +312,7 @@ async function click_letter(letter) {
 function toggle_settings() {
     document.getElementById('key').value = localStorage.getItem('m3-stocks-key') || '';
     document.getElementById('secret').value = localStorage.getItem('m3-stocks-secret') || '';
-    document.getElementById('token').value = localStorage.getItem('m3-stocks-token') || '';
+    document.getElementById('data-url').value = localStorage.getItem('m3-stocks-data-url') || '';
     document.getElementById('symbols').value = picks;
     document.getElementById('likes').value = likes;
     document.getElementById('steady_picks').value = steady;
@@ -342,7 +344,7 @@ function update_settings(all = true) {
     if (all) {
         localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-alpaca-key`, document.getElementById('key').value);
         localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-alpaca-secret`, document.getElementById('secret').value);
-        // localStorage.setItem('m3-stocks-token', document.getElementById('token').value);
+        localStorage.setItem('m3-stocks-data-url', document.getElementById('data-url').value);
     }
     let v = document.getElementById('symbols').value || localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-symbols`);
     localStorage.setItem(`m3-stocks-${ACCOUNT_NAME}-symbols`, v);
@@ -378,6 +380,7 @@ function click_account(value) {
     ACCOUNT_NAME = value;
     document.getElementById('key').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-alpaca-key`) || '';
     document.getElementById('secret').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-alpaca-secret`) || '';
+    document.getElementById('data-url').value = localStorage.getItem(`m3-stocks-data-url`) || '';
     document.getElementById('seed').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-seed`) || '1000';
     document.getElementById('start_date').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-start-at`) || '2026-01-01';
     document.getElementById('symbols').value = localStorage.getItem(`m3-stocks-${ACCOUNT_NAME}-symbols`) || '';
