@@ -1098,14 +1098,14 @@ async function update(instance) {
 
     // const start_price = 0; // PORTFOLIO_DAY_HISTORY[0].equity;
     data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
-    const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 15:59:00').getTime();
-    data = data.filter((v) => v.x >= st);
-    // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 250 };
-    chart_top_7.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 0 };
+    // const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 15:59:00').getTime();
+    // data = data.filter((v) => v.x >= st);
+    
+    // chart_top_7.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 250 };
 
     //! only needed if... (timeframe !== '1Min',...)
-    data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
-
+    // data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
+    
     last = data[data.length - 1];
     const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1];
     chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y));
