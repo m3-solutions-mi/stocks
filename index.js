@@ -1168,15 +1168,20 @@ async function update(instance) {
 
     elem = document.getElementById('header-today');
     elem.innerHTML = gain >= 1000 ? round3(gain / 1000) + 'K' : gain;
-    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     elem = document.getElementById('header-today-pct')
     elem.innerHTML = round2(gain / 5500 * 100) + ' %';
-    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     add_section('output', 'Today', 7, round1(total / yesterday.y * 100) - 100, gain, 'fa-line-chart', 12, 12, 12, 36, 24, 36);
 
     elem = document.getElementById(`value-24-hour`);
     gain = round1(data[data.length - 1].y - data[0].y);
     gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+    gain > 0 ? elem.classList.replace('w3-red', 'w3-green') : elem.classList.replace('w3-green', 'w3-red');
     elem.innerHTML = `${get_indicator(gain)}&nbsp;${Math.abs(gain).toLocaleString()}`;
 
     elem = document.getElementById('header-24h');
