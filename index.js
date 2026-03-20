@@ -599,7 +599,7 @@ async function update(instance) {
         elem.innerHTML = `${get_indicator(value_2)}&nbsp;${Math.abs(value_2).toLocaleString()}`;
         elem = document.getElementById(`value-1-${section_id}`);
         value_2 < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
-        elem.innerHTML = `$&nbsp;${(Math.abs(round2(value_1))).toLocaleString()}<br/>${(round1(value_1 / 5500 * 100) - 100).toLocaleString()}%`;
+        elem.innerHTML = `$&nbsp;${(Math.abs(round2(value_1))).toLocaleString()}<br/>${(round1(value_1 / config_stocks.alpaca.SEED * 100) - 100).toLocaleString()}%`;
 
         update_ui(map[section_id]);
         // update();
@@ -847,7 +847,7 @@ async function update(instance) {
     elem.innerHTML = round1(total);
     elem.parentElement.classList.replace('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
     elem = document.getElementById('header-positions-pct')
-    elem.innerHTML = round2(total / 5500 * 100) + ' %';
+    elem.innerHTML = round2(total / config_stocks.alpaca.SEED * 100) + ' %';
     elem.parentElement.classList.replace('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
 
     add_section('output', 'Positions', 4, percent, round(total), 'fa-tags', 12, 12, 12, 36, 24, 36);
@@ -1026,7 +1026,7 @@ async function update(instance) {
     elem.innerHTML = gain;
     elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     elem = document.getElementById('header-portfolio-pct')
-    elem.innerHTML = round2(gain / 5500 * 100) + ' %';
+    elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
     elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
 
     add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 12, 12, 36, 24, 36);
@@ -1172,7 +1172,7 @@ async function update(instance) {
     elem.parentElement.classList.remove('w3-text-red');
     elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     elem = document.getElementById('header-today-pct')
-    elem.innerHTML = round2(gain / 5500 * 100) + ' %';
+    elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
     elem.parentElement.classList.remove('w3-text-green');
     elem.parentElement.classList.remove('w3-text-red');
     elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
@@ -1188,7 +1188,7 @@ async function update(instance) {
     elem.innerHTML = gain >= 1000 ? round2(gain / 1000) + 'K' : gain;
     elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     elem = document.getElementById('header-24h-pct')
-    elem.innerHTML = round1(gain / 5500 * 100) + ' %';
+    elem.innerHTML = round1(gain / config_stocks.alpaca.SEED * 100) + ' %';
     elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
 
     // TODO: update setting of table column 1 values
