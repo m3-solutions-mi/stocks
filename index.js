@@ -648,7 +648,7 @@ async function update(instance) {
         config_stocks.alpaca.get_portfolio_history(null, '2026-02-28', new Date().toISOString(), '1D', reporting),               //* HISTORY | DAYS */
         config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', reporting),                                         //* HISTORY | MINUTES */
         config_stocks.alpaca.get_news(symbols.join(',')),                                                                        //* NEWS */
-        config_stocks.alpaca.bars_simplified(['NDAQ', '^IXIC', 'CL=F', '^VIX'], '1D', '2026-02-01'),                                //* INDICATORS DATA */ 
+        config_stocks.alpaca.bars_simplified(['NDAQ', '^IXIC', 'CL=F', '^VIX'/*, 'US.10'*/], '1D', '2026-02-01'),                                //* INDICATORS DATA */ 
         config_stocks.alpaca.get_account_activities(),                                                                           //* ACCOUNT ACTIVITIES */ 
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1D', '2026-02-01'),                                                   //* NDAQ DAYS */
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1Min', new Date(Date.now() - (24 * 60 * 60 * 1000)).toISOString()),   //* NDAQ 24h */
@@ -862,7 +862,7 @@ async function update(instance) {
     //*@ SYMBOLS BOXES & TABLE */
     const template = `<span id="{id}" 
             class="w3-tag w3-round w3-padding w3-{c}" 
-            style="cursor:pointer;min-width:136px;margin-bottom:5px;color:{fc}!important;" 
+            style="cursor:pointer;min-width:100px;margin-bottom:5px;color:{fc}!important;" 
             onclick="{f}('{s}')">
                 {0}<br/>{1}<!-- | <b>{2}</b>-->
             </span>`
@@ -1025,6 +1025,7 @@ async function update(instance) {
     elem = document.getElementById('header-portfolio');
     elem.innerHTML = gain;
     elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+
     elem = document.getElementById('header-portfolio-pct')
     elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
     elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
@@ -1100,12 +1101,12 @@ async function update(instance) {
     data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
     // const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 15:59:00').getTime();
     // data = data.filter((v) => v.x >= st);
-    
+
     // chart_top_7.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 250 };
 
     //! only needed if... (timeframe !== '1Min',...)
     // data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
-    
+
     last = data[data.length - 1];
     const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1];
     chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y));
@@ -1214,175 +1215,185 @@ async function update(instance) {
 //@-----------------------------------------------------------------------------------------------------------------
 let selected_symbol = 'NDAQ';
 async function click_symbol(s, elem, check_score = false) {
-    selected_symbol = s;
-    if (elem) {
-        Array.from(document.getElementsByClassName('symbol')).forEach((v) => v.classList.replace('w3-green', 'w3-white'));
-        elem.classList.replace('w3-white', 'w3-green');
-    }
-    document.getElementById('symbol-buy').classList.remove('w3-hide');
-    document.getElementById('symbol-sell').classList.remove('w3-hide');
-    document.getElementById('symbol-ndaq').classList.remove('w3-hide');
-    document.getElementById('symbol-nasdaq').classList.remove('w3-hide');
-    document.getElementById('symbol-oil').classList.remove('w3-hide');
-    document.getElementById('symbol-vix').classList.remove('w3-hide');
-
-    const tz = new Date(`2025-04-01T12:00:00`).getTimezoneOffset() / 60;
-    const start = new Date(`2025-04-01T00:00:00-0${tz}:00`);
-    const end = new Date(`${getYMD(new Date())}T23:59:59-0${tz}:00`);
-
-
-    let series = [
-        { name: 'Close', _type: 'line', data: [] },
-        { name: 'Open', type: 'line', color: colors.blue, data: [] },
-        // { name: 'Lower Bound', type: 'line', color: colors.red, data: [] },
-    ];
-
-    let temp = null;
-    if (use_24h) {
-        temp = await config_stocks.alpaca.bars_simplified([s], '1Min', new Date(Date.now() - (24 * 60 * 60 * 1000)).toISOString());
-    } else {
-        temp = await config_stocks.alpaca.bars_simplified([s], '1D', start.toISOString());
-    }
-    let entry = temp.symbols[0];
-
-    // const bars = entry.bars.slice(num_symbol_days) || []; //* recent days
-    const bars_source = use_raw ? entry.bars_raw : entry.bars;
-    if (entry.latest_raw && entry.latest) {
-        bars_source.push(use_raw ? entry.latest_raw : entry.latest);
-    }
-    const bars = (num_symbol_days === -15 ? bars_source/*.slice(-40)*/ : bars_source); //* recent 5 minute data
-    const num = 1000 / entry.bars_raw[0].o;
-    series[0].data = bars.map((b) => { return { x: b.e, y: round2(b.c) } });
-    series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.o) } });
-    // series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.sma) } });
-    // series[2].data = bars.map((b) => { return { x: b.e, y: round2((b.lb * num) * (config_stocks.alpaca.CONFIG.stop_pct)) } });
-
-    series.push({ name: 'Bollinger', type: 'line', color: colors.black, data: bars.map((b, i) => { return { x: b.e, y: (i < 15 ? b.c : round2(i === bars.length - 1 ? bars[bars.length - 2].lb : b.lb)) } }) });
-    // series.push({ name: 'Bollinger', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(bars[i].sma) } }) });
-
-    // let tl = calculateTrendline(series[0].data.map((v) => v.y));
-    // series.push({ name: 'Trendline', type: 'line', color: colors.orange, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
-
-
-    // tl = calculateTarget(series[0].data.map((v) => v.y), 0.25, 1000);
-    // series.push({ name: 'Target 0.5%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
-
-    if (use_raw === false && use_24h === false) {
-        tl = calculateTarget(series[0].data.map((v) => v.y), 0.5, 1000);
-        series.push({ name: 'Target 0.5%', type: 'line', color: colors.deeppink, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
-
-
-        tl = calculateTarget(series[0].data.map((v) => v.y), 1, 1000);
-        series.push({ name: 'Target 1%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
-    }
-
-    treemap_symbol_days.options.chart.type = 'area';
-    treemap_symbol_days.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
-    treemap_symbol_days.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
-    // treemap_symbol_days.options.chart.sparkline = { enabled: false };
-    // treemap_symbol_days.options.chart.legend = { show: true };
-    treemap_symbol_days.options.dataLabels.enabled = false;
-    treemap_symbol_days.options.fill = { type: 'solid' };
-    treemap_symbol_days.options.xaxis = { type: 'datetime' };
-    treemap_symbol_days.options.stroke = { width: [3, 3, 3, 4, 4, 4, 4, 4], };
-    treemap_symbol_days.options.annotations = { xaxis: [], yaxis: [], points: [] };
-    last_n = getMonthName(new Date(series[0].data[0].x));
-    series[0].data.forEach((v, i) => {
-        const n = getMonthName(new Date(v.x));
-        if (n !== last_n || i === series[0].data.length - 1 || i === (series[0].data.length - (new Date().getDay() - 2))) {
-            treemap_symbol_days.options.annotations.xaxis.push({ x: v.x, borderColor: colors.black, fillColor: colors.black, opacity: 1 });
-            // line_combtreemap_symbol_daysined_last_n.options.annotations.points.push({ x: v.x, y: v.y, marker: { radius: 5, fillColor: '#7fff00' } });
+    try {
+        selected_symbol = s;
+        if (elem) {
+            Array.from(document.getElementsByClassName('symbol')).forEach((v) => v.classList.replace('w3-green', 'w3-white'));
+            elem.classList.replace('w3-white', 'w3-green');
         }
-        last_n = n;
+        document.getElementById('symbol-buy').classList.remove('w3-hide');
+        document.getElementById('symbol-sell').classList.remove('w3-hide');
+        document.getElementById('symbol-ndaq').classList.remove('w3-hide');
+        document.getElementById('symbol-nasdaq').classList.remove('w3-hide');
+        document.getElementById('symbol-oil').classList.remove('w3-hide');
+        document.getElementById('symbol-vix').classList.remove('w3-hide');
 
-        // if (bars[i].thm === 930 || bars[i].thm === 1600) {
-        //     treemap_symbol_days.options.annotations.points.push({ x: v.x, y: v.y, marker: { size: 6, fillColor: colors.orange } });
-        //     treemap_symbol_days.options.annotations.xaxis.push(add_annotation_x(v.x, bars[i].thm === 930 ? '9:30' : '4:00'));
-        //     // treemap_symbol_days.options.annotations.points.push({ x: v.x, y: v.y, marker: { size: 6, fillColor: colors.orange } });
+        const tz = new Date(`2025-04-01T12:00:00`).getTimezoneOffset() / 60;
+        const start = new Date(`2025-04-01T00:00:00-0${tz}:00`);
+        const end = new Date(`${getYMD(new Date())}T23:59:59-0${tz}:00`);
 
-        //     //* order
-        //     // if (bars[i].thm === 930) {
-        //     //     treemap_symbol_days.options.annotations.points.push({ x: v.x, y: entry.orders[0].filled_avg_price, marker: { size: 6, fillColor: colors.deeppink } });
-        //     // }
-        // }
-    })
-    const max = Math.max(...series[0].data.map((v) => v.y));
-    treemap_symbol_days.options.annotations.points.push({ x: series[0].data[series[0].data.length - 1].x, y: series[0].data[series[0].data.length - 1].y, marker: { size: 6, fillColor: colors.black } });
-    treemap_symbol_days.options.annotations.yaxis.push({ y: max, borderColor: colors.black, fillColor: colors.black, _opacity: 0 });
 
-    //* ADD BUY DATE LINE TO CHART */
-    const orders = RESULTS.ORDERS
-        // .filter((v) => v.side === 'buy')
-        .filter((v) => v.symbol === s)
-        ;
-    if (orders[0] && orders[0].side === 'buy') {
-        const filled_at = new Date(orders[0].filled_at);
-        const g = +(RESULTS.POSITIONS.find((v) => v.symbol === s).unrealized_pl);
-        treemap_symbol_days.options.annotations.xaxis.push({
-            x: filled_at.getTime(),
-            x2: Date.now(),
-            borderColor: colors.black,
-            fillColor: colors.gray,
-            opacity: 0.15,
-            label: {
-                text: `${g >= 0 ? '▲' : '▼'} ${round(g)} `,
-                borderColor: g >= 0 ? colors.green : colors.red,
-                borderWidth: 2,
-                orientation: 'horizontal',
-                offsetX: -30,
-                offsetY: 20,
-                style: {
-                    fontSize: '22px',
-                    // background: g >= 0 ? colors.green : colors.red,
-                },
-            },
+        let series = [
+            { name: 'Close', _type: 'line', data: [] },
+            { name: 'Open', type: 'line', color: colors.blue, data: [] },
+            // { name: 'Lower Bound', type: 'line', color: colors.red, data: [] },
+        ];
+
+        let promise = null;
+        let temp = null;
+        if (use_24h) {
+            promise = config_stocks.alpaca.bars_simplified([s], '1Min', new Date(Date.now() - (24 * 60 * 60 * 1000)).toISOString());
+        } else {
+            promise = config_stocks.alpaca.bars_simplified([s], '1D', start.toISOString());
+        }
+        Promise.all([promise]).then((temp) => {
+            let entry = temp[0].symbols[0];
+
+            // const bars = entry.bars.slice(num_symbol_days) || []; //* recent days
+            const bars_source = use_raw ? entry.bars_raw : entry.bars;
+            if (entry.latest_raw && entry.latest) {
+                bars_source.push(use_raw ? entry.latest_raw : entry.latest);
+            }
+            const bars = (num_symbol_days === -15 ? bars_source/*.slice(-40)*/ : bars_source); //* recent 5 minute data
+            const num = 1000 / entry.bars_raw[0].o;
+            series[0].data = bars.map((b) => { return { x: b.e, y: round2(b.c) } });
+            series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.o) } });
+            // series[1].data = bars.map((b) => { return { x: b.e, y: round2(b.sma) } });
+            // series[2].data = bars.map((b) => { return { x: b.e, y: round2((b.lb * num) * (config_stocks.alpaca.CONFIG.stop_pct)) } });
+
+            series.push({ name: 'Bollinger', type: 'line', color: colors.black, data: bars.map((b, i) => { return { x: b.e, y: (i < 15 ? b.c : round2(i === bars.length - 1 ? bars[bars.length - 2].lb : b.lb)) } }) });
+            // series.push({ name: 'Bollinger', type: 'line', color: colors.black, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(bars[i].sma) } }) });
+
+            // let tl = calculateTrendline(series[0].data.map((v) => v.y));
+            // series.push({ name: 'Trendline', type: 'line', color: colors.orange, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+
+
+            // tl = calculateTarget(series[0].data.map((v) => v.y), 0.25, 1000);
+            // series.push({ name: 'Target 0.5%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+
+            if (use_raw === false && use_24h === false) {
+                tl = calculateTarget(series[0].data.map((v) => v.y), 0.5, 1000);
+                series.push({ name: 'Target 0.5%', type: 'line', color: colors.deeppink, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+
+
+                tl = calculateTarget(series[0].data.map((v) => v.y), 1, 1000);
+                series.push({ name: 'Target 1%', type: 'line', color: colors.purple, data: series[0].data.map((v, i) => { return { x: v.x, y: round2(tl.calculateY(i)) } }) });
+            }
+
+            treemap_symbol_days.options.chart.type = 'area';
+            treemap_symbol_days.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
+            treemap_symbol_days.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
+            // treemap_symbol_days.options.chart.sparkline = { enabled: false };
+            // treemap_symbol_days.options.chart.legend = { show: true };
+            treemap_symbol_days.options.dataLabels.enabled = false;
+            treemap_symbol_days.options.fill = { type: 'solid' };
+            treemap_symbol_days.options.xaxis = { type: 'datetime' };
+            treemap_symbol_days.options.stroke = { width: [3, 3, 3, 4, 4, 4, 4, 4], };
+            treemap_symbol_days.options.annotations = { xaxis: [], yaxis: [], points: [] };
+            last_n = getMonthName(new Date(series[0].data[0].x));
+            series[0].data.forEach((v, i) => {
+                const n = getMonthName(new Date(v.x));
+                if (n !== last_n || i === series[0].data.length - 1 || i === (series[0].data.length - (new Date().getDay() - 2))) {
+                    treemap_symbol_days.options.annotations.xaxis.push({ x: v.x, borderColor: colors.black, fillColor: colors.black, opacity: 1 });
+                    // line_combtreemap_symbol_daysined_last_n.options.annotations.points.push({ x: v.x, y: v.y, marker: { radius: 5, fillColor: '#7fff00' } });
+                }
+                last_n = n;
+
+                // if (bars[i].thm === 930 || bars[i].thm === 1600) {
+                //     treemap_symbol_days.options.annotations.points.push({ x: v.x, y: v.y, marker: { size: 6, fillColor: colors.orange } });
+                //     treemap_symbol_days.options.annotations.xaxis.push(add_annotation_x(v.x, bars[i].thm === 930 ? '9:30' : '4:00'));
+                //     // treemap_symbol_days.options.annotations.points.push({ x: v.x, y: v.y, marker: { size: 6, fillColor: colors.orange } });
+
+                //     //* order
+                //     // if (bars[i].thm === 930) {
+                //     //     treemap_symbol_days.options.annotations.points.push({ x: v.x, y: entry.orders[0].filled_avg_price, marker: { size: 6, fillColor: colors.deeppink } });
+                //     // }
+                // }
+            })
+            const max = Math.max(...series[0].data.map((v) => v.y));
+            treemap_symbol_days.options.annotations.points.push({ x: series[0].data[series[0].data.length - 1].x, y: series[0].data[series[0].data.length - 1].y, marker: { size: 6, fillColor: colors.black } });
+            treemap_symbol_days.options.annotations.yaxis.push({ y: max, borderColor: colors.black, fillColor: colors.black, _opacity: 0 });
+
+            //* ADD BUY DATE LINE TO CHART */
+            const orders = RESULTS.ORDERS
+                // .filter((v) => v.side === 'buy')
+                .filter((v) => v.symbol === s)
+                ;
+            if (orders[0] && orders[0].side === 'buy') {
+                const filled_at = new Date(orders[0].filled_at);
+                const g = +(RESULTS.POSITIONS.find((v) => v.symbol === s).unrealized_pl);
+                treemap_symbol_days.options.annotations.xaxis.push({
+                    x: filled_at.getTime(),
+                    x2: Date.now(),
+                    borderColor: colors.black,
+                    fillColor: colors.gray,
+                    opacity: 0.15,
+                    label: {
+                        text: `${g >= 0 ? '▲' : '▼'} ${round(g)} `,
+                        borderColor: g >= 0 ? colors.green : colors.red,
+                        borderWidth: 2,
+                        orientation: 'horizontal',
+                        offsetX: -30,
+                        offsetY: 20,
+                        style: {
+                            fontSize: '22px',
+                            // background: g >= 0 ? colors.green : colors.red,
+                        },
+                    },
+                });
+                // console.log(filled_at);
+            }
+
+            // series[0].hidden =  true;
+
+            //* RENNDER CHART */
+            data = series;
+            update_ui(treemap_symbol_days);
+            // data = data.map((d) => d.data.slice(-15));
+            treemap_symbol_days_recent.options = deepClone(treemap_symbol_days.options);
+            data = deepClone(data);
+            data.forEach((d) => {
+                d.data = d.data.slice(-25);
+            })
+            update_ui(treemap_symbol_days_recent);
+
+            //* CHART TITLE */
+            const detail = stock_symbols_detail.find((v) => v.symbol === s);
+            const g = round((series[0].data[series[0].data.length - 1].y - series[0].data[0].y));// * (1000 / series[0].data[0].y));
+            const last = series[0].data[series[0].data.length - 1].y;
+            const pct = round(g / 1000 * 100);
+            let color = g >= 0 ? 'w3-green' : 'w3-red';
+            let html = '';
+            html += `${get_indicator(g)} ${s}`;
+            html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
+            // html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
+            html += `<span class="w3-right ${color} w3-padding">$ ${g.toLocaleString()}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;${pct.toLocaleString()} %</span>`;
+            // // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(max - last).toLocaleString()}`;
+            // // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(trend_delta).toLocaleString()}`;
+            document.getElementById('symbol-days-title').innerHTML = html;
+
+            // window.scrollTo(0, document.body.scrollHeight);
+
+            //* ADD IF SCORE IS HIGH
+            // const trend_delta = series[0].data[series[0].data.length - 1].y - series[0].data[0].y;
+            // if (trend_delta > 1000 && check_score) {
+            //     click_letter('⏺');
+            // }
+
+            //*@ CANDLESTICK */
+            // candlestick_symbol.options.series = [
+            //     { name: 'ohlc', type: 'candlestick', data: [] }
+            // ]
+            // candlestick_symbol.options.series[0].data = bars.map((v) => { return { x: v.e, y: [v.o, v.h, v.l, v.c] } });
+            // candlestick_symbol.render(candlestick_symbol.options.series);
+            //*@ End | CANDLESTICK */
+        }, (err) => {
+            console.warn(err);
         });
-        // console.log(filled_at);
     }
-
-    // series[0].hidden =  true;
-
-    //* RENNDER CHART */
-    data = series;
-    update_ui(treemap_symbol_days);
-    // data = data.map((d) => d.data.slice(-15));
-    treemap_symbol_days_recent.options = deepClone(treemap_symbol_days.options);
-    data = deepClone(data);
-    data.forEach((d) => {
-        d.data = d.data.slice(-25);
-    })
-    update_ui(treemap_symbol_days_recent);
-
-    //* CHART TITLE */
-    const detail = stock_symbols_detail.find((v) => v.symbol === s);
-    const g = round((series[0].data[series[0].data.length - 1].y - series[0].data[0].y));// * (1000 / series[0].data[0].y));
-    const last = series[0].data[series[0].data.length - 1].y;
-    const pct = round(g / 1000 * 100);
-    let color = g >= 0 ? 'w3-green' : 'w3-red';
-    let html = '';
-    html += `${get_indicator(g)} ${s}`;
-    html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
-    // html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
-    html += `<span class="w3-right ${color} w3-padding">$ ${g.toLocaleString()}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;${pct.toLocaleString()} %</span>`;
-    // // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(max - last).toLocaleString()}`;
-    // // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(trend_delta).toLocaleString()}`;
-    document.getElementById('symbol-days-title').innerHTML = html;
-
-    // window.scrollTo(0, document.body.scrollHeight);
-
-    //* ADD IF SCORE IS HIGH
-    // const trend_delta = series[0].data[series[0].data.length - 1].y - series[0].data[0].y;
-    // if (trend_delta > 1000 && check_score) {
-    //     click_letter('⏺');
-    // }
-
-    //*@ CANDLESTICK */
-    // candlestick_symbol.options.series = [
-    //     { name: 'ohlc', type: 'candlestick', data: [] }
-    // ]
-    // candlestick_symbol.options.series[0].data = bars.map((v) => { return { x: v.e, y: [v.o, v.h, v.l, v.c] } });
-    // candlestick_symbol.render(candlestick_symbol.options.series);
-    //*@ End | CANDLESTICK */
+    catch (err) {
+        console.warn(err);
+    }
 }
 function m3_129() {
     config_stocks.alpaca.bars_simplified(

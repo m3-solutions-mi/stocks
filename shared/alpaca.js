@@ -316,7 +316,7 @@ class AlpacaData {
             // const isCrypto = false;
             const algo = this.CONFIG.stocks;
 
-            if (bars) {
+            if (bars && bars.length > 0) {
                 // const exceeds = (v, i1, i2) => {
                 //     if (own_at > 0) {
 
@@ -412,8 +412,10 @@ class AlpacaData {
             resolve({
                 symbol,
                 own: own_at,
-                buy: last.o >= last.lb,
-                sell: last.c <= last.lb,
+                // buy: last.o >= last.lb,
+                // sell: last.c <= last.lb,
+                buy: false,
+                sell: false,
                 bars,
                 trades
             });
@@ -591,7 +593,7 @@ class AlpacaData {
             // myHeaders.append("Content-Type", "application/json");
             // myHeaders.append("m3_token", "193750"); // Example of another header
             let options = { method: 'GET', headers: { m3_token: '193750' } };
-            let url = localStorage.getItem('m3-stocks-data-url')+`/${s}/${timeframe}/${start}/${end}`;
+            let url = localStorage.getItem('m3-stocks-data-url') + `/${s}/${timeframe}/${start}/${end}`;
 
             // symbol = symbol.replace('/', '-');
             // url = `http://localhost:3102/yahoo/${symbol.replace('/', '-')}/1d/${start}/${end}`
@@ -601,42 +603,51 @@ class AlpacaData {
                 open_positions[0].t = orders_list[0].t;
             }
             if (url) {
-                fetch(url, options)
-                    .then(res => res.json())
-                    .then((res) => {
-                        // console.log(res); 
-                        return res;
-                    })
-                    // .then((res) => this.get_next_page(symbol, url, delay, res, options))
-                    .then((res) => { res.symbol = symbol; return res; })
-                    .then((res) => {
-                        if (!res.bars[symbol]) {
-                            console.error(JSON.stringify(res));
-                            res.bars = { [symbol]: [{ o: 0, c: 0 }] };
-                        }
-                        return res;
-                    })
-                    .then((res) => res.bars[symbol] || [])
-                    .then((res) => this.addMetaData(res))
-                    // .then((res) => this.convertToPercent(symbol, res))
-                    // .then((res) => timeframe === '1Min' ? this.addMissingData(res, s, end) : res)
-                    // .then((res) => this.addBollingerBands('bands_c', res, isCrypto ? 50 : 28, isCrypto ? 1.0 : 0.7))
-                    .then((res) => this.addIMI(res, 14))
-                    .then((res) => this.addBollingerBands('bands_c', res, 14, 0.7, 1.0)) //TODO: get from config
-                    .then((res) => this.addTrendlines(res))
-                    .then((res) => this.addWeightedRollingAverage(res))
-                    .then((res) => this.refactor(symbol, res))
-                    .then((res) => this.analyze(symbol, res))
-                    .then((res) => this.summarize(res))
-                    .then((res) => this.levels(res))
-                    .then((res) => this.trendline(res))
-                    .then((res) => this.score(res))
-                    .then((res) => this.positions(symbol, open_positions, res))
-                    .then((res) => this.orders(symbol, orders_list, res))
-                    .then((res) => add30 ? this.add30Min(res, end) : res)
-                    .then((res) => this.add_bars_2(res))
-                    // .then((res) => this.add_latest_bar(res))
-                    .then((res) => resolve(res));
+                try {
+                    fetch(url, options)
+                        .then(res => res.json())
+                        .then((res) => {
+                            // console.log(res); 
+                            return res;
+                        })
+                        // .then((res) => this.get_next_page(symbol, url, delay, res, options))
+                        .then((res) => { res.symbol = symbol; return res; })
+                        .then((res) => {
+                            if (!res.bars[symbol]) {
+                                console.error(JSON.stringify(res));
+                                res.bars = { [symbol]: [{ o: 0, c: 0 }] };
+                            }
+                            return res;
+                        })
+                        .then((res) => res.bars[symbol] || [])
+                        .then((res) => this.addMetaData(res))
+                        // .then((res) => this.convertToPercent(symbol, res))
+                        // .then((res) => timeframe === '1Min' ? this.addMissingData(res, s, end) : res)
+                        // .then((res) => this.addBollingerBands('bands_c', res, isCrypto ? 50 : 28, isCrypto ? 1.0 : 0.7))
+                        .then((res) => this.addIMI(res, 14))
+                        .then((res) => this.addBollingerBands('bands_c', res, 14, 0.7, 1.0)) //TODO: get from config
+                        .then((res) => this.addTrendlines(res))
+                        .then((res) => this.addWeightedRollingAverage(res))
+                        .then((res) => this.refactor(symbol, res))
+                        .then((res) => this.analyze(symbol, res))
+                        .then((res) => this.summarize(res))
+                        .then((res) => this.levels(res))
+                        .then((res) => this.trendline(res))
+                        .then((res) => this.score(res))
+                        .then((res) => this.positions(symbol, open_positions, res))
+                        .then((res) => this.orders(symbol, orders_list, res))
+                        .then((res) => add30 ? this.add30Min(res, end) : res)
+                        .then((res) => this.add_bars_2(res))
+                        // .then((res) => this.add_latest_bar(res))
+                        .then((res) => resolve(res));
+                } catch (error) {
+                    // This block catches:
+                    // 1. Network errors (e.g., "Failed to fetch")
+                    // 2. Errors thrown manually in the try block (e.g., HTTP errors)
+                    // 3. Errors during JSON parsing (if not checked before)
+                    console.error("Fetch error:", error.message);
+                    // Update UI, log error to a service, etc.
+                }
             } else {
                 resolve(null);
             }
