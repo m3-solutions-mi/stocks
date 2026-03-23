@@ -636,8 +636,8 @@ class AlpacaData {
                         .then((res) => this.score(res))
                         .then((res) => this.positions(symbol, open_positions, res))
                         .then((res) => this.orders(symbol, orders_list, res))
-                        .then((res) => add30 ? this.add30Min(res, end) : res)
-                        .then((res) => this.add_bars_2(res))
+                        // .then((res) => add30 ? this.add30Min(res, end) : res)
+                        // .then((res) => this.add_bars_2(res))
                         // .then((res) => this.add_latest_bar(res))
                         .then((res) => resolve(res));
                 } catch (error) {
@@ -659,7 +659,7 @@ class AlpacaData {
             await sleep(delay);
 
             const s = symbol.replace('/', '%2F');
-            // const feed = 'iex'; //! DO NOT USE IEX FOR ALPACA - LIMITED DATA
+            const feed = 'iex'; //! DO NOT USE IEX FOR ALPACA - LIMITED DATA
 
             let options = { method: 'GET', headers: { accept: 'application/json' } };
             let url = `${this.baseUrl}/v1beta3/crypto/us/bars?symbols=${s}&timeframe=${timeframe}&start=${start}&end=${end}&feed=${this.FEED}&limit=5000&sort=asc`
@@ -733,7 +733,7 @@ class AlpacaData {
     }
     async bars_simplified(symbols, timeframe = '1D', start = this.START_OF_YEAR, end = new Date().toISOString()) {
         return new Promise(async (resolve) => {
-            const promises = symbols.map((s) => this.bars_m3(s, timeframe, start, end, [], [], false, 100, false));
+            const promises = symbols.map((s) => this.bars(s, timeframe, start, end, [], [], false, 100, false));
             const results = await Promise.all(promises);
             const obj = [];
             results.forEach((res) => {

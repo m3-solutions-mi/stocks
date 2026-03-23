@@ -128,7 +128,7 @@
                                             </div>
 
                                             <!--* FEED -->
-                                            <div class="w3-center w3-xlarge"
+                                            <!-- <div class="w3-center w3-xlarge"
                                                 style="letter-spacing:4px;display: flex;align-items: center;justify-content: center;">
                                                 <input class="w3-radio w3-margin-right" style="cursor:pointer;"
                                                     type="radio" name="accounts" value="sip"
@@ -144,7 +144,7 @@
                                                     type="radio" name="accounts" value="m3"
                                                     onclick="click_feed(this.value)">
                                                 <label class="w3-margin-top" style="margin-right: 45px;" l>M3</label>
-                                            </div>
+                                            </div> -->
 
                                             <!--* INPUTS  -->
                                             <div style="margin-top:10px;"><label>SYMBOLS</label><textarea id="symbols"
@@ -354,6 +354,7 @@
 
                     <!-- <br/> -->
 
+                    <!--@ ACCOUNT / PORTFOLIO HISTORY CHARTS -->
                     <div class="w3-xlarge w3-container _w3-margin _w3-padding">
 
                         <!--* header  -->
@@ -367,16 +368,12 @@
                         </div> -->
                         <!--* portfolio  -->
                         <div class="w3-row w3-padding w3-border w3-light-grey">
-                            <div class="w3-hide w3-col s3 m4 l3 w3-border-right">
-                                <b>▼&nbsp;Portfolio</b>
-                                <br />
-                                <b><span id="value-2-5" class="w3-tag w3-red w3-roundw3-text-white w3-left"
-                                        style="font-size: 24px;letter-spacing:16px;"><span
-                                            style="">▼</span>&nbsp;-</span>
-                                </b>
-                                <br />
+                            <div class="_w3-hide w3-col s12 m7 w3-border-right">
+                                <!-- <b>▼&nbsp;Portfolio</b> -->
+                                <!-- <br /> -->
+                                <b>Day History</b>
                                 <b>
-                                    <span id="value-1-5" class="w3-xlarge w3-text-green"
+                                    <span id="value-1-5" class="w3-hide w3-right w3-margin-right w3-xlarge w3-text-green"
                                         style="font-size: 24px !important;letter-spacing:6px;"></span>
                                 </b>
                             </div>
@@ -508,7 +505,7 @@
             <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Raw</label>
 
             <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
-                onclick="set_use_24h(this.checked)" checked>
+                onclick="set_use_24h(this.checked)">
             <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">24h</label>
 
             <!-- <input class="w3-radio" style="cursor:pointer;" type="checkbox"
