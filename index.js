@@ -86,7 +86,7 @@ const config_stocks = new Config(
 
 
         // BELFB
-        ...('AEIS,ALNT,CECO,DHC,FIVE,GEV,GOOGL,LASR,MKSI,MU,NXT,POWL,SNDK,STX,TSEM,WDC,SITM,CAT,LITE,NXT,FORM').split(','),
+        ...('AEIS,BTSG,CAMT,CAT,DHC,FORM,GEV,LASR,LITE,MU,PL,RKLB,ROIV,SNDK,STX,TSEM,VIAV,WDC').split(','),
         // ...('AEIS,ALNT,CAT,CECO,DHC,FIVE,FORM,GEV,GOOGL,LASR,LITE,MKSI,MU,NXT,POWL,SITM,SNDK,STX,TSEM,WDC').split(','),
     ].filter((v, i, a) => i === a.indexOf(v)).sort(),
     1000,
@@ -675,6 +675,7 @@ async function update(instance) {
         p.invetment = order ? order.notional : '-';
     })
     console.log(`RESULTS | $${RESULTS.ACCOUNT.equity.toLocaleString()}`, RESULTS);
+    document.getElementById('day-history-balance').innerHTML = `$ ${round(RESULTS.ACCOUNT.equity).toLocaleString()}`;
     //*@ End | GET ALL DATA */
 
     //*@ HEADER INDICATORS */
@@ -870,6 +871,7 @@ async function update(instance) {
             <tr onclick="click_symbol('{s}')">
                 <td style="color:{c}"><b>{symbol}</b></td>
                 <td class="w3-hide-small">{name}</td>
+                <td>{investment}</td>
                 <td>{date}</td>
                 <td style="color:{c2}">{day}</td>
                 <td style="color:{c}">{gain}</td>
@@ -909,6 +911,7 @@ async function update(instance) {
             .replace('{day}', `${round2(day)}`)
             .replace('{c2}', color_day)
             .replace('{date}', date)
+            .replace('{investment}', round(s.cost_basis))
     });
     document.getElementById('symbols-count').innerHTML = `&nbsp;&nbsp;|&nbsp;&nbsp;${RESULTS.POSITIONS.length}`;
     document.getElementById('symbol-boxes-positions').innerHTML = html;
@@ -1000,8 +1003,8 @@ async function update(instance) {
     });//.slice(-15);
 
     data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
-    // chart_top_5.options.yaxis = { max: data[data.length - 1].y + 1000 };
-    chart_top_5.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 750 };
+    chart_top_5.options.yaxis = { max: data[data.length - 1].y * 1.25 };
+    // chart_top_5.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 750 };
 
     last = data[data.length - 1];
     chart_top_5.options.annotations.yaxis.push(add_annotation_y(last.y));
@@ -1009,7 +1012,7 @@ async function update(instance) {
     // update_ui(chart_top_5);
 
     total = round1(data[data.length - 1].y);
-    gain = round1(data[data.length - 1].y - 5500);
+    gain = round1(data[data.length - 1].y - config_stocks.alpaca.SEED);
     // let gain = round(round2(round(data[data.length - 1].y - data[0].y)));
 
     // //* PORTFOLIO BALANCE */
@@ -1103,7 +1106,7 @@ async function update(instance) {
 
     // const start_price = 0; // PORTFOLIO_DAY_HISTORY[0].equity;
     data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
-    // const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 15:59:00').getTime();
+    // const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 19:00:00').getTime();
     // data = data.filter((v) => v.x >= st);
 
     // chart_top_7.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 250 };
@@ -1113,9 +1116,8 @@ async function update(instance) {
 
     last = data[data.length - 1];
     const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1];
-    chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y));
-
-    // chart_top_7.options.yaxis = { max: data[data.length - 1].y + 1000 };
+    chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y)); 7
+    chart_top_5.options.yaxis = { max: data[data.length - 1].y * 1.25 };
     // update_ui(chart_top_7);
 
     total = round3(data[data.length - 1].y);
@@ -1370,7 +1372,7 @@ async function click_symbol(s, elem, check_score = false) {
                 let color = g >= 0 ? 'w3-green' : 'w3-red';
                 let html = '';
                 html += `${get_indicator(g)} ${s}`;
-                html += `${detail && detail.name ? (' | ' + detail.name + ' | <b class="w3-text-blue">$ '  + last + '</b>') : ''}`;
+                html += `${detail && detail.name ? (' | ' + detail.name + ' | <b class="w3-text-blue">$ ' + last + '</b>') : ''}`;
                 // html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
                 html += `<span class="w3-right ${color} w3-padding">$ ${g.toLocaleString()}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;${pct.toLocaleString()} %</span>`;
                 // // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(max - last).toLocaleString()}`;

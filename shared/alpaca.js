@@ -636,8 +636,8 @@ class AlpacaData {
                         .then((res) => this.score(res))
                         .then((res) => this.positions(symbol, open_positions, res))
                         .then((res) => this.orders(symbol, orders_list, res))
-                        // .then((res) => add30 ? this.add30Min(res, end) : res)
-                        // .then((res) => this.add_bars_2(res))
+                        .then((res) => add30 ? this.add30Min(res, end) : res)
+                        .then((res) => this.add_bars_2(res))
                         // .then((res) => this.add_latest_bar(res))
                         .then((res) => resolve(res));
                 } catch (error) {
@@ -733,7 +733,7 @@ class AlpacaData {
     }
     async bars_simplified(symbols, timeframe = '1D', start = this.START_OF_YEAR, end = new Date().toISOString()) {
         return new Promise(async (resolve) => {
-            const promises = symbols.map((s) => this.bars(s, timeframe, start, end, [], [], false, 100, false));
+            const promises = symbols.map((s) => this.bars_m3(s, timeframe, start, end, [], [], false, 100, false));
             const results = await Promise.all(promises);
             const obj = [];
             results.forEach((res) => {
@@ -934,17 +934,23 @@ class AlpacaData {
     //*@ CUSTOM ANALYSIS - 10 Min */
     async bars_15(symbols, start, end) {
         return new Promise(async (resolve) => {
-            const promises = symbols.map((s) => this.bars(s, '10Min', start, end, [], [], false, 100, false));
+            const promises = symbols.map((s) => this.bars(s, '5Min', start, end, [], [], false, 100, false));
             const results = await Promise.all(promises);
             const obj = {};
             results.forEach((s) => {
-                const filtered = s.bars_1K.filter((v) => v.thm === 940 || v.thm === 1550);
+                // const filtered = s.bars_1K.filter((v) => v.thm === 940 || v.thm === 1550);
+                const filtered = s.bars_1K.filter((v) => v.thm === 1010 || v.thm === 1550);
                 filtered.forEach((b, i) => {
                     // obj.push(i === 0 ? 0 : b.c - filtered[i - 1].c);
-                    b.delta = i === 0 ? 0 : b.c - filtered[i - 1].c; //! DAYS & NIGHTS
+                    // b.delta = i === 0 ? 0 : b.c - filtered[i - 1].c; //! DAYS & NIGHTS
                     // b.delta = i === 0 ? 0 : (b.thm === 940 ? b.c - filtered[i - 1].c : 0); //! ONLY NIGHTS
+
+                    if (i > 0) {
+                        const delta = b.c - filtered[i - 1].c;
+                        b.delta = b.thm === 1010 ? (isNaN(delta) ? 0 : delta) : 0 ; //! 16:00 -> 10:00
+                    }
                 })
-                obj[s.symbol] = { sum: round2(filtered.map((v) => v.delta).reduce((p, c) => p + c)), filtered }
+                obj[s.symbol] = { sum: round2(filtered.map((v) => (isNaN(v.delta) ? 0 : v.delta)).reduce((p, c) => p + c)), filtered }
             })
 
             // Sum the elements at corresponding indices
@@ -963,8 +969,8 @@ class AlpacaData {
                     e.gain += found ? round2(found.delta) : 0;
                 })
             })
-            console.log('entries | ', entries.filter((v) => v.date.indexOf('9:40') > 0).map((v) => v.gain).reduce((p, c) => p + c), entries.filter((v) => v.date.indexOf('9:40') > 0));
-            console.log(`entries | ${symbols.length}K | ${entries.map((v) => v.gain).reduce((p, c) => p + c).toLocaleString()}`, entries);
+            console.log('entries | ', entries.filter((v) => v.date.indexOf('10:10') > 0).filter((v)=>isNaN(v.gain) === false).map((v) => v.gain).reduce((p, c) => p + c), entries.filter((v) => v.date.indexOf('10:10') > 0));
+            console.log(`entries | ${symbols.length}K | ${entries.map((v) => v.gain).filter((v)=>isNaN(v) === false).reduce((p, c) => p + c).toLocaleString()}`, entries);
 
 
             obj['sum'] = round2(Object.values(obj).map((v) => v.sum).reduce((p, c) => p + c));

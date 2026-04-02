@@ -130,6 +130,8 @@ async function click_letter(letter) {
 
         if (letter === '▶') {
             let filtered = stock_symbols_detail.filter((v) => v.symbol.startsWith(selected_letter));
+            const start_at = filtered.indexOf(selected_symbol);
+            filtered = filtered.slice(start_at < 0 ? 0 : start_at);
             if (use_filter) {
                 filtered = filtered.filter((v) => (Array.isArray(likes) ? likes : likes.split(',')).indexOf(v.symbol) >= 0)
             }
@@ -419,7 +421,7 @@ function toggleSymbolDayChart() {
 function buy_symbol() {
     const confirmed = confirm('are you sure you want to BUY symbol?');
     if (confirmed) {
-        const seed = 200; //1000;
+        const seed = 1000; //1000;
         config_stocks.alpaca.buy(selected_symbol, seed).then((res) => {
             console.log(res);
         });
@@ -432,7 +434,7 @@ function buy_symbol() {
 function buy_all() {
     const confirmed = confirm('are you sure you want to BUY ALL all symbols?');
     if (confirmed) {
-        const seed = 100; //1000;
+        const seed = 1000; //1000;
         config_stocks.alpaca.buy_symbols(config_stocks.symbols.join(','), seed).then((res) => {
             console.log(res);
         });
