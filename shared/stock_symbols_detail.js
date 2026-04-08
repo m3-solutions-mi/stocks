@@ -96084,10 +96084,14 @@ const stock_symbols_detail = [
     {symbol: 'REMX', name: 'VanEck Rare Earth and Strategic Metals ETF', status: 'active', tradable: true, fractionable: true}, // 
     {symbol: 'SETM', name: 'Sprott Critical Materials ETF', status: 'active', tradable: true, fractionable: true}, // 
     {symbol: 'ALB', name: 'ALBEMARLE CORPORATION - Lithium', status: 'active', tradable: true, fractionable: true}, // 
-    {symbol: 'LASE', name: '-', status: 'active', tradable: true, fractionable: true}, // 
+    {symbol: 'LASE', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'CMBT', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'CMC', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'CPB', name: '-', status: 'active', tradable: true, fractionable: true}, // 
     // {symbol: 'COMM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'SWMR', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'TSN', name: '-', status: 'active', tradable: true, fractionable: true},
+    {symbol: 'DIOD', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'ARM', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: 'VIXY', name: '-', status: 'active', tradable: true, fractionable: true},
     {symbol: '^IXIC', name: 'Nasdaq', status: 'active', tradable: true, fractionable: true},

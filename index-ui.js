@@ -421,7 +421,7 @@ function toggleSymbolDayChart() {
 function buy_symbol() {
     const confirmed = confirm('are you sure you want to BUY symbol?');
     if (confirmed) {
-        const seed = 1000; //1000;
+        const seed = 100; //1000;
         config_stocks.alpaca.buy(selected_symbol, seed).then((res) => {
             console.log(res);
         });
@@ -434,7 +434,7 @@ function buy_symbol() {
 function buy_all() {
     const confirmed = confirm('are you sure you want to BUY ALL all symbols?');
     if (confirmed) {
-        const seed = 1000; //1000;
+        const seed = 100; //1000;
         config_stocks.alpaca.buy_symbols(config_stocks.symbols.join(','), seed).then((res) => {
             console.log(res);
         });
