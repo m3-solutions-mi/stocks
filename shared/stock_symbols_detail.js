@@ -1,5 +1,5 @@
 const nasdaq_stocks_list = () => {
-    fetch('https://www.nasdaqtrader.com/dynamic/symdir/nasdaqlisted.txt').then((resp)=>{
+    fetch('https://www.nasdaqtrader.com/dynamic/symdir/nasdaqlisted.txt').then((resp) => {
         console.log(resp);
     })
 }
@@ -96050,61 +96050,63 @@ const stock_symbols_detail = [
     //     "fractionable": true,
     //     "attributes": []
     // }
-    {symbol: 'AI', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'CARV', name: 'Carvana', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'F', _name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'GE', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'GEV', name: 'GE VERNOVA INC', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'GM', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'IBM', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'JPM', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'LMND', name: 'Lemonade', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'PL', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'WD', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'WM', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'OKLO', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'SCCO', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'NEM', name: 'NEWMONT CORPORATION', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'AVDE', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'TOL', name: 'Housing', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'DHI', name: 'Housing', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'LEN', name: 'Housing', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'PHM', name: 'Housing', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'NVR', name: 'Housing', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'CAT', name: 'Caterpillar', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'BTC', name: 'Bitcoin ETF', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'WMT', name: 'Walmart', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'SLV', name: 'iShares Silver Trust', status: 'active', tradable: true, fractionable: true}, // SILVER
-    {symbol: 'GLTR', name: 'abrdn Physical Precious Metals Basket Shares ETF', status: 'active', tradable: true, fractionable: true}, // GOLD
-    {symbol: 'B', name: 'BARRICK MINING CORPORATION - GOLD', status: 'active', tradable: true, fractionable: true}, // GOLD
-    {symbol: 'GDX', name: 'VanEck Gold Miners ETF', status: 'active', tradable: true, fractionable: true}, // GOLD
+    { symbol: 'AI', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'CARV', name: 'Carvana', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'F', _name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'GE', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'GEV', name: 'GE VERNOVA INC', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'GM', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'IBM', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'JPM', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'LMND', name: 'Lemonade', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'PL', name: 'Planet Labs', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'WD', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'WM', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'OKLO', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'SCCO', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'NEM', name: 'NEWMONT CORPORATION', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'AVDE', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'TOL', name: 'Housing', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'DHI', name: 'Housing', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'LEN', name: 'Housing', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'PHM', name: 'Housing', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'NVR', name: 'Housing', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'CAT', name: 'Caterpillar', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'BTC', name: 'Bitcoin ETF', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'WMT', name: 'Walmart', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'SLV', name: 'iShares Silver Trust', status: 'active', tradable: true, fractionable: true }, // SILVER
+    { symbol: 'GLTR', name: 'abrdn Physical Precious Metals Basket Shares ETF', status: 'active', tradable: true, fractionable: true }, // GOLD
+    { symbol: 'B', name: 'BARRICK MINING CORPORATION - GOLD', status: 'active', tradable: true, fractionable: true }, // GOLD
+    { symbol: 'GDX', name: 'VanEck Gold Miners ETF', status: 'active', tradable: true, fractionable: true }, // GOLD
     // {symbol: 'XAU', name: 'Gold', status: 'active', tradable: true, fractionable: true}, // GOLD
-    {symbol: 'PALL', name: 'abrdn Physical Palladium Shares ETF', status: 'active', tradable: true, fractionable: true}, // PALLADIUM
-    {symbol: 'COPX', name: 'Global X Copper Miners ETF', status: 'active', tradable: true, fractionable: true}, // COPPER
-    {symbol: 'REMX', name: 'VanEck Rare Earth and Strategic Metals ETF', status: 'active', tradable: true, fractionable: true}, // 
-    {symbol: 'SETM', name: 'Sprott Critical Materials ETF', status: 'active', tradable: true, fractionable: true}, // 
-    {symbol: 'ALB', name: 'ALBEMARLE CORPORATION - Lithium', status: 'active', tradable: true, fractionable: true}, // 
-    {symbol: 'LASE', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'CMBT', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'CMC', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'CPB', name: '-', status: 'active', tradable: true, fractionable: true}, // 
+    { symbol: 'PALL', name: 'abrdn Physical Palladium Shares ETF', status: 'active', tradable: true, fractionable: true }, // PALLADIUM
+    { symbol: 'COPX', name: 'Global X Copper Miners ETF', status: 'active', tradable: true, fractionable: true }, // COPPER
+    { symbol: 'REMX', name: 'VanEck Rare Earth and Strategic Metals ETF', status: 'active', tradable: true, fractionable: true }, // 
+    { symbol: 'SETM', name: 'Sprott Critical Materials ETF', status: 'active', tradable: true, fractionable: true }, // 
+    { symbol: 'ALB', name: 'ALBEMARLE CORPORATION - Lithium', status: 'active', tradable: true, fractionable: true }, // 
+    { symbol: 'LASE', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'CMBT', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'CMC', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'SYK', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'CPB', name: '-', status: 'active', tradable: true, fractionable: true }, // 
     // {symbol: 'COMM', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'SWMR', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'TSN', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'DIOD', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'ARM', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'VIXY', name: '-', status: 'active', tradable: true, fractionable: true},
-    {symbol: '^IXIC', name: 'Nasdaq', status: 'active', tradable: true, fractionable: true},
-    {symbol: 'CL=F', name: 'Crude Oil', status: 'active', tradable: true, fractionable: true},
-    {symbol: '^VIX', name: 'Volatility Index', status: 'active', tradable: true, fractionable: true},
+    { symbol: 'SWMR', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'VGENX', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'TSN', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'DIOD', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'ARM', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'VIXY', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: '^IXIC', name: 'Nasdaq', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'CL=F', name: 'Crude Oil', status: 'active', tradable: true, fractionable: true },
+    { symbol: '^VIX', name: 'Volatility Index', status: 'active', tradable: true, fractionable: true },
 ]
-.filter((v)=>v.status === 'active')
-.filter((v)=>v.symbol.indexOf('.') < 0)
-.filter((v)=>v.symbol.indexOf('/BTC') < 0)
-.filter((v)=>v.symbol.indexOf('/USDC') < 0)
-.filter((v)=>v.symbol.indexOf('/USDT') < 0)
-.filter((v)=>v.tradable)
-.filter((v)=>v.fractionable)
-.filter((v,i,a)=> i === a.indexOf(v))
-.sort((a,b)=>a.symbol.localeCompare(b.symbol))
-;
+    .filter((v) => v.status === 'active')
+    .filter((v) => v.symbol.indexOf('.') < 0)
+    .filter((v) => v.symbol.indexOf('/BTC') < 0)
+    .filter((v) => v.symbol.indexOf('/USDC') < 0)
+    .filter((v) => v.symbol.indexOf('/USDT') < 0)
+    .filter((v) => v.tradable)
+    .filter((v) => v.fractionable)
+    .filter((v, i, a) => i === a.indexOf(v))
+    .sort((a, b) => a.symbol.localeCompare(b.symbol))
+    ;

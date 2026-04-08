@@ -901,12 +901,14 @@ async function update(instance) {
             .replace('{fc}', font_color)
             + '\n';
 
+        const detail = stock_symbols_detail.find((v) => v.symbol === s.symbol);
         html_table += template_row
             .replace('{s}', s.symbol)
             .replace('{symbol}', `${indicator} ${s.symbol}`)
             .replace('{c}', color)
             .replace('{c}', color)
-            .replace('{name}', stock_symbols_detail.find((v) => v.symbol === s.symbol).name)
+            .replace('{name}', detail ? detail.name : '-') // TODO: crashes if not found
+            // .replace('{name}', s.symbol)
             .replace('{gain}', `${round2(g)}`)
             .replace('{day}', `${round2(day)}`)
             .replace('{c2}', color_day)
