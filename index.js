@@ -846,10 +846,14 @@ async function update(instance) {
 
     elem = document.getElementById('header-positions');
     elem.innerHTML = round1(total);
-    elem.parentElement.classList.replace('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
     elem = document.getElementById('header-positions-pct')
     elem.innerHTML = round2(total / config_stocks.alpaca.SEED * 100) + ' %';
-    elem.parentElement.classList.replace('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
 
     add_section('output', 'Positions', 4, percent, round(total), 'fa-tags', 12, 12, 12, 36, 24, 36);
     chart_top_4.options.chart.height = CHART_HEIGHT;
@@ -861,26 +865,28 @@ async function update(instance) {
 
 
     //*@ SYMBOLS BOXES & TABLE */
-    const template = `<span id="{id}" 
+    const template = `<div id="{id}" 
             class="w3-tag w3-round w3-padding w3-{c}" 
-            style="cursor:pointer;min-width:100px;margin-bottom:5px;color:{fc}!important;" 
+            style="cursor:pointer;min-width:150px;margin-right:7px;margin-bottom:5px;color:{fc}!important;" 
             onclick="{f}('{s}')">
                 {0}<br/>{1}<!-- | <b>{2}</b>-->
-            </span>`
+            </div>`
     const template_row = `
             <tr onclick="click_symbol('{s}')">
                 <td style="color:{c}"><b>{symbol}</b></td>
                 <td class="w3-hide-small">{name}</td>
-                <td>{investment}</td>
-                <td>{date}</td>
+                <td class="w3-hide-small">{investment}</td>
+                <td class="w3-hide-small">{date}</td>
+                <td style="color:{c2}">{pct}</td>
                 <td style="color:{c2}">{day}</td>
-                <td style="color:{c}">{gain}</td>
+                <td class="w3-hide-small" style="color:{c}">{gain}</td>
             </tr>`
     let html = '';
     let html_table = '';
     RESULTS.POSITIONS.forEach((s) => {
         const g = +(s.unrealized_pl);
         const day = +(s.unrealized_intraday_pl);
+        const pct = round1(day / s.cost_basis * 100);
         const color = g > 0 ? 'green' : (round(g) < 0 ? 'red' : 'grey');
         const color_day = day > 0 ? 'green' : (round(day) < 0 ? 'red' : 'grey');
         const font_color = day >= 0 ? 'black' : 'white';
@@ -907,10 +913,12 @@ async function update(instance) {
             .replace('{symbol}', `${indicator} ${s.symbol}`)
             .replace('{c}', color)
             .replace('{c}', color)
-            .replace('{name}', detail ? detail.name : '-') // TODO: crashes if not found
+            .replace('{name}', detail ? detail.name.slice(0, 50) : '-') // TODO: crashes if not found
             // .replace('{name}', s.symbol)
             .replace('{gain}', `${round2(g)}`)
+            .replace('{pct}', `${round1(pct)}`)
             .replace('{day}', `${round2(day)}`)
+            .replace('{c2}', color_day)
             .replace('{c2}', color_day)
             .replace('{date}', date)
             .replace('{investment}', round(s.cost_basis))
@@ -1003,6 +1011,13 @@ async function update(instance) {
     data = RESULTS.PORTFOLIO_HISTORY.map((v) => {
         return { x: v.e, y: v.equity }
     });//.slice(-15);
+    // data = data.map((v) => {
+    //     const deposits = RESULTS.ACTIVITIES.reverse().filter((v) => v.activity_type === 'CSD');
+    //     const invested = deposits.filter((v2) => new Date(v2.date).getTime() <= v.x)
+    //     const subtract = invested.length > 0 ? invested.map((v2)=>+(v2.net_amount)).reduce((p, c) => p + c) : 0;
+    //     v.y = v.y - subtract;
+    //     return v;
+    // })
 
     data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
     chart_top_5.options.yaxis = { max: data[data.length - 1].y * 1.25 };
@@ -1025,7 +1040,7 @@ async function update(instance) {
 
     //* MONTH GAIN */
     elem = document.getElementById('gain-month');
-    elem.innerHTML = `$${total.toLocaleString()}`;
+    // elem.innerHTML = `$${total.toLocaleString()}`;
 
     elem = document.getElementById('header-portfolio');
     elem.innerHTML = gain;
@@ -1108,12 +1123,14 @@ async function update(instance) {
 
     // const start_price = 0; // PORTFOLIO_DAY_HISTORY[0].equity;
     data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
+    const st = new Date('2026-04-14T09:49:00').getTime();
+    data = data.filter((v) => v.x >= st);
     // const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 19:00:00').getTime();
     // data = data.filter((v) => v.x >= st);
 
     // chart_top_7.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 250 };
 
-    //! only needed if... (timeframe !== '1Min',...)
+    //! DONT USE !!! only needed if... (timeframe !== '1Min',...)
     // data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
 
     last = data[data.length - 1];
@@ -1124,59 +1141,10 @@ async function update(instance) {
 
     total = round3(data[data.length - 1].y);
     gain = round3(data[data.length - 1].y - yesterday.y);
-    //* PORTFOLIO BALANCE */
-    // let elem = document.getElementById('top-portfolio-day-total');
-    // gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-    // elem.innerHTML = `${get_indicator(gain)} ${Math.abs(gain).toLocaleString()}`;
-    // // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
-
-    //* MONTH GAIN */
-    // elem = document.getElementById('gain-today');
-    // gain < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
-    // elem.innerHTML = `${(Math.abs(round2(total / yesterday.y * 100) - 100)).toLocaleString()}%`;
-    // // elem.innerHTML = `$${(data[data.length-1].y - data[0].y).toLocaleString()}`;
-
-    //* new template */
-    // const map = {
-    //     7: chart_top_7
-    // }
-    // let id = 7;
-    // if (!document.getElementById(`section-${id}`)) {
-    //     let template = `
-    //         <div id="section-{id}" class="w3-col s12 w3-xxlarge w3-padding _w3-border-right">
-    //             <div class="w3-col s12" style="font-size: 48px;margin-top:16px;"><i
-    //                     class="fa {icon} fa-fw w3-text-green"></i> Today
-    //                 |
-    //                 <b><span id="value-1-{id}" class="w3-xlarge w3-text-green"
-    //                         style="font-size: 36px !important;letter-spacing:6px;">$</span></b>
-    //                 <b><span id="value-2-{id}" class="w3-tag w3-green w3-roundw3-text-white w3-right"
-    //                         style="font-size: 56px;letter-spacing:16px;">$-K</span>
-    //                 </b>
-    //                 <div id="top-chart-{id}" class="w3-margin-top"></div>
-    //             </div>
-    //         </div>`;
-    //     let elem_output = document.getElementById('output');
-    //     template = replaceAll(template, '{icon}', 'fa-line-chart');
-    //     template = replaceAll(template, '{id}', '7');
-    //     template = template;
-    //     elem_output.innerHTML = template;
-    // }
-    // elem = document.getElementById(`value-2-${id}`);
-    // gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-    // elem.innerHTML = `${get_indicator(gain)} ${Math.abs(gain).toLocaleString()}`;
-    // elem = document.getElementById(`value-1-${id}`);
-    // gain < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
-    // elem.innerHTML = `${(Math.abs(round2(total / yesterday.y * 100) - 100)).toLocaleString()}%`;
-
-    // Object.values(map).forEach((v) => {
-    //     update_ui(v);
-    // });
-
-    // `${(Math.abs(round2(value_1 / yesterday.y * 100) - 100)).toLocaleString()}%`
-
 
     elem = document.getElementById('header-today');
-    elem.innerHTML = gain >= 1000 ? round3(gain / 1000) + 'K' : gain;
+    elem.innerHTML = round(gain).toLocaleString();
+    // elem.innerHTML = gain >= 1000 ? round(gain) + 'K' : gain;
     elem.parentElement.classList.remove('w3-text-green');
     elem.parentElement.classList.remove('w3-text-red');
     elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
@@ -1189,21 +1157,45 @@ async function update(instance) {
 
     elem = document.getElementById(`value-24-hour`);
     gain = round1(data[data.length - 1].y - data[0].y);
-    gain < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-    gain > 0 ? elem.classList.replace('w3-red', 'w3-green') : elem.classList.replace('w3-green', 'w3-red');
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     elem.innerHTML = `${get_indicator(gain)}&nbsp;${Math.abs(gain).toLocaleString()}`;
 
     elem = document.getElementById('header-24h');
-    elem.innerHTML = gain >= 1000 ? round2(gain / 1000) + 'K' : gain;
-    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+
     elem = document.getElementById('header-24h-pct')
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     elem.innerHTML = round1(gain / config_stocks.alpaca.SEED * 100) + ' %';
-    elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem.innerHTML = `$${total.toLocaleString()}`;
+
+    //* PORTFOLIO - calculation to use after 8 PM */
+    if (getHMM(new Date()) > 2000) {
+        total = round(total - config_stocks.alpaca.SEED);
+        elem = document.getElementById('header-portfolio');
+        elem.innerHTML = total;
+        elem.parentElement.classList.remove('w3-text-green');
+        elem.parentElement.classList.remove('w3-text-red');
+        elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
+
+        elem = document.getElementById('header-portfolio-pct')
+        elem.innerHTML = round2(total / config_stocks.alpaca.SEED * 100) + ' %';
+        elem.parentElement.classList.remove('w3-text-green');
+        elem.parentElement.classList.remove('w3-text-red');
+        elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
+    }
 
     // TODO: update setting of table column 1 values
     elem = document.getElementById(`value-24-hour-percent`);
     percent = round2(total / yesterday.y * 100) - 100;
-    percent < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', percent > 0 ? 'w3-text-green' : 'w3-text-red');
     elem.innerHTML = `${Math.abs(percent).toLocaleString()}&nbsp;%`;
 
     chart_top_7.options.chart.height = CHART_HEIGHT;
@@ -1374,9 +1366,9 @@ async function click_symbol(s, elem, check_score = false) {
                 let color = g >= 0 ? 'w3-green' : 'w3-red';
                 let html = '';
                 html += `${get_indicator(g)} ${s}`;
-                html += `${detail && detail.name ? (' | ' + detail.name + ' | <b class="w3-text-blue">$ ' + last + '</b>') : ''}`;
+                html += `${detail && detail.name ? (`<span class="w3-hide-small"> | ${detail.name} | &nbsp;` + '&nbsp;<b class="w3-text-blue">$ ' + last + '</b></span>') : ''}`;
                 // html += `${detail && detail.name ? (' | ' + detail.name) : ''}`;
-                html += `<span class="w3-right ${color} w3-padding">$ ${g.toLocaleString()}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;${pct.toLocaleString()} %</span>`;
+                html += `<span class="w3-hide-small w3-right ${color} w3-padding">$ ${g.toLocaleString()}&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;${pct.toLocaleString()} %</span>`;
                 // // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(max - last).toLocaleString()}`;
                 // // html += `&nbsp;&nbsp;|&nbsp;&nbsp;$ ${round(trend_delta).toLocaleString()}`;
                 document.getElementById('symbol-days-title').innerHTML = html;
@@ -1418,4 +1410,16 @@ function m3_129() {
             console.log(v);
             console.log(`%c$${round(v.total / 129 * 50).toLocaleString()}`, 'color:yellow;')
         });
+}
+function analyze_account() {
+    const obj = {};
+    console.table(RESULTS.PORTFOLIO_HISTORY);
+    const deposits = RESULTS.ACTIVITIES.filter((v) => v.activity_type === 'CSD').reverse();
+    const history = RESULTS.PORTFOLIO_HISTORY;
+    // TODO: add lastest data point to history
+    history.forEach((d) => {
+        const filtered = deposits.filter((v) => new Date(v.date).getTime() <= new Date(d.ymd).getTime()).map((v) => +(v.net_amount)).reduce((p, c) => p + c);
+        console.log(filtered);
+    })
+
 }

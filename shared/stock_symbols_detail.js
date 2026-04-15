@@ -96073,6 +96073,9 @@ const stock_symbols_detail = [
     { symbol: 'NVR', name: 'Housing', status: 'active', tradable: true, fractionable: true },
     { symbol: 'CAT', name: 'Caterpillar', status: 'active', tradable: true, fractionable: true },
     { symbol: 'BTC', name: 'Bitcoin ETF', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'BW', name: 'Babcock & Wilcox', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'CIEN', name: '', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'VRT', name: 'Vertiv Holdings Co', status: 'active', tradable: true, fractionable: true },
     { symbol: 'WMT', name: 'Walmart', status: 'active', tradable: true, fractionable: true },
     { symbol: 'SLV', name: 'iShares Silver Trust', status: 'active', tradable: true, fractionable: true }, // SILVER
     { symbol: 'GLTR', name: 'abrdn Physical Precious Metals Basket Shares ETF', status: 'active', tradable: true, fractionable: true }, // GOLD
@@ -96086,6 +96089,8 @@ const stock_symbols_detail = [
     { symbol: 'ALB', name: 'ALBEMARLE CORPORATION - Lithium', status: 'active', tradable: true, fractionable: true }, // 
     { symbol: 'LASE', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'CMBT', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'OXY', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'IONQ', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'CMC', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'SYK', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'CPB', name: '-', status: 'active', tradable: true, fractionable: true }, // 

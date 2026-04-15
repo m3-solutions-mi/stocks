@@ -76,107 +76,13 @@
                                     <h1 style="margin-top:10px;">
                                         <b>M3&nbsp;Solutions&nbsp;MI</b>
                                         <span
-                                            class="w3-hide-small w3-hide-medium w3-wide"><b>&nbsp;&nbsp;|&nbsp;&nbsp;STOCKS</b></span>
+                                            class="w3-hide-small w3-hide-medium"><b>&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;STOCKS</b></span>
                                         <div class="w3-large" style="display:flex;font-size:22px !important;">
                                             Stock&nbsp;Trading&nbsp;Advisor<div class="w3-hide-small w3-hide-medium">
                                                 &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;m3-solutions-mi.github.io/stocks
                                             </div>
                                         </div>
 
-                                        <div id="settings" class="w3-hide _w3-container w3-xlarge">
-                                            <hr style="border-top-color: black;" />
-
-                                            <!--* CONFIGURATIONS -->
-                                            <div class="w3-center w3-xxlarge"
-                                                style="letter-spacing:4px;display: flex;align-items: center;justify-content: center;">
-                                                <input class="w3-radio w3-margin-right" style="cursor:pointer;"
-                                                    type="radio" name="accounts" value="paper"
-                                                    onclick="click_account(this.value)" checked>
-                                                <label class="w3-margin-top" style="margin-right: 45px;">PAPER</label>
-
-                                                <input class="w3-radio w3-margin-right" style="cursor:pointer;"
-                                                    type="radio" name="accounts" value="live"
-                                                    onclick="click_account(this.value)">
-                                                <label class="w3-margin-top" style="margin-right: 45px;" l>LIVE</label>
-
-                                                <input class="w3-radio w3-margin-right" style="cursor:pointer;"
-                                                    type="radio" name="accounts" value="crypto"
-                                                    onclick="click_account(this.value)">
-                                                <label class="w3-margin-top" style="margin-right: 45px;"
-                                                    l>CRYPTO</label>
-                                            </div>
-
-                                            <!--* ACCOUNT INPUTS  -->
-                                            <div><label>KEY</label><input id="key" class="w3-input w3-border"
-                                                    style="filter:blur(4px);" type="text" placeholder="Enter key">
-                                            </div>
-                                            <div style="margin-top:10px;"><label>SECRET</label><input id="secret"
-                                                    class="w3-input w3-border" style="filter:blur(4px);" type="text"
-                                                    placeholder="Enter secret">
-                                            </div>
-                                            <div style="margin-top:10px;width:50%;">
-                                                <label>DATA URL</label><input id="data-url" class="w3-input w3-border"
-                                                    type="text" placeholder="Enter data url (https://....)">
-                                            </div>
-                                            <div class="w3-right" style="margin-top:10px;width:45%;"><label>START
-                                                    DATE</label><input id="start_date" class="w3-input w3-border"
-                                                    type="text" value="2026-01-05" placeholder="Enter seed dollars">
-                                            </div>
-                                            <div style="margin-top:10px;width:45%;"><label>SEED ( dollars / symbol
-                                                    )</label><input id="seed" class="w3-input w3-border" type="number"
-                                                    value="1000" placeholder="Enter seed dollars">
-                                            </div>
-
-                                            <!--* FEED -->
-                                            <!-- <div class="w3-center w3-xlarge"
-                                                style="letter-spacing:4px;display: flex;align-items: center;justify-content: center;">
-                                                <input class="w3-radio w3-margin-right" style="cursor:pointer;"
-                                                    type="radio" name="accounts" value="sip"
-                                                    onclick="click_feed(this.value)" checked>
-                                                <label class="w3-margin-top" style="margin-right: 45px;">SIP</label>
-
-                                                <input class="w3-radio w3-margin-right" style="cursor:pointer;"
-                                                    type="radio" name="accounts" value="iex"
-                                                    onclick="click_feed(this.value)">
-                                                <label class="w3-margin-top" style="margin-right: 45px;" l>IEX</label>
-
-                                                <input class="w3-radio w3-margin-right" style="cursor:pointer;"
-                                                    type="radio" name="accounts" value="m3"
-                                                    onclick="click_feed(this.value)">
-                                                <label class="w3-margin-top" style="margin-right: 45px;" l>M3</label>
-                                            </div> -->
-
-                                            <!--* INPUTS  -->
-                                            <div style="margin-top:10px;"><label>SYMBOLS</label><textarea id="symbols"
-                                                    rows="4" class="w3-input w3-border" style="letter-spacing:2px;"
-                                                    type="text" placeholder="Enter picks"></textarea></div>
-                                            <div style="margin-top:10px;"><label>LIKES</label><textarea id="likes"
-                                                    rows="4" class="w3-input w3-border" style="letter-spacing:2px;"
-                                                    type="text" placeholder="Enter likes"></textarea></div>
-                                            <div style="display:none;margin-top:10px;"><label>STEADY
-                                                    PICKS</label><textarea id="steady_picks" rows="4"
-                                                    class="w3-input w3-border" style="letter-spacing:2px;" type="text"
-                                                    placeholder="Enter steady picks"></textarea></div>
-                                            <button class="w3-btn w3-round w3-white w3-margin-top w3-right"
-                                                onclick="update_settings()">Update</button>
-                                            <button
-                                                class="w3-btn w3-round w3-white w3-margin-top w3-right w3-margin-right"
-                                                onclick="alert(JSON.stringify(localStorage, null, 2))">View</button>
-                                            <span id="" class="w3-left">v1.0.2</span>
-
-                                            <br />
-                                            <div class="w3-center _w3-margin-top"
-                                                style="letter-spacing: 4px; margin-top:50px;">
-                                                <div class="w3-border w3-round-large w3-padding w3-white w3-xlarge w3-margin w3-center"
-                                                    style="cursor:pointer;" onclick="buy_all()">Buy All</div>
-                                                <div class="w3-border w3-round-large w3-padding w3-white w3-xlarge w3-margin w3-center"
-                                                    style="cursor:pointer;" onclick="liquidate()">Liquidate</div>
-
-                                                <!--@ TEST BUTTON -->
-                                                <!-- <div class="w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
-                                onclick="test()">Test</div> -->
-                                            </div>
-                                        </div>
                                     </h1>
                                 </div>
                             </div>
@@ -194,169 +100,113 @@
                 <!--@ End | Tablet / Desktop Header -->
 
                 <!--@ TOP NEW -->
-                <div class="w3-col s12 w3-xxlarge w3-card w3-white w3-margin-bottom w3-padding">
-                    <div class="w3-hide _w3-center">
+                <!--@ End | TOP NEW -->
 
-                        <!--* CURRENT POSITIONS -->
-                        <span class="" style="font-size: 56px !important;">
-                            <div class="w3-right _w3-margin-top" style="letter-spacing: 4px;">
-                                <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
-                                    style="cursor:pointer;" onclick="buy_all()">Buy All</div>
-                                <div class="w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
-                                    style="cursor:pointer;" onclick="liquidate()">Liquidate</div>
+                <!--@ TEMPLATE -->
+                <!--@ End | TEMPLATE -->
 
-                                <!--@ TEST BUTTON -->
-                                <!-- <div class="w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin w3-center"
-                                onclick="test()">Test</div> -->
+                <!--@ responsive layout -->
+                <div class=w3-row-padding>
+                    <div class="w3-col s2">
+                        <div class="w3-panel w3-border w3-light-grey w3-padding w3-xlarge">
+                            <div class="w3-col s12">
+                                <span class="w3-right w3-text-green"><b id="header-portfolio-pct">-</b></span>
+                                <span class="w3-left">AEHS</span>
                             </div>
-
-                            <h5 class="w3-text-green _w3-right">
-                                <span id="day-total" class="w3-tag w3-green w3-round w3-margin w3-padding"
-                                    style="font-size: 72px !important;font-weight: 900;letter-spacing: 12px;">K</span>
-                                <b><span id="day-pct" class="w3-padding w3-text-green"
-                                        style="font-size: 56px !important;letter-spacing: 4px;">%</span></b>
-                                <b><span id="last-seed" class="w3-text-grey"
-                                        style="font-size: 24px !important;letter-spacing: 4px;">-</span></b>
-                            </h5>
-                        </span>
-                    </div>
-                    <!--@ End | TOP NEW -->
-
-                    <!--@ TEMPLATE -->
-                    <!-- <div class="w3-row w3-padding-top" style="_border-top:1px solid lightgrey;"> -->
-                    <!-- <div id="template" class="w3-col s12 w3-xxlarge w3-padding _w3-border-right">
-                        <div class="w3-col s12" style="font-size: 48px;margin-top:16px;"><i
-                                class="fa fa-line-chart fa-fw w3-text-green"></i> Today
-                            |
-                            <b><span id="sum-{id}" class="w3-xlarge w3-text-green"
-                                    style="font-size: 36px !important;letter-spacing:6px;">$</span></b>
-                            <b><span id="sum-box-{id}" class="w3-tag w3-green w3-roundw3-text-white w3-right"
-                                    style="font-size: 56px;letter-spacing:16px;">$-K</span>
-                            </b>
-                            <div id="top-chart-{id}" class="w3-margin-top"></div>
-                        </div>
-                    </div> -->
-                    <!-- </div> -->
-                    <!--@ End | TEMPLATE -->
-
-
-                    <!--* Configuration Selections -->
-                    <div class="w3-hide w3-center" style="margin-top:-0px;">
-                        <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="view_type"
-                            value="account" onclick="click_config(this.value)" checked>
-                        <label class="w3-hide-small" style="position:relative;top:6px;margin-left: 5px;">Account</label>
-
-                        <input class="w3-hide-small w3-radio" style="cursor:pointer;margin-left: 20px;" type="radio"
-                            name="view_type" value="estimated" onclick="click_config(this.value)">
-                        <label class="w3-hide-small"
-                            style="position:relative;top:6px;margin-left: 5px;">Estimated</label>
-                    </div>
-
-
-                    <!--@ responsive layout -->
-                    <div class=w3-row-padding>
-                        <div class="w3-third">
-                            <div class="w3-panel w3-border w3-light-grey w3-padding w3-xlarge">
-                                <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green"><b
-                                            id="header-portfolio-pct">-</b></span>
-                                    <span class="w3-left">PORTFOLIO</span>
-                                </div>
-                                <!-- <br /> -->
-                                <div class="w3-col s12">
-                                    <div class="w3-right w3-text-green" style="letter-spacing:4px;font-size:64px;">
-                                        <b id="header-portfolio">-</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w3-hide w3-quarter">
-                            <div class="w3-panel w3-border w3-light-grey w3-padding w3-xlarge">
-                                <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-large"><b id="header-24h-pct">-</b></span>
-                                    <span class="w3-large w3-left">24 HOUR</span>
-                                </div>
-                                <br />
-                                <div class="w3-col s12">
-                                    <div class="w3-right w3-text-green" style="letter-spacing:4px;font-size:64px;">
-                                        <b id="header-24h">-</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w3-third">
-                            <div class="w3-panel w3-border w3-light-grey w3-padding w3-xlarge">
-                                <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green"><b
-                                            id="header-positions-pct">-</b></span>
-                                    <span class="w3-left">POSITIONS</span>
-                                </div>
-                                <!-- <br /> -->
-                                <div class="w3-col s12">
-                                    <div class="w3-right w3-text-green" style="letter-spacing:4px;font-size:64px;">
-                                        <b id="header-positions">-</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w3-third">
-                            <div class="w3-panel w3-border w3-light-grey w3-padding w3-xlarge">
-                                <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green"><b id="header-today-pct">-</b></span>
-                                    <span class="w3-left">TODAY</span>
-                                </div>
-                                <!-- <br /> -->
-                                <div class="w3-col s12">
-                                    <div class="w3-right w3-text-green" style="letter-spacing:4px;font-size:64px;">
-                                        <b id="header-today">-</b>
-                                    </div>
+                            <!-- <br /> -->
+                            <div class="w3-col s12">
+                                <div class="w3-right w3-text-green" style="letter-spacing:4px;font-size:64px;">
+                                    <b id="header-portfolio">-</b>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="w3-hide w3-row-padding w3-margin-bottom">
-                        <div class="w3-quarter">
-                            <div class="w3-container w3-border w3-light-grey w3-padding">
-                                <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-ndaq">-</b></span>
-                                    <span class="w3-large w3-left">NDAQ</span>
-                                </div>
+                    <div class="w3-col s2">
+                        <div class="w3-panel w3-border w3-light-grey w3-padding w3-xlarge">
+                            <div class="w3-col s12">
+                                <span class="w3-right w3-text-green"><b id="header-portfolio-pct">-</b></span>
+                                <span class="w3-left">DIDO</span>
                             </div>
-                        </div>
-                        <div class="w3-quarter">
-                            <div class="w3-container w3-border w3-light-grey w3-padding">
-                                <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-nasdaq">-</b></span>
-                                    <span class="w3-large w3-left">NASDAQ</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w3-quarter">
-                            <div class="w3-container w3-border w3-light-grey w3-padding">
-                                <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-oil">-</b></span>
-                                    <span class="w3-large w3-left">OIL</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="w3-quarter">
-                            <div class="w3-container w3-border w3-light-grey w3-padding">
-                                <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-vix">-</b></span>
-                                    <span class="w3-large w3-left">VIX</span>
+                            <!-- <br /> -->
+                            <div class="w3-col s12">
+                                <div class="w3-right w3-text-green" style="letter-spacing:4px;font-size:64px;">
+                                    <b id="header-portfolio">-</b>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="w3-col s2">
+                        <div class="w3-panel w3-border w3-light-grey w3-padding w3-xlarge">
+                            <div class="w3-col s12">
+                                <span class="w3-right w3-text-green"><b id="header-portfolio-pct">-</b></span>
+                                <span class="w3-left">KLAC</span>
+                            </div>
+                            <!-- <br /> -->
+                            <div class="w3-col s12">
+                                <div class="w3-right w3-text-green" style="letter-spacing:4px;font-size:64px;">
+                                    <b id="header-portfolio">-</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w3-col s2">
+                        <div class="w3-panel w3-border w3-light-grey w3-padding w3-xlarge">
+                            <div class="w3-col s12">
+                                <span class="w3-right w3-text-green"><b id="header-portfolio-pct">-</b></span>
+                                <span class="w3-left">LITE</span>
+                            </div>
+                            <!-- <br /> -->
+                            <div class="w3-col s12">
+                                <div class="w3-right w3-text-green" style="letter-spacing:4px;font-size:64px;">
+                                    <b id="header-portfolio">-</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- <br/> -->
+                <div class="w3-hide w3-row-padding w3-margin-bottom">
+                    <div class="w3-quarter">
+                        <div class="w3-container w3-border w3-light-grey w3-padding">
+                            <div class="w3-col s12">
+                                <span class="w3-right w3-text-green w3-xlarge"><b id="header-ndaq">-</b></span>
+                                <span class="w3-large w3-left">NDAQ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w3-quarter">
+                        <div class="w3-container w3-border w3-light-grey w3-padding">
+                            <div class="w3-col s12">
+                                <span class="w3-right w3-text-green w3-xlarge"><b id="header-nasdaq">-</b></span>
+                                <span class="w3-large w3-left">NASDAQ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w3-quarter">
+                        <div class="w3-container w3-border w3-light-grey w3-padding">
+                            <div class="w3-col s12">
+                                <span class="w3-right w3-text-green w3-xlarge"><b id="header-oil">-</b></span>
+                                <span class="w3-large w3-left">OIL</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w3-quarter">
+                        <div class="w3-container w3-border w3-light-grey w3-padding">
+                            <div class="w3-col s12">
+                                <span class="w3-right w3-text-green w3-xlarge"><b id="header-vix">-</b></span>
+                                <span class="w3-large w3-left">VIX</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <!--@ ACCOUNT / PORTFOLIO HISTORY CHARTS -->
-                    <div class="w3-xlarge w3-container _w3-margin _w3-padding">
+                <!-- <br/> -->
 
-                        <!--* header  -->
-                        <!-- <div class="w3-row w3-padding w3-margin w3-border w3-light-grey">
+                <!--@ ACCOUNT / PORTFOLIO HISTORY CHARTS -->
+                <div class="w3-xlarge w3-container _w3-margin _w3-padding">
+
+                    <!--* header  -->
+                    <!-- <div class="w3-row w3-padding w3-margin w3-border w3-light-grey">
                             <div class="w3-col s3 m3">
                                 <b>Symbol</b>
                             </div>
@@ -364,45 +214,45 @@
                                 <b>Chart</b>
                             </div>
                         </div> -->
-                        <!--* portfolio  -->
-                        <div class="w3-row w3-padding w3-border w3-light-grey">
+                    <!--* portfolio  -->
+                    <div class="w3-row w3-padding w3-border w3-light-grey">
 
-                            <!--* day history  -->
-                            <div class="w3-hide-small w3-col s12 m9 w3-padding">
-                                <!-- <span id="day-history-balance">$ 10,281</span> -->
-                                <b>Day History</b> | <span id="day-history-balance">$ -</span>
-                                <!-- <b>Chart</b> -->
-                                <div id="top-chart-5"></div>
-                            </div>
-                            
-                            <!--* 24 hour  -->
-                            <div class="w3-col s12 m3">
-                                24&nbsp;hour
-                                <div id="top-chart-7"></div>
-                            </div>
+                        <!--* day history  -->
+                        <div class="w3-col s12 m7 w3-padding">
+                            <!-- <span id="day-history-balance">$ 10,281</span> -->
+                            <b>Day History</b> | <span id="day-history-balance">$ -</span>
+                            <!-- <b>Chart</b> -->
+                            <div id="top-chart-5"></div>
                         </div>
-                        <!--* positions  -->
-                        <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
-                            <div class="w3-col s12">
-                                Positions
-                                <!-- <br />
+
+                        <!--* 24 hour  -->
+                        <div class="w3-col s12 m5 w3-padding">
+                            <b>24&nbsp;hour</b>
+                            <div id="top-chart-7"></div>
+                        </div>
+                    </div>
+                    <!--* positions  -->
+                    <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
+                        <div class="w3-col s12 w3-center">
+                            <b>Positions</b>
+                            <!-- <br />
                                 <b><span id="value-2-4" class="w3-tag w3-red w3-roundw3-text-white w3-left"
                                         style="font-size: 24px;letter-spacing:16px;"><span style=""></span>
                                 </b> -->
-                                <!-- <br />
+                            <!-- <br />
                                         <b>
                                             <span id="value-1-7" class="w3-xlarge w3-text-green"
                                                 style="font-size: 24px !important;letter-spacing:6px;"></span>
                                         </b> -->
-                            </div>
-                            <div class="w3-col s12">
-                                <!-- <b>Chart</b> -->
-                                <div id="top-chart-4"></div>
-                            </div>
                         </div>
-                        <!--* today  -->
-                        <div class="w3-hide-small w3-row w3-padding w3-margin-top w3-border w3-light-grey">
-                            <!-- <div class="w3-col s3 m3 l3">
+                        <div class="w3-col s12">
+                            <!-- <b>Chart</b> -->
+                            <div id="top-chart-4"></div>
+                        </div>
+                    </div>
+                    <!--* today  -->
+                    <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
+                        <!-- <div class="w3-col s3 m3 l3">
                                 <b>▼&nbsp;Today</b>
                                 <br />
                                 <b>
@@ -415,19 +265,19 @@
                                         style="font-size: 24px !important;letter-spacing:6px;">6.4%</span></b>
                             </div> -->
 
-                            <div class="w3-center w3-col s12 w3-xlarge">
-                                <b>Symbols
+                        <div class="w3-center w3-col s12 w3-xlarge">
+                            <b>Symbols
             </span></b>
-            <span id="symbols-count" class="w3-hide-small"></span>
-            <div id="symbol-boxes-positions" class="w3-left w3-hide-small" style="display:flex;flex-wrap:wrap;flex-direction:row;justify-content:center;"></div>
+            <span id="symbols-count"></span>
+            <div id="symbol-boxes-positions" class="w3-left" style="display:block;"></div>
         </div>
     </div>
 
 
     <!--* chart  -->
     <div class="w3-row w3-padding w3-margin-top w3-border w3-light-grey">
-        <p id="symbol-days-title" class=""><span></span>-</p>
-        <div class="w3-hide-small w3-col s12 m8">
+        <p id="symbol-days-title"><span></span>-</p>
+        <div class="w3-col s12 m8">
             <!-- <b>Chart</b> -->
             <div id="chart8" class="w3-padding w3-margin"></div>
         </div>
@@ -493,7 +343,7 @@
         </div>
     </div>
 
-    <div id="symbol-boxes-filtered" class="w3-hide-small w3-center w3-xlarge w3-text-grey" style="display:none;margin-top:20px;">
+    <div id="symbol-boxes-filtered" class="w3-center w3-xlarge w3-text-grey" style="display:none;margin-top:20px;">
         Trending
         <div id="symbols-filtered"></div>
     </div>
@@ -510,11 +360,10 @@
                 <tr class="w3-light-grey">
                     <th>Symbol</th>
                     <th class="w3-hide-small">Name</th>
-                    <th class="w3-hide-small">Seed</th>
-                    <th class="w3-hide-small">Date</th>
-                    <th>%</th>
+                    <th>Seed</th>
+                    <th>Date</th>
                     <th>Today</th>
-                    <th class="w3-hide-small">Gain</th>
+                    <th>Gain</th>
                 </tr>
             </thead>
             <tbody id="symbol-table-body">
@@ -970,19 +819,6 @@
     </div>
     <!--@ End MODAL  -->
 
-    <!--@ MODAL CALCS  -->
-    <div id="modal-calcs" class="w3-modal">
-        <div class="w3-modal-content">
-            <div class="w3-container w3-xxlarge" style="_font-size:228px;">
-                <span onclick="document.getElementById('modal-calcs').style.display='none'"
-                    class="w3-button w3-display-topright w3-xxxlarge">&times;</span>
-                <p>Some text. Some text. Some text.</p>
-                <p>Some text. Some text. Some text.</p>
-            </div>
-        </div>
-    </div>
-    <!--@ End MODAL  -->
-
 
     <script>
         /** PRINT THE VERSION */
@@ -1025,17 +861,7 @@
     <script src="./charts/chart-bar-options.js"></script>
     <script src="./charts/chart-area-spline-options.js"></script>
     <script src="./shared/alpaca.js"></script>
-    <script src="./shared/nasdaq-symbols.js"></script>
-    <script src="./shared/stock_symbols_detail.js"></script>
-    <script src="./shared/bollinger-bands.js"></script>
-    <script src="./shared/calculate-trendline.js"></script>
-    <script src="./shared/calculate-target.js"></script>
-    <script src="./scripts/run_top_25_each_week.js"></script>
-    <script src="./shared/combine-data.js"></script>
-    <script src="./config.js"></script>
     <script src="./treemap.js"></script>
-    <script src="./candlestick.js"></script>
-    <script src="./index-ui.js"></script>
     <!-- <script src="./index-charts.js"></script> -->
     <script src="./index-interval.js"></script>
     <script src="./index.js"></script>

@@ -931,7 +931,10 @@ class AlpacaData {
             }
         });
     }
+
+    //@ ----------------------------
     //*@ CUSTOM ANALYSIS - 10 Min */
+    //@ ----------------------------
     async bars_15(symbols, start, end) {
         return new Promise(async (resolve) => {
             const promises = symbols.map((s) => this.bars(s, '5Min', start, end, [], [], false, 100, false));
@@ -980,6 +983,7 @@ class AlpacaData {
                 per_day: round2(combined.reduce((p, c) => p + c)) / combined.filter((v) => v !== 0).length,
                 data: combined.filter((v) => v !== 0).map((v) => round2(v))
             };
+            console.yellow(obj);
             console.chart(combined.filter((v) => v !== 0).map((v) => round2(v)))
             resolve(obj);
             // resolve({ sum: obj.reduce((p, c) => p + c), obj, filtered });
@@ -988,6 +992,69 @@ class AlpacaData {
             // resolve(results.filter());
         });
     }
+
+    //@ ----------------------------
+    //*@ OVERNIGHT vs DAY */
+    //@ ----------------------------
+    async bars_comparison(symbols, start, end) {
+        return new Promise(async (resolve) => {
+            const promises = symbols.map((s) => this.bars(s, '5Min', start, end, [], [], false, 100, false));
+            const results = await Promise.all(promises);
+            const obj = {};
+            results.forEach((s) => {
+                // const filtered = s.bars_1K.filter((v) => v.thm === 940 || v.thm === 1550);
+                const filtered = s.bars_1K.filter((v) => v.thm === 935 || v.thm === 1555);
+                filtered.forEach((b, i) => {
+                    // obj.push(i === 0 ? 0 : b.c - filtered[i - 1].c);
+                    // b.delta = i === 0 ? 0 : b.c - filtered[i - 1].c; //! DAYS & NIGHTS
+                    // b.delta = i === 0 ? 0 : (b.thm === 940 ? b.c - filtered[i - 1].c : 0); //! ONLY NIGHTS
+
+                    if (i > 0) {
+                        const delta = b.c - filtered[i - 1].c;
+                        b.delta = b.thm === 935 ? (isNaN(delta) ? 0 : delta) : 0 ; //! 16:00 -> 10:00
+                    }
+                })
+                obj[s.symbol] = { sum: round2(filtered.map((v) => (isNaN(v.delta) ? 0 : v.delta)).reduce((p, c) => p + c)), filtered }
+            })
+
+            // Sum the elements at corresponding indices
+            const combined = Object.values(obj).map((v) => v.filtered).filter((v) => v !== undefined).reduce((accumulator, currentArray) => {
+                return currentArray.map((value, index) => {
+                    // Add the current value to the accumulator's value at the same index
+                    return (accumulator[index] || 0) + round2(value.delta);
+                });
+            }, []); // Initial value for the accumulator is an empty array []
+            // console.log(combined);
+
+            const entries = Object.entries(obj)[0][1].filtered.map((v) => { return { date: v.tl, gain: 0 } });
+            entries.forEach((e) => {
+                Object.values(obj).forEach((o) => {
+                    const found = o.filtered.find((v) => v.tl === e.date);
+                    e.gain += found ? round2(found.delta) : 0;
+                })
+            })
+            const t = '9:35';
+            console.log('entries | ', entries.filter((v) => v.date.indexOf(t) > 0).filter((v)=>isNaN(v.gain) === false).map((v) => v.gain).reduce((p, c) => p + c), entries.filter((v) => v.date.indexOf(t) > 0));
+            console.log(`entries | ${symbols.length}K | ${entries.map((v) => v.gain).filter((v)=>isNaN(v) === false).reduce((p, c) => p + c).toLocaleString()}`, entries);
+
+
+            obj['sum'] = round2(Object.values(obj).map((v) => v.sum).reduce((p, c) => p + c));
+            obj['last'] = round2(Object.values(obj).map((v) => v.filtered).filter((v) => v !== undefined).map((v) => v[v.length - 2].delta).reduce((p, c) => p + c));
+            obj['combined'] = {
+                sum: round2(combined.reduce((p, c) => p + c)),
+                per_day: round2(combined.reduce((p, c) => p + c)) / combined.filter((v) => v !== 0).length,
+                data: combined.filter((v) => v !== 0).map((v) => round2(v))
+            };
+            console.log('obj', obj);
+            console.chart(combined.filter((v) => v !== 0).map((v) => round2(v)))
+            resolve(obj);
+            // resolve({ sum: obj.reduce((p, c) => p + c), obj, filtered });
+            // results.forEach((res) => {
+            // });
+            // resolve(results.filter());
+        });
+    }
+
     async latest_bar(symbol) {
         return new Promise(async (resolve) => {
             // await sleep(delay);
