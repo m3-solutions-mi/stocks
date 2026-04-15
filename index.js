@@ -831,7 +831,7 @@ async function update(instance) {
     // update_ui(chart_top_4);
 
     //*@ LAST TOTAL | PERCENT */
-    total = round2(reduceArray(RESULTS.POSITIONS.map((v) => +(v.unrealized_pl))));
+    total = round(reduceArray(RESULTS.POSITIONS.map((v) => +(v.unrealized_pl))));
     percent = round2(total / (RESULTS.POSITIONS.length * 1000) * 100);
 
     // let elem = document.getElementById('last-total');
