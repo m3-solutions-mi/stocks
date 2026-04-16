@@ -158,6 +158,7 @@ let chart_top_4 = new Treemap('#top-chart-4');
 let chart_top_5 = new Treemap('#top-chart-5');
 let chart_top_6 = new Treemap('#top-chart-6');
 let chart_top_7 = new Treemap('#top-chart-7');
+let chart_top_8 = new Treemap('#top-chart-8');
 
 
 //#-------------------------------------------
@@ -652,6 +653,8 @@ async function update(instance) {
         config_stocks.alpaca.get_account_activities(),                                                                           //* ACCOUNT ACTIVITIES */ 
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1D', '2026-02-01'),                                                   //* NDAQ DAYS */
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1Min', new Date(Date.now() - (24 * 60 * 60 * 1000)).toISOString()),   //* NDAQ 24h */
+        // config_stocks.alpaca.bars_simplified(['NUCL', 'PLUG', 'AEO', 'BKCH', 'TOYO','DUO','DAPP','LMND','QUIK','AVAV'], '1Min', '2026-04-13'),                                         //* WATCH LIST */
+        config_stocks.alpaca.bars_simplified(symbols.sort(), '1Min', '2026-04-13'),                                         //* WATCH LIST */
     ];
     const results = await Promise.all(promises);
     RESULTS = {
@@ -666,6 +669,7 @@ async function update(instance) {
         ACTIVITIES: results[7],
         // NDAQ_DAYS: results[7],
         // NDAQ_24: results[8],
+        WATCH_LIST: results[8],
     }
     RESULTS.POSITIONS.forEach((p) => {
         const order = RESULTS.ORDERS.find((v) => v.symbol === p.symbol);
@@ -825,8 +829,8 @@ async function update(instance) {
         return [text, op.value]
     };
     chart_top_4.options.chart.events.dataPointSelection = (event, chartContext, opts) => {
-        // console.log('data point selected', event, chartContext, opts);
-        console.log('data point selected | ', opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].x);
+        const symbol = opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].x;
+        click_symbol(symbol)
     }
     // update_ui(chart_top_4);
 
@@ -845,7 +849,7 @@ async function update(instance) {
 
 
     elem = document.getElementById('header-positions');
-    elem.innerHTML = round1(total);
+    elem.innerHTML = round1(total).toLocaleString();
     elem.parentElement.classList.remove('w3-text-green');
     elem.parentElement.classList.remove('w3-text-red');
     elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
@@ -858,6 +862,19 @@ async function update(instance) {
     add_section('output', 'Positions', 4, percent, round(total), 'fa-tags', 12, 12, 12, 36, 24, 36);
     chart_top_4.options.chart.height = CHART_HEIGHT;
     update_ui(chart_top_4);
+
+    //* CHART /*
+    data = RESULTS.POSITIONS.map((v) => { return { x: v.symbol, y: round(v.unrealized_intraday_pl) } });
+    chart_top_8.options.dataLabels.formatter = function (text, op) {
+        return [text, op.value]
+    };
+    chart_top_8.options.chart.events.dataPointSelection = (event, chartContext, opts) => {
+        const symbol = opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].x;
+        click_symbol(symbol)
+    }
+    chart_top_8.options.chart.height = CHART_HEIGHT;
+    update_ui(chart_top_8);
+
 
     //* SEED MONEY */
     elem = document.getElementById('last-seed');
@@ -878,15 +895,18 @@ async function update(instance) {
                 <td class="w3-hide-small">{investment}</td>
                 <td class="w3-hide-small">{date}</td>
                 <td style="color:{c2}">{pct}</td>
-                <td style="color:{c2}">{day}</td>
-                <td class="w3-hide-small" style="color:{c}">{gain}</td>
+                <td style="color:{c2}"><b>{day}</b></td>
+                <td class="w3-hide-small" style="color:{c}"><b>{gain}</b></td>
+                <td class="w3-hide-small" style="color:{c}">{gain_pct}</td>
             </tr>`
     let html = '';
     let html_table = '';
+    let html_table_watch = '';
     RESULTS.POSITIONS.forEach((s) => {
         const g = +(s.unrealized_pl);
         const day = +(s.unrealized_intraday_pl);
         const pct = round1(day / s.cost_basis * 100);
+        const gain_pct = round1(g / s.cost_basis * 100);
         const color = g > 0 ? 'green' : (round(g) < 0 ? 'red' : 'grey');
         const color_day = day > 0 ? 'green' : (round(day) < 0 ? 'red' : 'grey');
         const font_color = day >= 0 ? 'black' : 'white';
@@ -913,14 +933,18 @@ async function update(instance) {
             .replace('{symbol}', `${indicator} ${s.symbol}`)
             .replace('{c}', color)
             .replace('{c}', color)
-            .replace('{name}', detail ? detail.name.slice(0, 50) : '-') // TODO: crashes if not found
+            .replace('{c}', color)
+            .replace('{name}', detail ? detail.name.slice(0, 30) : '-') // TODO: crashes if not found
             // .replace('{name}', s.symbol)
+            // .replace('{gain}', `${round2(g)} | ${gain_pct}%`)
+            // .replace('{day}', `${round2(day)} | ${pct}%`)
             .replace('{gain}', `${round2(g)}`)
-            .replace('{pct}', `${round1(pct)}`)
             .replace('{day}', `${round2(day)}`)
+            .replace('{pct}', `${round1(pct)}%`)
+            .replace('{gain_pct}', `${round1(gain_pct)}%`)
             .replace('{c2}', color_day)
             .replace('{c2}', color_day)
-            .replace('{date}', date)
+            .replace('{date}', date.slice(date.indexOf('-') + 1))
             .replace('{investment}', round(s.cost_basis))
     });
     document.getElementById('symbols-count').innerHTML = `&nbsp;&nbsp;|&nbsp;&nbsp;${RESULTS.POSITIONS.length}`;
@@ -928,286 +952,379 @@ async function update(instance) {
     document.getElementById('symbol-names').value = config_stocks.symbols.join(',');
     document.getElementById('symbol-table-body').innerHTML = html_table;
 
-    //* ALL SYMBOLS BY LETTER */
-    html = '';
+    // console.log('-------------------------------------------------------------------');
+    RESULTS.WATCH_LIST.symbols.forEach((s) => {
+        const bars = s.bars;
+        let start = new Date(getYMD(bars[0].tl) + 'T00:00:00').getTime();
+        let end = new Date(getYMD(bars[bars.length - 1].tl) + 'T23:59:59').getTime();
 
-    // ,⏺,🔎︎
-    'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,▶,⏸'.split(',').forEach((letter) => {
-        html += template.replace('{id}', letter).replace('{c}', 'white').replace('{0}', letter).replace('{1}', '').replace('{s}', letter).replace('{f}', 'click_letter') + '\n';
-    });
-    // html += `<i class="fa fa-filter w3-right w3-margin-right w3-xlarge w3-text-blue" aria-hidden="true"></i>`;
-    document.getElementById('letters').innerHTML = html;
-    // });
+        const first_total = bars[0].c;
+        const last_total = bars[bars.length - 1].c
+        // console.log(s.symbol, ' | ', 'GAIN', ' | ', last_total);
 
-    //*@ ORDERS */
-    // config_stocks.alpaca.get_orders().then((result) => {
-    //     ORDERS = result;
-    //     console.log('ORDERS', ORDERS.slice(0, 25));
-    // });
+        const days = [];
+        let last_day_close = 0;
+        while (start <= end + (24 * 60 * 60 * 1000)) {
 
-    //*@ PORTFOLIO HISTORY */
-    // // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
-    // // start_date = '2026-02-05';
-    // // start_date =  getYMD(Date.now() - (21*24*60*60*1000));
-    let timeframe = '1D'; // 1Min | 5Min | 15Min | 1H
-    // let reporting = 'continuous'; // continuous | extended_hours | market_hours
-    // // let num_days = '30D'; // 1D | 2D | 3D | 4D | 5D
-    // // config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {
-    // config_stocks.alpaca.get_portfolio_history(null, start_date, new Date(Date.now() + (24 * 60 * 60 * 1000)).toISOString(), timeframe, reporting).then((result) => {
-    //     // config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
-    //     PORTFOLIO_HISTORY = result;
-    //     console.log('PORTFOLIO_HISTORY', PORTFOLIO_HISTORY);
-
-    //* GENERATE CHART */
-    series = { name: 'Close', type: 'area', data: [] };
-    chart_top_5.options.chart.type = 'area';
-    chart_top_5.options.chart.sparkline = { enabled: true };
-    chart_top_5.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
-    chart_top_5.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
-    chart_top_5.options.dataLabels.enabled = false;
-    chart_top_5.options.fill = { type: 'solid' };
-
-    // const start_price = PORTFOLIO_HISTORY[0].equity;
-
-    //* day indicators */
-    chart_top_5.options.annotations = { xaxis: [], yaxis: [], points: [], };
-    let last = 0;
-    chart_top_5.options.annotations.points = RESULTS.PORTFOLIO_HISTORY.filter((v, i) => v.thm === 2000).map((v, i) => {
-        const value = round((v.equity - last));
-        last = v.equity;
-        return add_annotation_point(v.e, v.equity, 4.5, colors.black, value);
-        // return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
-    })
-    // chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetX'] = -25;
-    // chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetY'] = 50;
-    // chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label.text = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].y.toString();
-    chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].marker.fillColor = colors.deeppink;
-
-    //* month indicators */
-    let m = null;
-    chart_top_5.options.annotations.xaxis = chart_top_5.options.annotations.points.map((v, i) => {
-        if (i > 0 && new Date(v.x).getMonth() !== new Date(chart_top_5.options.annotations.points[i - 1].x).getMonth()) {
-            return add_annotation_x(v.x);
+            const filtered = bars
+                .filter((v) => getYMD(v.tl) === getYMD(start))
+                .filter((v) => v.thm >= 930);
+            if (filtered.length > 0) {
+                const first = filtered[0].c;
+                const last = filtered[filtered.length - 1].c
+                days.push(round2(last - last_day_close));
+                last_day_close = last;
+                // console.log(getYMD(start), round2(last - first)/*, filtered*/);
+            }
+            start = start + (24 * 60 * 60 * 1000);
         }
-        m = new Date(v.x).getMonth();
-    })
+        // console.log(days);
 
-    // last = PORTFOLIO_HISTORY[PORTFOLIO_HISTORY.length - 1];
-    // chart_top_5.options.annotations.points.push(add_annotation_point(last.e, last.equity, 6.5, colors.deeppink));
-    // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-02T16:00:00').getTime()));
-    // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
 
-    // data = RESULTS.PORTFOLIO_HISTORY.map((v) => { 
-    //     const invested = RESULTS.ACTIVITIES.reverse()
-    //         .filter((v2)=>new Date(v2.date) <= new Date(v.t))
-    //         .filter((v2)=>v2.activity_type === 'CSD')
-    //         .map((v2)=>{return {net_amount: v2.net_amount}})
-    //         .map((v2)=>+(v2.net_amount))
-    //         // .reduce((p,c)=>p+c);
-    //     return { x: v.e, y: v.equity - (invested.length > 0 ? invested.reduce((p,c)=>p+c) : 0) }
-    // });
-    // data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
+        const seed = 1000;
+        const g = last_total;
+        const day = days[days.length-1];
+        const pct = round1(day / seed * 100);
+        const gain_pct = round1(g / seed * 100);
+        const color = g > 0 ? 'green' : (round(g) < 0 ? 'red' : 'grey');
+        const color_day = day > 0 ? 'green' : (round(day) < 0 ? 'red' : 'grey');
+        const font_color = day >= 0 ? 'black' : 'white';
+        const date = '-'; //s.filled_at.split('T')[0];
+        const indicator = get_indicator(day);
 
-    data = RESULTS.PORTFOLIO_HISTORY.map((v) => {
-        return { x: v.e, y: v.equity }
-    });//.slice(-15);
-    // data = data.map((v) => {
-    //     const deposits = RESULTS.ACTIVITIES.reverse().filter((v) => v.activity_type === 'CSD');
-    //     const invested = deposits.filter((v2) => new Date(v2.date).getTime() <= v.x)
-    //     const subtract = invested.length > 0 ? invested.map((v2)=>+(v2.net_amount)).reduce((p, c) => p + c) : 0;
-    //     v.y = v.y - subtract;
-    //     return v;
-    // })
+        const detail = nasdaq_symbols().filter((v)=>v.symbol === s.symbol)[0];
+        html_table_watch += template_row
+            .replace('{s}', s.symbol)
+            .replace('{symbol}', `${indicator}${s.symbol}`)
+            .replace('{c}', color)
+            .replace('{c}', color)
+            .replace('{c}', color)
+            .replace('{name}', detail ? detail.name.slice(0, 30) : '-') // TODO: crashes if not found
+            .replace('{gain}', `${round2(g)}`)
+            .replace('{day}', `${round2(day)}`)
+            .replace('{pct}', `${round1(pct)}%`)
+            .replace('{gain_pct}', `${round1(gain_pct)}%`)
+            .replace('{c2}', color_day)
+            .replace('{c2}', color_day)
+            .replace('{date}', date.slice(date.indexOf('-') + 1))
+            .replace('{investment}', round(seed))
+    });
+    document.getElementById('watch-table-body').innerHTML = html_table_watch;
 
-    data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
-    chart_top_5.options.yaxis = { max: data[data.length - 1].y * 1.25 };
-    // chart_top_5.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 750 };
 
-    last = data[data.length - 1];
-    chart_top_5.options.annotations.yaxis.push(add_annotation_y(last.y));
+// RESULTS.WATCH_LIST.symbols.forEach((s) => {
 
-    // update_ui(chart_top_5);
+//     while (start <= Date.now()) {
 
-    total = round1(data[data.length - 1].y);
-    gain = round1(data[data.length - 1].y - config_stocks.alpaca.SEED);
-    // let gain = round(round2(round(data[data.length - 1].y - data[0].y)));
+//     }
+//     const g = +(s.unrealized_pl);
+//     const day = +(s.unrealized_intraday_pl);
+//     const pct = round1(day / s.cost_basis * 100);
+//     const gain_pct = round1(g / s.cost_basis * 100);
+//     const color = g > 0 ? 'green' : (round(g) < 0 ? 'red' : 'grey');
+//     const color_day = day > 0 ? 'green' : (round(day) < 0 ? 'red' : 'grey');
+//     const font_color = day >= 0 ? 'black' : 'white';
+//     const date = s.filled_at.split('T')[0];
 
-    // //* PORTFOLIO BALANCE */
-    // let elem = document.getElementById('top-portfolio-total');
-    // total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-    // elem.innerHTML = `${get_indicator(gain)} ${gain.toLocaleString()}`;
-    // // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+//     const detail = null;
+//     html_table_watch += template_row
+//         .replace('{s}', s.symbol)
+//         .replace('{symbol}', `${indicator}${s.symbol}`)
+//         .replace('{c}', color)
+//         .replace('{c}', color)
+//         .replace('{c}', color)
+//         .replace('{name}', detail ? detail.name.slice(0, 30) : '-') // TODO: crashes if not found
+//         .replace('{gain}', `${round2(g)}`)
+//         .replace('{day}', `${round2(day)}`)
+//         .replace('{pct}', `${round1(pct)}%`)
+//         .replace('{gain_pct}', `${round1(gain_pct)}%`)
+//         .replace('{c2}', color_day)
+//         .replace('{c2}', color_day)
+//         .replace('{date}', date.slice(date.indexOf('-') + 1))
+//         .replace('{investment}', round(s.cost_basis))
+// });
+// document.getElementById('watch-table-body').innerHTML = html_table;
 
-    //* MONTH GAIN */
-    elem = document.getElementById('gain-month');
-    // elem.innerHTML = `$${total.toLocaleString()}`;
+//* ALL SYMBOLS BY LETTER */
+html = '';
 
+// ,⏺,🔎︎
+'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,▶,⏸'.split(',').forEach((letter) => {
+    html += template.replace('{id}', letter).replace('{c}', 'white').replace('{0}', letter).replace('{1}', '').replace('{s}', letter).replace('{f}', 'click_letter') + '\n';
+});
+// html += `<i class="fa fa-filter w3-right w3-margin-right w3-xlarge w3-text-blue" aria-hidden="true"></i>`;
+document.getElementById('letters').innerHTML = html;
+// });
+
+//*@ ORDERS */
+// config_stocks.alpaca.get_orders().then((result) => {
+//     ORDERS = result;
+//     console.log('ORDERS', ORDERS.slice(0, 25));
+// });
+
+//*@ PORTFOLIO HISTORY */
+// // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
+// // start_date = '2026-02-05';
+// // start_date =  getYMD(Date.now() - (21*24*60*60*1000));
+let timeframe = '1D'; // 1Min | 5Min | 15Min | 1H
+// let reporting = 'continuous'; // continuous | extended_hours | market_hours
+// // let num_days = '30D'; // 1D | 2D | 3D | 4D | 5D
+// // config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {
+// config_stocks.alpaca.get_portfolio_history(null, start_date, new Date(Date.now() + (24 * 60 * 60 * 1000)).toISOString(), timeframe, reporting).then((result) => {
+//     // config_stocks.alpaca.get_portfolio_history(null, start_date).then((result) => {
+//     PORTFOLIO_HISTORY = result;
+//     console.log('PORTFOLIO_HISTORY', PORTFOLIO_HISTORY);
+
+//* GENERATE CHART */
+series = { name: 'Close', type: 'area', data: [] };
+chart_top_5.options.chart.type = 'area';
+chart_top_5.options.chart.sparkline = { enabled: true };
+chart_top_5.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
+chart_top_5.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
+chart_top_5.options.dataLabels.enabled = false;
+chart_top_5.options.fill = { type: 'solid' };
+
+// const start_price = PORTFOLIO_HISTORY[0].equity;
+
+//* day indicators */
+chart_top_5.options.annotations = { xaxis: [], yaxis: [], points: [], };
+let last = 0;
+chart_top_5.options.annotations.points = RESULTS.PORTFOLIO_HISTORY.filter((v, i) => v.thm === 2000).map((v, i) => {
+    const value = round((v.equity - last));
+    last = v.equity;
+    return add_annotation_point(v.e, v.equity, 4.5, colors.black, value);
+    // return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
+})
+// chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetX'] = -25;
+// chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label['offsetY'] = 50;
+// chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].label.text = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].y.toString();
+chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1].marker.fillColor = colors.deeppink;
+
+//* month indicators */
+let m = null;
+chart_top_5.options.annotations.xaxis = chart_top_5.options.annotations.points.map((v, i) => {
+    if (i > 0 && new Date(v.x).getMonth() !== new Date(chart_top_5.options.annotations.points[i - 1].x).getMonth()) {
+        return add_annotation_x(v.x);
+    }
+    m = new Date(v.x).getMonth();
+})
+
+// last = PORTFOLIO_HISTORY[PORTFOLIO_HISTORY.length - 1];
+// chart_top_5.options.annotations.points.push(add_annotation_point(last.e, last.equity, 6.5, colors.deeppink));
+// chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-02T16:00:00').getTime()));
+// chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
+
+// data = RESULTS.PORTFOLIO_HISTORY.map((v) => { 
+//     const invested = RESULTS.ACTIVITIES.reverse()
+//         .filter((v2)=>new Date(v2.date) <= new Date(v.t))
+//         .filter((v2)=>v2.activity_type === 'CSD')
+//         .map((v2)=>{return {net_amount: v2.net_amount}})
+//         .map((v2)=>+(v2.net_amount))
+//         // .reduce((p,c)=>p+c);
+//     return { x: v.e, y: v.equity - (invested.length > 0 ? invested.reduce((p,c)=>p+c) : 0) }
+// });
+// data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
+
+data = RESULTS.PORTFOLIO_HISTORY.map((v) => {
+    return { x: v.e, y: v.equity }
+}).slice(-10);
+// data = data.map((v) => {
+//     const deposits = RESULTS.ACTIVITIES.reverse().filter((v) => v.activity_type === 'CSD');
+//     const invested = deposits.filter((v2) => new Date(v2.date).getTime() <= v.x)
+//     const subtract = invested.length > 0 ? invested.map((v2)=>+(v2.net_amount)).reduce((p, c) => p + c) : 0;
+//     v.y = v.y - subtract;
+//     return v;
+// })
+
+data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
+chart_top_5.options.yaxis = { max: data[data.length - 1].y * 1.25 };
+// chart_top_5.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 750 };
+
+last = data[data.length - 1];
+chart_top_5.options.annotations.yaxis.push(add_annotation_y(last.y));
+
+// update_ui(chart_top_5);
+
+total = round1(data[data.length - 1].y);
+gain = round1(data[data.length - 1].y - config_stocks.alpaca.SEED);
+// let gain = round(round2(round(data[data.length - 1].y - data[0].y)));
+
+// //* PORTFOLIO BALANCE */
+// let elem = document.getElementById('top-portfolio-total');
+// total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
+// elem.innerHTML = `${get_indicator(gain)} ${gain.toLocaleString()}`;
+// // document.getElementById('top-portfolio-total-pct').innerHTML = `${round1(total / (PROCESSED_DATA.symbols.length * 1000) * 100).toLocaleString()}%`;
+
+//* MONTH GAIN */
+elem = document.getElementById('gain-month');
+// elem.innerHTML = `$${total.toLocaleString()}`;
+
+elem = document.getElementById('header-portfolio');
+elem.innerHTML = gain.toLocaleString();
+elem.parentElement.classList.remove('w3-text-green');
+elem.parentElement.classList.remove('w3-text-red');
+elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+
+elem = document.getElementById('header-portfolio-pct')
+elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
+elem.parentElement.classList.remove('w3-text-green');
+elem.parentElement.classList.remove('w3-text-red');
+elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+
+add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 12, 12, 36, 24, 36);
+chart_top_5.options.chart.height = CHART_HEIGHT;
+update_ui(chart_top_5);
+// });
+
+
+//*@ PORTFOLIO --DAY-- HISTORY */
+// start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
+// start_date = '2026-01-05';
+//@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
+//* config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
+
+let num_days = '3D'; // 1D | 2D | 3D | 4D | 5D
+timeframe = '1Min'; // 1Min | 5Min | 15Min | 1H
+reporting = 'continuous'; // continuous | extended_hours | market_hours
+// config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {
+//     PORTFOLIO_DAY_HISTORY = result;
+//     console.log('PORTFOLIO_DAY_HISTORY', PORTFOLIO_DAY_HISTORY);
+
+//* GENERATE CHART */
+series = { name: 'Close', type: 'area', data: [] };
+// chart_top_7.options = Object.assign(chart_top_7.options, {
+//     chart: {
+//         type: 'area',
+//         height: 300,
+//         sparkline: {enabled: true },
+//     },
+//     xaxis:  { type: 'datetime', labels: { datetimeUTC: true, } },
+//     _tooltip: { x: { formatter: function (value, timestamp) { return new Date(value).toLocaleString(); } } }, 
+// });
+chart_top_7.options.chart.type = 'area';
+chart_top_7.options.chart.sparkline = { enabled: true };
+chart_top_7.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
+chart_top_7.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
+chart_top_7.options.dataLabels.enabled = false;
+chart_top_7.options.fill = { type: 'solid' };
+
+chart_top_7.options.annotations = { xaxis: [], yaxis: [], points: [], };
+last = 0;
+// chart_top_7.options.annotations.points = PORTFOLIO_DAY_HISTORY.filter((v) => v.thm === 2000).map((v, i) => {
+//     const value = round((v.equity - last));
+//     last = v.equity;
+//     return add_annotation_point(v.e, v.equity, 4.5, colors.black, value);
+//     // return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
+// })
+
+// last = PORTFOLIO_DAY_HISTORY[PORTFOLIO_DAY_HISTORY.length - 1];
+// chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.equity));
+
+RESULTS.PORTFOLIO_HISTORY_MINUTES.forEach((v) => {
+    const label = {
+        0: '12p',
+        400: '4a',
+        930: '9:30',
+        1100: '11',
+        1200: '12',
+        1600: '4:00',
+        2000: '8p',
+    }
+    if ([400, 930, 1600, 2000].indexOf(v.thm) >= 0) {
+        chart_top_7.options.annotations.xaxis.push(add_annotation_x(v.e, label[v.thm] || v.thm, v.thm === 930 || v.thm === 1600 ? colors.deeppink : colors.black, v.thm === 400 ? 0 : 0));
+    }
+})
+// const first = PORTFOLIO_DAY_HISTORY[0];
+// chart_top_7.options.annotations.points.push(add_annotation_point(last.e, last.equity - first.equity, 4.5, colors.deeppink, '123'))
+// chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
+
+// const start_price = 0; // PORTFOLIO_DAY_HISTORY[0].equity;
+data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
+const st = new Date('2026-04-15T21:05:00').getTime();
+data = data.filter((v) => v.x >= st);
+// const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 19:00:00').getTime();
+// data = data.filter((v) => v.x >= st);
+
+// chart_top_7.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 250 };
+
+//! DONT USE !!! only needed if... (timeframe !== '1Min',...)
+// data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
+
+last = data[data.length - 1];
+const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1];
+chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y)); 7
+chart_top_5.options.yaxis = { max: data[data.length - 1].y * 1.25 };
+// update_ui(chart_top_7);
+
+total = round3(data[data.length - 1].y);
+gain = round3(data[data.length - 1].y - yesterday.y);
+
+elem = document.getElementById('header-today');
+elem.innerHTML = round(gain).toLocaleString();
+// elem.innerHTML = gain >= 1000 ? round(gain) + 'K' : gain;
+elem.parentElement.classList.remove('w3-text-green');
+elem.parentElement.classList.remove('w3-text-red');
+elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+elem = document.getElementById('header-today-pct')
+elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
+elem.parentElement.classList.remove('w3-text-green');
+elem.parentElement.classList.remove('w3-text-red');
+elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+add_section('output', 'Today', 7, round1(total / yesterday.y * 100) - 100, gain, 'fa-line-chart', 12, 12, 12, 36, 24, 36);
+
+elem = document.getElementById(`value-24-hour`);
+gain = round1(data[data.length - 1].y - data[0].y);
+elem.parentElement.classList.remove('w3-text-green');
+elem.parentElement.classList.remove('w3-text-red');
+elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+elem.innerHTML = `${get_indicator(gain)}&nbsp;${Math.abs(gain).toLocaleString()}`;
+
+elem = document.getElementById('header-24h');
+elem.parentElement.classList.remove('w3-text-green');
+elem.parentElement.classList.remove('w3-text-red');
+elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+
+elem = document.getElementById('header-24h-pct')
+elem.parentElement.classList.remove('w3-text-green');
+elem.parentElement.classList.remove('w3-text-red');
+elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+elem.innerHTML = round1(gain / config_stocks.alpaca.SEED * 100) + ' %';
+elem.innerHTML = `$${total.toLocaleString()}`;
+
+//* PORTFOLIO - calculation to use after 8 PM */
+if (getHMM(new Date()) > 2000) {
+    total = round(total - config_stocks.alpaca.SEED);
     elem = document.getElementById('header-portfolio');
-    elem.innerHTML = gain;
+    elem.innerHTML = total;
     elem.parentElement.classList.remove('w3-text-green');
     elem.parentElement.classList.remove('w3-text-red');
-    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
 
     elem = document.getElementById('header-portfolio-pct')
-    elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
+    elem.innerHTML = round2(total / config_stocks.alpaca.SEED * 100) + ' %';
     elem.parentElement.classList.remove('w3-text-green');
     elem.parentElement.classList.remove('w3-text-red');
-    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
+}
 
-    add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 12, 12, 36, 24, 36);
-    chart_top_5.options.chart.height = CHART_HEIGHT;
-    update_ui(chart_top_5);
-    // });
+// TODO: update setting of table column 1 values
+elem = document.getElementById(`value-24-hour-percent`);
+percent = round2(total / yesterday.y * 100) - 100;
+elem.parentElement.classList.remove('w3-text-green');
+elem.parentElement.classList.remove('w3-text-red');
+elem.parentElement.classList.add('w3-text-green', percent > 0 ? 'w3-text-green' : 'w3-text-red');
+elem.innerHTML = `${Math.abs(percent).toLocaleString()}&nbsp;%`;
 
+chart_top_7.options.chart.height = CHART_HEIGHT;
+update_ui(chart_top_7);
+// });
 
-    //*@ PORTFOLIO --DAY-- HISTORY */
-    // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
-    // start_date = '2026-01-05';
-    //@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
-    //* config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
+//*@ TABLE WIEW - NEW */
 
-    let num_days = '3D'; // 1D | 2D | 3D | 4D | 5D
-    timeframe = '1Min'; // 1Min | 5Min | 15Min | 1H
-    reporting = 'continuous'; // continuous | extended_hours | market_hours
-    // config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {
-    //     PORTFOLIO_DAY_HISTORY = result;
-    //     console.log('PORTFOLIO_DAY_HISTORY', PORTFOLIO_DAY_HISTORY);
-
-    //* GENERATE CHART */
-    series = { name: 'Close', type: 'area', data: [] };
-    // chart_top_7.options = Object.assign(chart_top_7.options, {
-    //     chart: {
-    //         type: 'area',
-    //         height: 300,
-    //         sparkline: {enabled: true },
-    //     },
-    //     xaxis:  { type: 'datetime', labels: { datetimeUTC: true, } },
-    //     _tooltip: { x: { formatter: function (value, timestamp) { return new Date(value).toLocaleString(); } } }, 
-    // });
-    chart_top_7.options.chart.type = 'area';
-    chart_top_7.options.chart.sparkline = { enabled: true };
-    chart_top_7.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
-    chart_top_7.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
-    chart_top_7.options.dataLabels.enabled = false;
-    chart_top_7.options.fill = { type: 'solid' };
-
-    chart_top_7.options.annotations = { xaxis: [], yaxis: [], points: [], };
-    last = 0;
-    // chart_top_7.options.annotations.points = PORTFOLIO_DAY_HISTORY.filter((v) => v.thm === 2000).map((v, i) => {
-    //     const value = round((v.equity - last));
-    //     last = v.equity;
-    //     return add_annotation_point(v.e, v.equity, 4.5, colors.black, value);
-    //     // return add_annotation_point(v.e, v.equity, 4.5, colors.black, round1(v.equity / 1000));
-    // })
-
-    // last = PORTFOLIO_DAY_HISTORY[PORTFOLIO_DAY_HISTORY.length - 1];
-    // chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.equity));
-
-    RESULTS.PORTFOLIO_HISTORY_MINUTES.forEach((v) => {
-        const label = {
-            0: '12p',
-            400: '4a',
-            930: '9:30',
-            1100: '11',
-            1200: '12',
-            1600: '4:00',
-            2000: '8p',
-        }
-        if ([400, 930, 1600, 2000].indexOf(v.thm) >= 0) {
-            chart_top_7.options.annotations.xaxis.push(add_annotation_x(v.e, label[v.thm] || v.thm, v.thm === 930 || v.thm === 1600 ? colors.deeppink : colors.black, v.thm === 400 ? 0 : 0));
-        }
-    })
-    // const first = PORTFOLIO_DAY_HISTORY[0];
-    // chart_top_7.options.annotations.points.push(add_annotation_point(last.e, last.equity - first.equity, 4.5, colors.deeppink, '123'))
-    // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
-
-    // const start_price = 0; // PORTFOLIO_DAY_HISTORY[0].equity;
-    data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
-    const st = new Date('2026-04-14T09:49:00').getTime();
-    data = data.filter((v) => v.x >= st);
-    // const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 19:00:00').getTime();
-    // data = data.filter((v) => v.x >= st);
-
-    // chart_top_7.options.yaxis = { max: Math.max(...data.map((v) => v.y)) + 250 };
-
-    //! DONT USE !!! only needed if... (timeframe !== '1Min',...)
-    // data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
-
-    last = data[data.length - 1];
-    const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1];
-    chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y)); 7
-    chart_top_5.options.yaxis = { max: data[data.length - 1].y * 1.25 };
-    // update_ui(chart_top_7);
-
-    total = round3(data[data.length - 1].y);
-    gain = round3(data[data.length - 1].y - yesterday.y);
-
-    elem = document.getElementById('header-today');
-    elem.innerHTML = round(gain).toLocaleString();
-    // elem.innerHTML = gain >= 1000 ? round(gain) + 'K' : gain;
-    elem.parentElement.classList.remove('w3-text-green');
-    elem.parentElement.classList.remove('w3-text-red');
-    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
-    elem = document.getElementById('header-today-pct')
-    elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
-    elem.parentElement.classList.remove('w3-text-green');
-    elem.parentElement.classList.remove('w3-text-red');
-    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
-    add_section('output', 'Today', 7, round1(total / yesterday.y * 100) - 100, gain, 'fa-line-chart', 12, 12, 12, 36, 24, 36);
-
-    elem = document.getElementById(`value-24-hour`);
-    gain = round1(data[data.length - 1].y - data[0].y);
-    elem.parentElement.classList.remove('w3-text-green');
-    elem.parentElement.classList.remove('w3-text-red');
-    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
-    elem.innerHTML = `${get_indicator(gain)}&nbsp;${Math.abs(gain).toLocaleString()}`;
-
-    elem = document.getElementById('header-24h');
-    elem.parentElement.classList.remove('w3-text-green');
-    elem.parentElement.classList.remove('w3-text-red');
-    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
-
-    elem = document.getElementById('header-24h-pct')
-    elem.parentElement.classList.remove('w3-text-green');
-    elem.parentElement.classList.remove('w3-text-red');
-    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
-    elem.innerHTML = round1(gain / config_stocks.alpaca.SEED * 100) + ' %';
-    elem.innerHTML = `$${total.toLocaleString()}`;
-
-    //* PORTFOLIO - calculation to use after 8 PM */
-    if (getHMM(new Date()) > 2000) {
-        total = round(total - config_stocks.alpaca.SEED);
-        elem = document.getElementById('header-portfolio');
-        elem.innerHTML = total;
-        elem.parentElement.classList.remove('w3-text-green');
-        elem.parentElement.classList.remove('w3-text-red');
-        elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
-
-        elem = document.getElementById('header-portfolio-pct')
-        elem.innerHTML = round2(total / config_stocks.alpaca.SEED * 100) + ' %';
-        elem.parentElement.classList.remove('w3-text-green');
-        elem.parentElement.classList.remove('w3-text-red');
-        elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
-    }
-
-    // TODO: update setting of table column 1 values
-    elem = document.getElementById(`value-24-hour-percent`);
-    percent = round2(total / yesterday.y * 100) - 100;
-    elem.parentElement.classList.remove('w3-text-green');
-    elem.parentElement.classList.remove('w3-text-red');
-    elem.parentElement.classList.add('w3-text-green', percent > 0 ? 'w3-text-green' : 'w3-text-red');
-    elem.innerHTML = `${Math.abs(percent).toLocaleString()}&nbsp;%`;
-
-    chart_top_7.options.chart.height = CHART_HEIGHT;
-    update_ui(chart_top_7);
-    // });
-
-    //*@ TABLE WIEW - NEW */
-
-    //*@ End | TABLE WIEW - NEW */
-    if (selected_symbol) {
-        click_symbol(selected_symbol, null);
-    }
+//*@ End | TABLE WIEW - NEW */
+if (selected_symbol) {
+    click_symbol(selected_symbol, null);
+}
 }
 
 //@-----------------------------------------------------------------------------------------------------------------

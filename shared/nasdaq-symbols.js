@@ -13,7 +13,7 @@ const nasdaq_symbols = () => {
         });
         // symbols[split[0]] = `${split[1]} | ${split[4]}`;
     });
-    console.log(symbols);
+    // console.log(symbols);
     return symbols;
 }
 //* https://www.nasdaqtrader.com/dynamic/symdir/nasdaqlisted.txt */

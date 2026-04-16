@@ -96090,6 +96090,7 @@ const stock_symbols_detail = [
     { symbol: 'LASE', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'CMBT', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'OXY', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'NUCL', name: 'Eagle nuclear Energy Corp', status: 'active', tradable: true, fractionable: true },
     { symbol: 'IONQ', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'CMC', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'SYK', name: '-', status: 'active', tradable: true, fractionable: true },
