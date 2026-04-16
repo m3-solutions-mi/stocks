@@ -19,7 +19,7 @@ setInterval(async () => {
             // refresh = false;
             // console.log('%cREFRESH DISABLED', 'color:yellow;')
         }
-        update();
+        setTimeout(update(), Math.random() * 1.1 * 2);
         // update_data(config_stocks);
         // config_stocks.get_data().then((c) => {
         //     update_charts();
