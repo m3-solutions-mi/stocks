@@ -1240,7 +1240,7 @@ RESULTS.PORTFOLIO_HISTORY_MINUTES.forEach((v) => {
 
 // const start_price = 0; // PORTFOLIO_DAY_HISTORY[0].equity;
 data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
-const st = new Date('2026-04-15T21:05:00').getTime();
+const st = new Date('2026-04-16T18:35:00').getTime();
 data = data.filter((v) => v.x >= st);
 // const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 19:00:00').getTime();
 // data = data.filter((v) => v.x >= st);
