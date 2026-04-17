@@ -686,7 +686,7 @@ async function update(instance) {
     ['ndaq', 'nasdaq', 'oil', 'vix'].forEach((v, i) => {
         let gain = RESULTS.INDICATORS.symbols[i].bars_raw[RESULTS.INDICATORS.symbols[i].bars_raw.length - 1].c;
         elem = document.getElementById(`header-${v}`);
-        elem.innerHTML = round2(gain).toLocaleString();
+        elem.innerHTML = gain > 1000 ? round2(gain / 1000).toLocaleString() + 'K' : gain;
         elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     });
 
