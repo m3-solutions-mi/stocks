@@ -314,34 +314,37 @@
                     </div>
 
                     <div class="w3-row-padding w3-margin-bottom">
-                        <div class="w3-quarter">
+                        <div class="w3-quarter" style="cursor:pointer;" onclick="click_symbol('NDAQ')">
                             <div class="w3-container w3-border w3-light-grey w3-padding">
                                 <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-ndaq">-</b><br class="w3-hide-medium w3-hide-large"/></span>
+                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-ndaq" class="w3-wide">-</b><br
+                                            class="w3-hide-medium w3-hide-large" /></span>
                                     <span class="w3-large w3-left">NDAQ</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="w3-quarter">
+                        <div class="w3-quarter" style="cursor:pointer;" onclick="click_symbol('^IXIC')">
                             <div class="w3-container w3-border w3-light-grey w3-padding">
                                 <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-nasdaq">-</b></span>
+                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-nasdaq" class="w3-wide">-</b></span>
                                     <span class="w3-large w3-left">^NDAQ</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="w3-quarter">
+                        <div class="w3-quarter" style="cursor:pointer;" onclick="click_symbol('CL=F')">
                             <div class="w3-container w3-border w3-light-grey w3-padding">
                                 <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-oil">-</b><br class="w3-hide-large"/></span>
+                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-oil" class="w3-wide">-</b><br
+                                            class="w3-hide-large" /></span>
                                     <span class="w3-large w3-left">^OIL</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="w3-quarter">
+                        <div class="w3-quarter" style="cursor:pointer;" onclick="click_symbol('^VIX')">
                             <div class="w3-container w3-border w3-light-grey w3-padding">
                                 <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-vix">-</b><br class="w3-hide-large"/></span>
+                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-vix" class="w3-wide">-</b><br
+                                            class="w3-hide-large" /></span>
                                     <span class="w3-large w3-left">^VIX</span>
                                 </div>
                             </div>
@@ -379,7 +382,7 @@
                                 <div id="top-chart-7"></div>
                             </div>
                         </div>
-                        <!--* positions  -->
+                        <!--@ treemaps - positions  -->
                         <div class="w3-center w3-row w3-padding w3-margin-top w3-border w3-light-grey">
                             <div class="w3-col s12">
                                 <b>Positions</b> | <span id="positions-count"></span>
@@ -391,6 +394,10 @@
                             <div class="w3-col s12">
                                 <b>Today</b>
                                 <div id="top-chart-8"></div>
+                            </div>
+                            <div class="w3-col s12">
+                                <b>Watch List</b>
+                                <div id="top-chart-9"></div>
                             </div>
                         </div>
 
@@ -413,12 +420,15 @@
                         <div class="w3-xlarge w3-container _w3-card w3-white" style="margin-top:20px;">
 
                             <div id="symbol-sell"
-                                class="w3-left w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin-right w3-center"
-                                style="cursor:pointer;" onclick="buy_symbol()">Buy</div>
+                                class="w3-left w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin-right w3-center"
+                                style="cursor:pointer;width:125px;" onclick="buy_symbol()">Buy</div>
                             <div id="symbol-buy"
-                                class="w3-left w3-hide w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge _w3-margin w3-center"
-                                style="cursor:pointer;" onclick="sell_symbol()">Sell</div>
-                            <div id="symbol-ndaq"
+                                class="w3-left w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge w3-margin-right w3-center"
+                                style="cursor:pointer;width:125px;" onclick="sell_symbol()">Sell</div>
+                            <div id="symbol-watch"
+                                class="w3-left w3-hide-small w3-border w3-round-large w3-padding w3-text-grey w3-xlarge _w3-margin w3-center"
+                                style="cursor:pointer;width:125px;" onclick="watch_symbol()">Watch</div>
+                            <!-- <div id="symbol-ndaq"
                                 class="w3-left w3-hide w3-hide-small w3-border w3-round-large w3-padding _w3-text-grey w3-xlarge _w3-margin w3-center"
                                 style="cursor:pointer;margin-left:48px;" onclick="click_symbol('NDAQ')">NDAQ</div>
                             <div id="symbol-nasdaq"
@@ -429,7 +439,7 @@
                                 style="cursor:pointer;" onclick="click_symbol('CL=F')">OIL</div>
                             <div id="symbol-vix"
                                 class="w3-left w3-hide w3-hide-small w3-border w3-round-large w3-padding _w3-text-grey w3-xlarge w3-margin-left w3-center"
-                                style="cursor:pointer;" onclick="click_symbol('^VIX')">VIX</div>
+                                style="cursor:pointer;" onclick="click_symbol('^VIX')">VIX</div> -->
 
                             <div class="w3-right" style="display:inline-flex;align-content: center;">
                                 <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
@@ -455,12 +465,17 @@
                                 <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="checkbox"
                                     onclick="set_use_24h(this.checked)">
                                 <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">24h</label>
-
-                                <!-- <input class="w3-radio" style="cursor:pointer;" type="checkbox"
-                                    onclick="set_num_days(this.checked)" checked>
-                                <label style="margin:-2px 20px 0px 10px;">40 Days</label> -->
-
                             </div>
+                            <!-- <div class="w3-right" class="" style="display:inline-flex;align-content: center;margin-top:18px;">
+                                
+                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
+                                    value="symbols" onclick="click_config(this.value)">
+                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Positions</label>
+
+                                <input class="w3-hide-small w3-radio" style="cursor:pointer;" type="radio" name="config"
+                                    value="symbols" onclick="click_config(this.value)">
+                                <label class="w3-hide-small" style="margin:-2px 20px 0px 10px;">Watch List</label>
+                            </div> -->
                         </div>
 
                         <div id="symbol-boxes-filtered" class="w3-hide-small w3-center w3-xlarge w3-text-grey"
@@ -511,9 +526,9 @@
                                 <thead>
                                     <tr class="w3-light-grey">
                                         <th>Symbol</th>
+                                        <th>S</th>
                                         <th class="w3-hide-small">Name</th>
                                         <th class="w3-hide-small">Seed</th>
-                                        <th class="w3-hide-small">Date</th>
                                         <th>%</th>
                                         <th>Today</th>
                                         <th class="w3-hide-small">Total</th>

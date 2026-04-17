@@ -96101,6 +96101,8 @@ const stock_symbols_detail = [
     { symbol: 'TSN', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'DIOD', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: 'ARM', name: '-', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'UEC', name: 'Uranium Energy Corp.', status: 'active', tradable: true, fractionable: true },
+    { symbol: 'MDA', name: 'Uranium | Nuclear.', status: 'active', tradable: true, fractionable: true },
     { symbol: 'VIXY', name: '-', status: 'active', tradable: true, fractionable: true },
     { symbol: '^IXIC', name: 'Nasdaq', status: 'active', tradable: true, fractionable: true },
     { symbol: 'CL=F', name: 'Crude Oil', status: 'active', tradable: true, fractionable: true },

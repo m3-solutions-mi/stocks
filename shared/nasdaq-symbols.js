@@ -5264,4 +5264,10 @@ ZXYZ.A|Nasdaq Symbology Test Common Stock|Q|Y|N|100|N|N
 ZXZZT|NASDAQ TEST STOCK|G|Y|N|100|N|N
 ZYBT|Zhengye Biotechnology Holding Limited - Ordinary Shares|S|N|N|100|N|N
 ZYME|Zymeworks Inc. - Common Stock|Q|N|N|100|N|N
+UEC|Uranium Energy Corp.|Q|N|N|100|N|N
+PL|Planet Labs PBC|Q|N|N|100|N|N
+IONQ|IONQ.corp Quantum|Q|N|N|100|N|N
+QBTS|D-Wave Quantum Inc|Q|N|N|100|N|N
+MDA|Uranium | Nuclear|Q|N|N|100|N|N
+CBOE|*S&P Financial Select Sector*|Q|N|N|100|N|N
 `;

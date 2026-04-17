@@ -159,6 +159,7 @@ let chart_top_5 = new Treemap('#top-chart-5');
 let chart_top_6 = new Treemap('#top-chart-6');
 let chart_top_7 = new Treemap('#top-chart-7');
 let chart_top_8 = new Treemap('#top-chart-8');
+let chart_top_9 = new Treemap('#top-chart-9');
 
 
 //#-------------------------------------------
@@ -653,10 +654,10 @@ async function update(instance) {
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1D', '2026-02-01'),                                                   //* NDAQ DAYS */
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1Min', new Date(Date.now() - (24 * 60 * 60 * 1000)).toISOString()),   //* NDAQ 24h */
         // config_stocks.alpaca.bars_simplified(['NUCL', 'PLUG', 'AEO', 'BKCH', 'TOYO','DUO','DAPP','LMND','QUIK','AVAV'], '1Min', '2026-04-13'),                                         //* WATCH LIST */
-        config_stocks.alpaca.bars_simplified(symbols.sort(), '1Min', '2026-04-13'),                                         //* WATCH LIST */
+        config_stocks.alpaca.bars_simplified(symbols, '1Min', '2026-04-13'),                                         //* WATCH LIST */
         config_stocks.alpaca.bars_simplified(['NDAQ', '^IXIC', 'CL=F', '^VIX'/*, 'US.10'*/], '1D', '2026-02-01'),                                //* INDICATORS DATA */ 
     ];
-    const results = await Promise.all(promises);
+    let results = await Promise.all(promises);
     RESULTS = {
         PROCESSED_DATA: results[0],
         ACCOUNT: results[1],
@@ -671,6 +672,7 @@ async function update(instance) {
         WATCH_LIST: results[8],
         INDICATORS: results[9],
     }
+    results = null;
     RESULTS.POSITIONS.forEach((p) => {
         const order = RESULTS.ORDERS.find((v) => v.symbol === p.symbol);
         p.filled_at = order ? order.filled_at : '-';
@@ -678,7 +680,7 @@ async function update(instance) {
         p.filled_qty = order ? order.filled_qty : '-';
         p.invetment = order ? order.notional : '-';
     })
-    console.log(`RESULTS | $${RESULTS.ACCOUNT.equity.toLocaleString()}`, RESULTS);
+    console.log(`RESULTS | $${RESULTS.ACCOUNT.equity.toLocaleString()}`/*, RESULTS*/);
     document.getElementById('day-history-balance').innerHTML = `$ ${round(RESULTS.ACCOUNT.equity).toLocaleString()}`;
     //*@ End | GET ALL DATA */
 
@@ -863,7 +865,7 @@ async function update(instance) {
     chart_top_4.options.chart.height = CHART_HEIGHT;
     update_ui(chart_top_4);
 
-    //* CHART /*
+    //* CHART POSITIONS /*
     data = RESULTS.POSITIONS.map((v) => { return { x: v.symbol, y: round(v.unrealized_intraday_pl) } });
     chart_top_8.options.dataLabels.formatter = function (text, op) {
         return [text, op.value]
@@ -874,6 +876,18 @@ async function update(instance) {
     }
     chart_top_8.options.chart.height = CHART_HEIGHT;
     update_ui(chart_top_8);
+
+    //* CHART WATCH LIST /*
+    // data = RESULTS.WATCH_LIST.symbols.map((v) => { return { x: v.symbol, y: round(v.bars[v.bars.lendth-1].c) } });
+    // chart_top_9.options.dataLabels.formatter = function (text, op) {
+    //     return [text, op.value]
+    // };
+    // chart_top_9.options.chart.events.dataPointSelection = (event, chartContext, opts) => {
+    //     const symbol = opts.w.config.series[opts.seriesIndex].data[opts.dataPointIndex].x;
+    //     click_symbol(symbol)
+    // }
+    // chart_top_9.options.chart.height = CHART_HEIGHT;
+    // update_ui(chart_top_9);
 
 
     //* SEED MONEY */
@@ -894,6 +908,17 @@ async function update(instance) {
                 <td class="w3-hide-small">{name}</td>
                 <td class="w3-hide-small">{investment}</td>
                 <td class="w3-hide-small">{date}</td>
+                <td style="color:{c2}">{pct}</td>
+                <td style="color:{c2}"><b>{day}</b></td>
+                <td class="w3-hide-small" style="color:{c}"><b>{gain}</b></td>
+                <td class="w3-hide-small" style="color:{c}">{gain_pct}</td>
+            </tr>`
+    const template_row_watch = `
+            <tr onclick="click_symbol('{s}')">
+                <td style="color:{c}"><b>{symbol}</b></td>
+                <td style="color:{c}"><span class="w3-badge {bc}"><b>{b}</b></span></td>
+                <td class="w3-hide-small">{name}</td>
+                <td class="w3-hide-small">{investment}</td>
                 <td style="color:{c2}">{pct}</td>
                 <td style="color:{c2}"><b>{day}</b></td>
                 <td class="w3-hide-small" style="color:{c}"><b>{gain}</b></td>
@@ -947,6 +972,7 @@ async function update(instance) {
             .replace('{date}', date.slice(date.indexOf('-') + 1))
             .replace('{investment}', round(s.cost_basis))
     });
+    document.getElementById('positions-count').innerHTML = `${RESULTS.POSITIONS.length}`;
     document.getElementById('symbols-count').innerHTML = `&nbsp;&nbsp;|&nbsp;&nbsp;${RESULTS.POSITIONS.length}`;
     document.getElementById('symbol-boxes-positions').innerHTML = html;
     document.getElementById('symbol-names').value = config_stocks.symbols.join(',');
@@ -993,9 +1019,14 @@ async function update(instance) {
         const indicator = get_indicator(day);
 
         const detail = nasdaq_symbols().filter((v) => v.symbol === s.symbol)[0];
-        html_table_watch += template_row
+        const badge = get_sector(detail?.name || '-');
+
+        html_table_watch += template_row_watch
             .replace('{s}', s.symbol)
+            .replace('{b}', badge.sector)
+            .replace('{bc}', badge.badge_color)
             .replace('{symbol}', `${indicator}${s.symbol}`)
+            .replace('{c}', color)
             .replace('{c}', color)
             .replace('{c}', color)
             .replace('{c}', color)
@@ -1006,7 +1037,7 @@ async function update(instance) {
             .replace('{gain_pct}', `${round1(gain_pct)}%`)
             .replace('{c2}', color_day)
             .replace('{c2}', color_day)
-            .replace('{date}', date.slice(date.indexOf('-') + 1))
+            // .replace('{date}', date.slice(date.indexOf('-') + 1))
             .replace('{investment}', round(seed))
     });
     document.getElementById('watch-table-body').innerHTML = html_table_watch;
@@ -1339,12 +1370,12 @@ async function click_symbol(s, elem, check_score = false) {
                 Array.from(document.getElementsByClassName('symbol')).forEach((v) => v.classList.replace('w3-green', 'w3-white'));
                 elem.classList.replace('w3-white', 'w3-green');
             }
-            document.getElementById('symbol-buy').classList.remove('w3-hide');
-            document.getElementById('symbol-sell').classList.remove('w3-hide');
-            document.getElementById('symbol-ndaq').classList.remove('w3-hide');
-            document.getElementById('symbol-nasdaq').classList.remove('w3-hide');
-            document.getElementById('symbol-oil').classList.remove('w3-hide');
-            document.getElementById('symbol-vix').classList.remove('w3-hide');
+            // document.getElementById('symbol-buy').classList.remove('w3-hide');
+            // document.getElementById('symbol-sell').classList.remove('w3-hide');
+            // document.getElementById('symbol-ndaq').classList.remove('w3-hide');
+            // document.getElementById('symbol-nasdaq').classList.remove('w3-hide');
+            // document.getElementById('symbol-oil').classList.remove('w3-hide');
+            // document.getElementById('symbol-vix').classList.remove('w3-hide');
 
             const tz = new Date(`2025-04-01T12:00:00`).getTimezoneOffset() / 60;
             const start = new Date(`2025-04-01T00:00:00-0${tz}:00`);

@@ -543,11 +543,18 @@ const get_sector = (n) => {
     sector = n.toLowerCase().indexOf('capital') >= 0 ? 'B' : sector;
     sector = n.toLowerCase().indexOf('bank') >= 0 ? 'B' : sector;
     sector = n.toLowerCase().indexOf('financ') >= 0 ? 'B' : sector;
+    sector = n.toLowerCase().indexOf('quantum') >= 0 ? 'Q' : sector;
+    sector = n.toLowerCase().indexOf('rigetti') >= 0 ? 'Q' : sector;
+    sector = n.toLowerCase().indexOf('uranium') >= 0 ? 'U' : sector;
+    sector = n.toLowerCase().indexOf('uranium') >= 0 ? 'U' : sector;
+    sector = n.toLowerCase().indexOf('nuclear') >= 0 ? 'U' : sector;
     let badge_color = 'w3-dark-grey';
     badge_color = sector === 'E' ? badge_color = 'w3-blue' : badge_color;
     badge_color = sector === 'H' ? badge_color = 'w3-orange' : badge_color;
     badge_color = sector === 'M' ? badge_color = 'w3-light-blue' : badge_color;
     badge_color = sector === 'T' ? badge_color = 'w3-purple' : badge_color;
+    badge_color = sector === 'Q' ? badge_color = 'w3-teal' : badge_color;
+    badge_color = sector === 'U' ? badge_color = 'w3-khaki' : badge_color;
 
     return {sector, badge_color};
 }
