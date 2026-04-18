@@ -160,6 +160,7 @@ let chart_top_6 = new Treemap('#top-chart-6');
 let chart_top_7 = new Treemap('#top-chart-7');
 let chart_top_8 = new Treemap('#top-chart-8');
 let chart_top_9 = new Treemap('#top-chart-9');
+let chart_top_10 = new Treemap('#top-chart-10');
 
 
 //#-------------------------------------------
@@ -680,6 +681,7 @@ async function update(instance) {
         p.filled_qty = order ? order.filled_qty : '-';
         p.invetment = order ? order.notional : '-';
     })
+    RESULTS['ACCOUNT_DETAIL'] = analyze_account().slice(-7);
     console.log(`RESULTS | $${RESULTS.ACCOUNT.equity.toLocaleString()}`/*, RESULTS*/);
     document.getElementById('day-history-balance').innerHTML = `$ ${round(RESULTS.ACCOUNT.equity).toLocaleString()}`;
     //*@ End | GET ALL DATA */
@@ -1207,6 +1209,71 @@ async function update(instance) {
     update_ui(chart_top_5);
     // });
 
+    //*@ ACCOUNT DETAIL */
+    series = { name: 'Close', type: 'area', data: [] };
+    chart_top_10.options.chart.type = 'area';
+    chart_top_10.options.chart.sparkline = { enabled: true };
+    chart_top_10.options.xaxis = { type: 'datetime', labels: { datetimeUTC: true, } };
+    chart_top_10.options.tooltip.x.formatter = function (value, timestamp) { return new Date(value).toLocaleString(); };
+    chart_top_10.options.dataLabels.enabled = false;
+    chart_top_10.options.fill = { type: 'solid' };
+
+    // const start_price = PORTFOLIO_HISTORY[0].equity;
+
+
+    //* DATA */
+    data = RESULTS.ACCOUNT_DETAIL.map((v) => {
+        return { x: v.e, y: v.net }
+    });
+    data = [{ x: RESULTS.ACCOUNT_DETAIL[0].e - (12 * 60 * 60 * 1000), y: RESULTS.ACCOUNT_DETAIL[0].net }, ...data];
+    data.push({ x: data[data.length - 1].x + (12 * 60 * 60 * 1000), y: data[data.length - 1].y });
+
+    //* day indicators */
+    chart_top_10.options.annotations = { xaxis: [], yaxis: [], points: [], };
+    chart_top_10.options.annotations.points = RESULTS.ACCOUNT_DETAIL.map((v, i) => {
+        return add_annotation_point(v.e, v.net, 4.5, colors.black, round(v.delta));
+    })
+    // first = chart_top_10.options.annotations.points[chart_top_10.options.annotations.points.length-1];
+    // first.e = Date.now();
+    // chart_top_10.options.annotations.points.push(add_annotation_point(last.e, last.y, 4.5, colors.black));
+
+    //* month indicators */
+    let day = null;
+    chart_top_10.options.annotations.xaxis = chart_top_10.options.annotations.points.map((v, i) => {
+        if (i > 0 && new Date(v.x).getDay() === 1) {
+            return add_annotation_x(v.x);
+        }
+        day = new Date(v.x).getDay();
+    })
+
+    chart_top_10.options.yaxis = { max: data[data.length - 1].y * 1.3 };
+
+    // last = data[data.length - 1];
+    // chart_top_10.options.annotations.yaxis.push(add_annotation_y(last.y));
+
+
+    // total = round1(data[data.length - 1].y);
+    // gain = round1(data[data.length - 1].y - config_stocks.alpaca.SEED);
+
+    // //* MONTH GAIN */
+    // elem = document.getElementById('gain-month');
+
+    // elem = document.getElementById('header-portfolio');
+    // elem.innerHTML = gain.toLocaleString();
+    // elem.parentElement.classList.remove('w3-text-green');
+    // elem.parentElement.classList.remove('w3-text-red');
+    // elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+
+    // elem = document.getElementById('header-portfolio-pct')
+    // elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
+    // elem.parentElement.classList.remove('w3-text-green');
+    // elem.parentElement.classList.remove('w3-text-red');
+    // elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+
+    // add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 12, 12, 36, 24, 36);
+    chart_top_10.options.chart.height = CHART_HEIGHT;
+    update_ui(chart_top_10);
+
 
     //*@ PORTFOLIO --DAY-- HISTORY */
     // start_date = getYMD(new Date(Date.now() - (((new Date().getDay() + 7) * 24 * 60 * 60 * 1000))))
@@ -1270,7 +1337,9 @@ async function update(instance) {
     // chart_top_5.options.annotations.xaxis.push(add_annotation_x(new Date('2026-01-05T16:00:00').getTime()));
 
     // const start_price = 0; // PORTFOLIO_DAY_HISTORY[0].equity;
-    data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
+    const adjusted = analyze_account(false);
+    data = adjusted.map((v) => { return { x: v.e, y: v.net } });//.slice(-15);
+    // data = RESULTS.PORTFOLIO_HISTORY_MINUTES.map((v) => { return { x: v.e, y: v.equity } });//.slice(-15);
     const st = new Date('2026-04-16T18:35:00').getTime();
     data = data.filter((v) => v.x >= st);
     // const st = new Date(getYMD(RESULTS.PORTFOLIO_HISTORY_MINUTES[0].e) + ' 19:00:00').getTime();
@@ -1282,13 +1351,13 @@ async function update(instance) {
     // data.push({ x: Date.now(), y: +(RESULTS.ACCOUNT.equity) });
 
     last = data[data.length - 1];
-    const yesterday = chart_top_5.options.annotations.points[chart_top_5.options.annotations.points.length - 1];
+    const yesterday = chart_top_10.options.annotations.points[chart_top_10.options.annotations.points.length - 1];
     chart_top_7.options.annotations.yaxis.push(add_annotation_y(last.y)); 7
     chart_top_5.options.yaxis = { max: data[data.length - 1].y * 1.25 };
     // update_ui(chart_top_7);
 
-    total = round3(data[data.length - 1].y);
-    gain = round3(data[data.length - 1].y - yesterday.y);
+    total = round3(last.y);
+    gain = round3(last.y - yesterday.y);
 
     elem = document.getElementById('header-today');
     elem.innerHTML = round(gain).toLocaleString();
@@ -1559,15 +1628,74 @@ function m3_129() {
             console.log(`%c$${round(v.total / 129 * 50).toLocaleString()}`, 'color:yellow;')
         });
 }
-function analyze_account() {
-    const obj = {};
-    console.table(RESULTS.PORTFOLIO_HISTORY);
+// function remove_investment_dollars(data, deposits) {
+    
+// }
+function analyze_account(days = true, trim = true) {
+    // console.table(RESULTS.PORTFOLIO_HISTORY);
     const deposits = RESULTS.ACTIVITIES.filter((v) => v.activity_type === 'CSD').reverse();
-    const history = RESULTS.PORTFOLIO_HISTORY;
+    const history = deepClone(days ? RESULTS.PORTFOLIO_HISTORY : RESULTS.PORTFOLIO_HISTORY_MINUTES);//.filter((v) => v.ymd >= '2026-04-09');
+
     // TODO: add lastest data point to history
+    const invested = [];
     history.forEach((d) => {
         const filtered = deposits.filter((v) => new Date(v.date).getTime() <= new Date(d.ymd).getTime()).map((v) => +(v.net_amount)).reduce((p, c) => p + c);
-        console.log(filtered);
+        // console.log(filtered);
+        invested.push(filtered);
     })
-
+    // console.table(invested);
+    const obj = [];
+    history.forEach((v, i) => {
+        const net = round2(v.equity - invested[i]);
+        const delta = i === 0 ? 0 : round2(net - obj[i - 1].net);
+        const pct = round1(delta / invested[i] * 100);
+        obj.push({
+            date: days ? v.ymd : v.tl,
+            e: days ? new Date(`${v.ymd}T12:00:00`).getTime() : new Date(v.tl).getTime(),
+            // v: (0 ? (i === 0 ? 0 : round2(v.equity - history[i-1].equity)) - invested[i] : invested[i] - invested[i-1]),
+            // delta,
+            // net,
+            // // equity: v.equity,
+            // seed: i === 0 ? invested[i] : invested[i] - invested[i-1],
+            equity: v.equity,
+            invested: invested[i],
+            net,
+            delta,
+            pct,
+        });
+        if (i === history.length - 1) {
+            const total = {
+                date: 'TOTAL',
+                e: null,
+                equity: '-',
+                invested: '-',
+                net: '-',
+                delta: round2(obj.map((v) => v.delta).reduce((p, c) => p + c)),
+                pct: round2(obj.map((v) => v.pct).reduce((p, c) => p + c)),
+            };
+            const average = {
+                date: 'AVERAGE',
+                e: null,
+                equity: '-',
+                invested: '-',
+                net: '-',
+                delta: round2(total.delta / history.length),
+                pct: round2(total.pct / history.length),
+            };
+            const spacer = {
+                date: '-----',
+                e: null,
+                equity: '-----',
+                invested: '-----',
+                net: '-----',
+                delta: '-----',
+                pct: '-----',
+            }
+            obj.push(spacer);
+            obj.push(total);
+            obj.push(average);
+        }
+    })
+    // console.table(obj);
+    return trim ? obj.filter((v) => v.e !== null) : obj;
 }
