@@ -649,7 +649,7 @@ async function update(instance) {
         config_stocks.alpaca.get_positions(),                                                                                    //* POSITIONS */
         config_stocks.alpaca.get_orders(),                                                                                       //* ORDERS */
         config_stocks.alpaca.get_portfolio_history(null, '2026-02-28', new Date().toISOString(), '1D', reporting),               //* HISTORY | DAYS */
-        config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', reporting),                                         //* HISTORY | MINUTES */
+        config_stocks.alpaca.get_portfolio_history('3D', null, null, '1Min', reporting),                                         //* HISTORY | MINUTES */
         config_stocks.alpaca.get_news(symbols.join(',')),                                                                        //* NEWS */
         config_stocks.alpaca.get_account_activities(),                                                                           //* ACCOUNT ACTIVITIES */ 
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1D', '2026-02-01'),                                                   //* NDAQ DAYS */
@@ -1393,7 +1393,7 @@ async function update(instance) {
 
     //* PORTFOLIO - calculation to use after 8 PM */
     if (getHMM(new Date()) > 2000) {
-        total = round(total - config_stocks.alpaca.SEED);
+        total = round(total);
         elem = document.getElementById('header-portfolio');
         elem.innerHTML = total;
         elem.parentElement.classList.remove('w3-text-green');
