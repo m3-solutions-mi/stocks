@@ -839,18 +839,9 @@ async function update(instance) {
     // update_ui(chart_top_4);
 
     //*@ LAST TOTAL | PERCENT */
+    let last = RESULTS.ACCOUNT_DETAIL[RESULTS.ACCOUNT_DETAIL.length-1];
     total = round(reduceArray(RESULTS.POSITIONS.map((v) => +(v.unrealized_pl))));
     percent = round2(total / (RESULTS.POSITIONS.length * 1000) * 100);
-
-    // let elem = document.getElementById('last-total');
-    // elem.innerHTML = `${get_indicator(total)} ${Math.abs(round(total)).toLocaleString()}&nbsp;`;
-    // total < 0 ? elem.classList.replace('w3-green', 'w3-red') : elem.classList.replace('w3-red', 'w3-green');
-
-    // //* LAST PERCENT */
-    // elem = document.getElementById('last-pct');
-    // elem.innerHTML = `${percent.toLocaleString()}%`;
-    // total < 0 ? elem.classList.replace('w3-text-green', 'w3-text-red') : elem.classList.replace('w3-text-red', 'w3-text-green');
-
 
     elem = document.getElementById('header-positions');
     elem.innerHTML = round1(total).toLocaleString();
@@ -858,7 +849,7 @@ async function update(instance) {
     elem.parentElement.classList.remove('w3-text-red');
     elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
     elem = document.getElementById('header-positions-pct')
-    elem.innerHTML = round2(total / config_stocks.alpaca.SEED * 100) + ' %';
+    elem.innerHTML = round2(total / last.invested * 100) + ' %';
     elem.parentElement.classList.remove('w3-text-green');
     elem.parentElement.classList.remove('w3-text-red');
     elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
@@ -1121,7 +1112,7 @@ async function update(instance) {
 
     //* day indicators */
     chart_top_5.options.annotations = { xaxis: [], yaxis: [], points: [], };
-    let last = 0;
+    last = 0;
     chart_top_5.options.annotations.points = RESULTS.PORTFOLIO_HISTORY.filter((v, i) => v.thm === 2000).map((v, i) => {
         const value = round((v.equity - last));
         last = v.equity;
@@ -1252,23 +1243,24 @@ async function update(instance) {
     // chart_top_10.options.annotations.yaxis.push(add_annotation_y(last.y));
 
 
-    // total = round1(data[data.length - 1].y);
-    // gain = round1(data[data.length - 1].y - config_stocks.alpaca.SEED);
+    last = RESULTS.ACCOUNT_DETAIL[RESULTS.ACCOUNT_DETAIL.length-1];
+    total = round1(data[data.length - 1].y);
+    gain = round1(last.net);
 
     // //* MONTH GAIN */
     // elem = document.getElementById('gain-month');
 
-    // elem = document.getElementById('header-portfolio');
-    // elem.innerHTML = gain.toLocaleString();
-    // elem.parentElement.classList.remove('w3-text-green');
-    // elem.parentElement.classList.remove('w3-text-red');
-    // elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem = document.getElementById('header-portfolio');
+    elem.innerHTML = gain.toLocaleString();
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
 
-    // elem = document.getElementById('header-portfolio-pct')
-    // elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
-    // elem.parentElement.classList.remove('w3-text-green');
-    // elem.parentElement.classList.remove('w3-text-red');
-    // elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    elem = document.getElementById('header-portfolio-pct')
+    elem.innerHTML = round2(gain / last.invested * 100) + ' %';
+    elem.parentElement.classList.remove('w3-text-green');
+    elem.parentElement.classList.remove('w3-text-red');
+    elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
 
     // add_section('output', 'Portfolio', 5, total, gain, 'fa-university', 12, 12, 12, 36, 24, 36);
     chart_top_10.options.chart.height = CHART_HEIGHT;
@@ -1358,6 +1350,7 @@ async function update(instance) {
 
     total = round3(last.y);
     gain = round3(last.y - yesterday.y);
+    last = RESULTS.ACCOUNT_DETAIL[RESULTS.ACCOUNT_DETAIL.length-1];
 
     elem = document.getElementById('header-today');
     elem.innerHTML = round(gain).toLocaleString();
@@ -1366,7 +1359,7 @@ async function update(instance) {
     elem.parentElement.classList.remove('w3-text-red');
     elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
     elem = document.getElementById('header-today-pct')
-    elem.innerHTML = round2(gain / config_stocks.alpaca.SEED * 100) + ' %';
+    elem.innerHTML = round2(gain / last.invested * 100) + ' %';
     elem.parentElement.classList.remove('w3-text-green');
     elem.parentElement.classList.remove('w3-text-red');
     elem.parentElement.classList.add('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
@@ -1392,20 +1385,20 @@ async function update(instance) {
     elem.innerHTML = `$${total.toLocaleString()}`;
 
     //* PORTFOLIO - calculation to use after 8 PM */
-    if (getHMM(new Date()) > 2000) {
-        total = round(total);
-        elem = document.getElementById('header-portfolio');
-        elem.innerHTML = total;
-        elem.parentElement.classList.remove('w3-text-green');
-        elem.parentElement.classList.remove('w3-text-red');
-        elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
+    // if (getHMM(new Date()) > 2000) {
+    //     total = round(total);
+    //     elem = document.getElementById('header-portfolio');
+    //     elem.innerHTML = total;
+    //     elem.parentElement.classList.remove('w3-text-green');
+    //     elem.parentElement.classList.remove('w3-text-red');
+    //     elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
 
-        elem = document.getElementById('header-portfolio-pct')
-        elem.innerHTML = round2(total / config_stocks.alpaca.SEED * 100) + ' %';
-        elem.parentElement.classList.remove('w3-text-green');
-        elem.parentElement.classList.remove('w3-text-red');
-        elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
-    }
+    //     elem = document.getElementById('header-portfolio-pct')
+    //     elem.innerHTML = round2(total / config_stocks.alpaca.SEED * 100) + ' %';
+    //     elem.parentElement.classList.remove('w3-text-green');
+    //     elem.parentElement.classList.remove('w3-text-red');
+    //     elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
+    // }
 
     // TODO: update setting of table column 1 values
     elem = document.getElementById(`value-24-hour-percent`);
