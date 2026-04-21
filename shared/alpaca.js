@@ -733,7 +733,7 @@ class AlpacaData {
     }
     async bars_simplified(symbols, timeframe = '1D', start = this.START_OF_YEAR, end = new Date().toISOString()) {
         return new Promise(async (resolve) => {
-            const promises = symbols.map((s) => this.bars_m3(s, timeframe, start, end, [], [], false, 100, false));
+            const promises = symbols.map((s) => this.bars(s, timeframe, start, end, [], [], false, 100, false));
             const results = await Promise.all(promises);
             const obj = [];
             results.forEach((res) => {

@@ -649,14 +649,14 @@ async function update(instance) {
         config_stocks.alpaca.get_positions(),                                                                                    //* POSITIONS */
         config_stocks.alpaca.get_orders(),                                                                                       //* ORDERS */
         config_stocks.alpaca.get_portfolio_history(null, '2026-02-28', new Date().toISOString(), '1D', reporting),               //* HISTORY | DAYS */
-        config_stocks.alpaca.get_portfolio_history('3D', null, null, '1Min', reporting),                                         //* HISTORY | MINUTES */
+        config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', reporting),                                         //* HISTORY | MINUTES */
         config_stocks.alpaca.get_news(symbols.join(',')),                                                                        //* NEWS */
         config_stocks.alpaca.get_account_activities(),                                                                           //* ACCOUNT ACTIVITIES */ 
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1D', '2026-02-01'),                                                   //* NDAQ DAYS */
         // config_stocks.alpaca.bars_simplified(['NDAQ'], '1Min', new Date(Date.now() - (24 * 60 * 60 * 1000)).toISOString()),   //* NDAQ 24h */
         // config_stocks.alpaca.bars_simplified(['NUCL', 'PLUG', 'AEO', 'BKCH', 'TOYO','DUO','DAPP','LMND','QUIK','AVAV'], '1Min', '2026-04-13'),                                         //* WATCH LIST */
         config_stocks.alpaca.bars_simplified(symbols, '1Min', '2026-04-13'),                                         //* WATCH LIST */
-        config_stocks.alpaca.bars_simplified(['NDAQ', '^IXIC', 'CL=F', '^VIX'/*, 'US.10'*/], '1D', '2026-02-01'),                                //* INDICATORS DATA */ 
+        // config_stocks.alpaca.bars_simplified(['NDAQ', '^IXIC', 'CL=F', '^VIX'/*, 'US.10'*/], '1D', '2026-02-01'),                                //* INDICATORS DATA */ 
     ];
     let results = await Promise.all(promises);
     RESULTS = {
@@ -687,12 +687,12 @@ async function update(instance) {
     //*@ End | GET ALL DATA */
 
     //*@ HEADER INDICATORS */
-    ['ndaq', 'nasdaq', 'oil', 'vix'].forEach((v, i) => {
-        let gain = RESULTS.INDICATORS.symbols[i].bars_raw[RESULTS.INDICATORS.symbols[i].bars_raw.length - 1].c;
-        elem = document.getElementById(`header-${v}`);
-        elem.innerHTML = gain > 1000 ? round2(gain / 1000).toLocaleString() + 'K' : gain;
-        elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
-    });
+    // ['ndaq', 'nasdaq', 'oil', 'vix'].forEach((v, i) => {
+    //     let gain = RESULTS.INDICATORS.symbols[i].bars_raw[RESULTS.INDICATORS.symbols[i].bars_raw.length - 1].c;
+    //     elem = document.getElementById(`header-${v}`);
+    //     elem.innerHTML = gain > 1000 ? round2(gain / 1000).toLocaleString() + 'K' : gain;
+    //     elem.parentElement.classList.replace('w3-text-green', gain > 0 ? 'w3-text-green' : 'w3-text-red');
+    // });
 
 
     // config_stocks.alpaca.bars_simplified(symbols, '1D', start_date).then(async (result) => {
@@ -860,7 +860,7 @@ async function update(instance) {
 
     //* CHART POSITIONS /*
     data = RESULTS.POSITIONS.map((v) => { return { x: v.symbol, y: round(v.unrealized_intraday_pl) } });
-    chart_top_8.options.dataLabels.formatter = function (text, op) {
+    chart_top_8 .options.dataLabels.formatter = function (text, op) {
         return [text, op.value]
     };
     chart_top_8.options.chart.events.dataPointSelection = (event, chartContext, opts) => {
@@ -1273,7 +1273,7 @@ async function update(instance) {
     //@ get_portfolio_history(period = '1W', start = null, end = null, timeframe = '1D', reporting = 'extended_hours', pnl_reset = 'per_day') {
     //* config_stocks.alpaca.get_portfolio_history('1D', null, null, '1Min', 'extended_hours').then((result) => {
 
-    let num_days = '3D'; // 1D | 2D | 3D | 4D | 5D
+    let num_days = '1D'; // 1D | 2D | 3D | 4D | 5D
     timeframe = '1Min'; // 1Min | 5Min | 15Min | 1H
     reporting = 'continuous'; // continuous | extended_hours | market_hours
     // config_stocks.alpaca.get_portfolio_history(num_days, null, null, timeframe, reporting).then((result) => {

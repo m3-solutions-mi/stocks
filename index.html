@@ -317,8 +317,8 @@
                         <div class="w3-quarter" style="cursor:pointer;" onclick="click_symbol('NDAQ')">
                             <div class="w3-container w3-border w3-light-grey w3-padding">
                                 <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-ndaq" class="w3-wide">-</b><br
-                                            class="w3-hide-medium w3-hide-large" /></span>
+                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-ndaq"
+                                            class="w3-wide">-</b><br class="w3-hide-medium w3-hide-large" /></span>
                                     <span class="w3-large w3-left">NDAQ</span>
                                 </div>
                             </div>
@@ -326,7 +326,8 @@
                         <div class="w3-quarter" style="cursor:pointer;" onclick="click_symbol('^IXIC')">
                             <div class="w3-container w3-border w3-light-grey w3-padding">
                                 <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-nasdaq" class="w3-wide">-</b></span>
+                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-nasdaq"
+                                            class="w3-wide">-</b></span>
                                     <span class="w3-large w3-left">^NDAQ</span>
                                 </div>
                             </div>
@@ -334,8 +335,8 @@
                         <div class="w3-quarter" style="cursor:pointer;" onclick="click_symbol('CL=F')">
                             <div class="w3-container w3-border w3-light-grey w3-padding">
                                 <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-oil" class="w3-wide">-</b><br
-                                            class="w3-hide-large" /></span>
+                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-oil"
+                                            class="w3-wide">-</b><br class="w3-hide-large" /></span>
                                     <span class="w3-large w3-left">^OIL</span>
                                 </div>
                             </div>
@@ -343,8 +344,8 @@
                         <div class="w3-quarter" style="cursor:pointer;" onclick="click_symbol('^VIX')">
                             <div class="w3-container w3-border w3-light-grey w3-padding">
                                 <div class="w3-col s12">
-                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-vix" class="w3-wide">-</b><br
-                                            class="w3-hide-large" /></span>
+                                    <span class="w3-right w3-text-green w3-xlarge"><b id="header-vix"
+                                            class="w3-wide">-</b><br class="w3-hide-large" /></span>
                                     <span class="w3-large w3-left">^VIX</span>
                                 </div>
                             </div>
@@ -384,7 +385,8 @@
 
                             <!--* Account Detail  -->
                             <div class="w3-hide w3-col s12 m6 w3-padding">
-                                <b>Account&nbsp;Detail</b> | <span id="account-detail-avg">$ -</span> [ <span id="account-detail-avg-pct">%</span> ]
+                                <b>Account&nbsp;Detail</b> | <span id="account-detail-avg">$ -</span> [ <span
+                                    id="account-detail-avg-pct">%</span> ]
                                 <div id="top-chart-5"></div>
                             </div>
                         </div>
@@ -1005,64 +1007,83 @@
                 </div>
             </div>
         </div>
-        <!--@ End MODAL  -->
+    </div>
+    <!--@ End MODAL  -->
+
+    <!--@ MODAL WATCH LIST  -->
+    <div id="modal-watch-list" class="w3-modal">
+        <div class="w3-modal-content" style="width:75%;">
+            <div class="w3-container w3-xxlarge" style="_font-size:228px;">
+                <span onclick="document.getElementById('modal-watch-list').style.display='none'"
+                    class="w3-button w3-display-topright w3-xxxlarge">&times;</span>
+                <div class="w3-margin w3-padding">
+                    <div class="w3-xxxlarge">
+                        <div>Positions: <span id="modal-gain">$1,084</span></div>
+                        <div>Days: <span id="modal-gain">5</span></div>
+                        <div>Per Day: <span id="modal-gain">$216.8</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--@ End MODAL  -->
 
 
-        <script>
-            /** PRINT THE VERSION */
-            const print_version = () => {
-                console.log(`%c------------------------------------------------------------------------------------------`, 'color:lime');
-                console.log(`%c  ███      ███  ████\n  ██ ██  ██ ██    ██\n  ██   ██   ██  ████\n  ██        ██    ██\n  ██        ██  ████`, 'color:lime');
-                console.log('%c   M3 STOCKS v6.0.0', 'color:lime');
-                console.log(`%c------------------------------------------------------------------------------------------`, 'color:lime');
-            }
-            print_version();
-            // let count = 0;
-            setInterval(() => {
-                const d = new Date();
-                if (d.getSeconds() === 0) {
-                    // count++;
-                    if (d.getMinutes() === 0 /*|| count > 30*/) {
-                        console.clear();
-                        // count = 0;
-                        print_version();
-                        update();
-                    }
+    <script>
+        /** PRINT THE VERSION */
+        const print_version = () => {
+            console.log(`%c------------------------------------------------------------------------------------------`, 'color:lime');
+            console.log(`%c  ███      ███  ████\n  ██ ██  ██ ██    ██\n  ██   ██   ██  ████\n  ██        ██    ██\n  ██        ██  ████`, 'color:lime');
+            console.log('%c   M3 STOCKS v6.0.0', 'color:lime');
+            console.log(`%c------------------------------------------------------------------------------------------`, 'color:lime');
+        }
+        print_version();
+        // let count = 0;
+        setInterval(() => {
+            const d = new Date();
+            if (d.getSeconds() === 0) {
+                // count++;
+                if (d.getMinutes() === 0 /*|| count > 30*/) {
+                    console.clear();
+                    // count = 0;
+                    print_version();
+                    update();
                 }
-            }, 1000);
-        </script>
+            }
+        }, 1000);
+    </script>
 
-        <!-- 
+    <!-- 
         ------------------------------------------------------
         MUST BE AT THE BOTTOM - HTML ELEMENTS MUST EXIST 
         ------------------------------------------------------
     -->
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-        <script src="./shared/helper-functions.js"></script>
-        <script src="./shared/HackTimer.js"></script>
-        <script src="./shared/colors.js"></script>
-        <script src="./shared/calendar.js"></script>
-        <script src="./shared/tops_by_week.js"></script>
-        <!-- <script src="./bollinger-bands.js"></script> -->
-        <!-- <script src="./buy-sell-positions.js"></script> -->
-        <!-- <script src="./calculate-trendline.js"></script> -->
-        <script src="./charts/chart-bar-options.js"></script>
-        <script src="./charts/chart-area-spline-options.js"></script>
-        <script src="./shared/alpaca.js"></script>
-        <script src="./shared/nasdaq-symbols.js"></script>
-        <script src="./shared/stock_symbols_detail.js"></script>
-        <script src="./shared/bollinger-bands.js"></script>
-        <script src="./shared/calculate-trendline.js"></script>
-        <script src="./shared/calculate-target.js"></script>
-        <script src="./scripts/run_top_25_each_week.js"></script>
-        <script src="./shared/combine-data.js"></script>
-        <script src="./config.js"></script>
-        <script src="./treemap.js"></script>
-        <script src="./candlestick.js"></script>
-        <script src="./index-ui.js"></script>
-        <!-- <script src="./index-charts.js"></script> -->
-        <script src="./index-interval.js"></script>
-        <script src="./index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="./shared/helper-functions.js"></script>
+    <script src="./shared/HackTimer.js"></script>
+    <script src="./shared/colors.js"></script>
+    <script src="./shared/calendar.js"></script>
+    <script src="./shared/tops_by_week.js"></script>
+    <!-- <script src="./bollinger-bands.js"></script> -->
+    <!-- <script src="./buy-sell-positions.js"></script> -->
+    <!-- <script src="./calculate-trendline.js"></script> -->
+    <script src="./charts/chart-bar-options.js"></script>
+    <script src="./charts/chart-area-spline-options.js"></script>
+    <script src="./shared/alpaca.js"></script>
+    <script src="./shared/nasdaq-symbols.js"></script>
+    <script src="./shared/stock_symbols_detail.js"></script>
+    <script src="./shared/bollinger-bands.js"></script>
+    <script src="./shared/calculate-trendline.js"></script>
+    <script src="./shared/calculate-target.js"></script>
+    <script src="./scripts/run_top_25_each_week.js"></script>
+    <script src="./shared/combine-data.js"></script>
+    <script src="./config.js"></script>
+    <script src="./treemap.js"></script>
+    <script src="./candlestick.js"></script>
+    <script src="./index-ui.js"></script>
+    <!-- <script src="./index-charts.js"></script> -->
+    <script src="./index-interval.js"></script>
+    <script src="./index.js"></script>
 </body>
 
 </html>
