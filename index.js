@@ -1625,6 +1625,7 @@ function m3_129() {
     
 // }
 function analyze_account(days = true, trim = true) {
+    return [];
     // console.table(RESULTS.PORTFOLIO_HISTORY);
     const deposits = RESULTS.ACTIVITIES.filter((v) => v.activity_type === 'CSD').reverse();
     const history = deepClone(days ? RESULTS.PORTFOLIO_HISTORY : RESULTS.PORTFOLIO_HISTORY_MINUTES);//.filter((v) => v.ymd >= '2026-04-09');
