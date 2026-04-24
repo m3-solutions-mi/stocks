@@ -849,10 +849,10 @@ async function update(instance) {
     elem.parentElement.classList.remove('w3-text-red');
     elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
     elem = document.getElementById('header-positions-pct')
-    elem.innerHTML = round2(total / last.invested * 100) + ' %';
-    elem.parentElement.classList.remove('w3-text-green');
-    elem.parentElement.classList.remove('w3-text-red');
-    elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
+    // elem.innerHTML = round2(total / last.invested * 100) + ' %';
+    // elem.parentElement.classList.remove('w3-text-green');
+    // elem.parentElement.classList.remove('w3-text-red');
+    // elem.parentElement.classList.add('w3-text-green', total > 0 ? 'w3-text-green' : 'w3-text-red');
 
     add_section('output', 'Positions', 4, percent, round(total), 'fa-tags', 12, 12, 12, 36, 24, 36);
     chart_top_4.options.chart.height = CHART_HEIGHT;
